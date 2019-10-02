@@ -4,8 +4,8 @@ using System.Diagnostics;
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public class ActionAssertions
-        : ObjectAssertions
+    public class ActionAssertions<TActual>
+        : ObjectAssertions<object>
     {
         readonly Action actual;
 

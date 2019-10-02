@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace NetFabric.Assertive
 {
-    public sealed class EnumerableWrapper : IEnumerable
+    public sealed class EnumerableWrapper<T> : IEnumerable<T>
     {
         readonly EnumerableInfo info;
 
@@ -17,20 +18,22 @@ namespace NetFabric.Assertive
         public Type DeclaringType => info.GetEnumerator.DeclaringType;
 
         public Enumerator GetEnumerator() => new Enumerator(this);
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => new Enumerator(this);
         IEnumerator IEnumerable.GetEnumerator() => new Enumerator(this);
 
-        public sealed class Enumerator : IEnumerator, IDisposable
+        public sealed class Enumerator : IEnumerator<T>
         {
             readonly EnumerableInfo info;
             readonly object enumerator;
 
-            public Enumerator(EnumerableWrapper enumerable)
+            public Enumerator(EnumerableWrapper<T> enumerable)
             {
                 info = enumerable.info;
                 enumerator = info.GetEnumerator.Invoke(enumerable.Actual, Array.Empty<object>());
             }
 
-            public object Current => info.Current.GetValue(enumerator);
+            public T Current => (T)info.Current.GetValue(enumerator);
+            object IEnumerator.Current => info.Current.GetValue(enumerator);
 
             public bool MoveNext() => (bool)info.MoveNext.Invoke(enumerator, Array.Empty<object>());
 

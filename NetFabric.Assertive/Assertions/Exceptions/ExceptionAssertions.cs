@@ -5,7 +5,7 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class ExceptionAssertions<TException> 
-        : ObjectAssertions
+        : ObjectAssertions<TException>
         where TException
         : Exception
     {

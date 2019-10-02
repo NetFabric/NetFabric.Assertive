@@ -1,24 +1,45 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public class ObjectAssertions 
+    public static class ObjectAssertionsExtensions
     {
-        readonly object actual;
+        public static ObjectAssertions<TActual> Must<TActual>(this TActual actual) 
+            => new ObjectAssertions<TActual>(actual); 
+    }
 
-        internal ObjectAssertions(object actual) 
+    [DebuggerNonUserCode]
+    public class ObjectAssertions<TActual> 
+    {
+        readonly TActual actual;
+
+        internal ObjectAssertions(TActual actual) 
         {
             this.actual = actual;
         }
 
-        public ObjectAssertions Equal(object expected)
+        public ObjectAssertions<TActual> BeNull() 
+        {
+            if (actual is object)
+                throw new NullException<object>(actual);
+                
+            return this;
+        }
+
+        public ObjectAssertions<TActual> NotBeNull() 
+        {
+            if (actual is null)
+                throw new NotNullException();
+
+            return this;
+        }
+
+        public ObjectAssertions<TActual> Equal(TActual expected)
             => Equal(expected, (actual, expected) => actual.Equals(expected));
 
-        public ObjectAssertions Equal(object expected, Func<object, object, bool> comparer)
+        public ObjectAssertions<TActual> Equal<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
         {
             if (actual is null)
             {
@@ -37,9 +58,9 @@ namespace NetFabric.Assertive
             return this;
         }
 
-        public ObjectEnumerableAssertions BeEnumerable()
+        public EnumerableObjectAssertions<TActual, TActualItem> BeEnumerable<TActualItem>()
         {
-            var actualType = actual.GetType();
+            var actualType = typeof(TActual);
             if (!actualType.IsEnumerable(out var enumerableInfo))
             {
                 if (enumerableInfo.GetEnumerator is null)
@@ -50,23 +71,11 @@ namespace NetFabric.Assertive
                     throw new AssertionException($"Expected {enumerableInfo.GetEnumerator.ReturnType} to be an enumerator but it's missing a valid 'MoveNext' method.");
             }
 
-            return new ObjectEnumerableAssertions(actual, enumerableInfo);
-        }
+            var actualItemType = enumerableInfo.Current.PropertyType;
+            if (!typeof(TActualItem).IsAssignableFrom(actualItemType))
+                throw new AssertionException($"Expected {actualType} to be an enumerable of {typeof(TActualItem)} but found an enumerable of {actualItemType}.");
 
-        public ObjectAssertions BeNull() 
-        {
-            if (actual is object)
-                throw new NullException<object>(actual);
-                
-            return this;
-        }
-
-        public ObjectAssertions NotBeNull() 
-        {
-            if (actual is null)
-                throw new NotNullException();
-
-            return this;
+            return new EnumerableObjectAssertions<TActual, TActualItem>(actual, enumerableInfo);
         }
     }
 }
