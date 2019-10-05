@@ -6,14 +6,14 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class EnumerableObjectAssertions<TActual, TActualItem> 
-        : ObjectAssertions<TActual>
     {
         internal EnumerableObjectAssertions(TActual actual, EnumerableInfo enumerableInfo) 
-            : base(actual)
         {
+            Actual = actual;
             EnumerableInfo = enumerableInfo;
         }
 
+        public TActual Actual { get; }
         public EnumerableInfo EnumerableInfo { get; }
 
         public EnumerableObjectAssertions<TActual, TActualItem> Equal<TExpectedItem>(IEnumerable<TExpectedItem> expected)

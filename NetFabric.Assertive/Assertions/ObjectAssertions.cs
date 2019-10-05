@@ -54,15 +54,14 @@ namespace NetFabric.Assertive
         public EnumerableObjectAssertions<TActual, TActualItem> BeEnumerable<TActualItem>()
         {
             var actualType = typeof(TActual);
-            if (!actualType.IsEnumerable(out var enumerableInfo))
-            {
-                if (enumerableInfo.GetEnumerator is null)
-                    throw new AssertionException($"Expected {actualType} to be an enumerable but it's missing a valid 'GetEnumerator' method.");
-                if (enumerableInfo.Current is null)
-                    throw new AssertionException($"Expected {enumerableInfo.GetEnumerator.ReturnType} to be an enumerator but it's missing a valid 'Current' property.");
-                if (enumerableInfo.MoveNext is null)
-                    throw new AssertionException($"Expected {enumerableInfo.GetEnumerator.ReturnType} to be an enumerator but it's missing a valid 'MoveNext' method.");
-            }
+            var enumerableInfo = actualType.GetEnumerableInfo();
+
+            if (enumerableInfo.GetEnumerator is null)
+                throw new AssertionException($"Expected {actualType} to be an enumerable but it's missing a valid 'GetEnumerator' method.");
+            if (enumerableInfo.Current is null)
+                throw new AssertionException($"Expected {enumerableInfo.GetEnumerator.ReturnType} to be an enumerator but it's missing a valid 'Current' property.");
+            if (enumerableInfo.MoveNext is null)
+                throw new AssertionException($"Expected {enumerableInfo.GetEnumerator.ReturnType} to be an enumerator but it's missing a valid 'MoveNext' method.");
 
             var actualItemType = enumerableInfo.Current.PropertyType;
             if (!typeof(TActualItem).IsAssignableFrom(actualItemType))
