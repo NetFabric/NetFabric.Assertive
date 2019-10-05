@@ -9,12 +9,9 @@ namespace NetFabric.Assertive
         where TException
         : ArgumentException
     {
-        readonly TException actual;
-
         internal ArgumentExceptionAssertions(TException actual) 
             : base(actual) 
         {
-            this.actual = actual;
         }
 
         public ArgumentExceptionAssertions<TException> WithParamName(string expected) 

@@ -5,12 +5,10 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class ActionAssertions<TActual>
-        : ObjectAssertions<object>
     {
         readonly Action actual;
 
         internal ActionAssertions(Action actual) 
-            : base(actual) 
         {
             this.actual = actual;
         }

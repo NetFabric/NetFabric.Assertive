@@ -13,7 +13,7 @@ namespace NetFabric.Assertive
     [DebuggerNonUserCode]
     public class ObjectAssertions<TActual> 
     {
-        readonly TActual actual;
+        protected readonly TActual actual;
 
         internal ObjectAssertions(TActual actual) 
         {
