@@ -4,33 +4,26 @@ using System.Diagnostics;
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public static class ObjectAssertionsExtensions
-    {
-        public static ObjectAssertions<TActual> Must<TActual>(this TActual actual) 
-            => new ObjectAssertions<TActual>(actual); 
-    }
-
-    [DebuggerNonUserCode]
     public class ObjectAssertions<TActual> 
     {
-        protected readonly TActual actual;
-
         internal ObjectAssertions(TActual actual) 
         {
-            this.actual = actual;
+            Actual = actual;
         }
+
+        public TActual Actual { get; }
 
         public ObjectAssertions<TActual> BeNull() 
         {
-            if (actual is object)
-                throw new NullException<object>(actual);
+            if (Actual is object)
+                throw new NullException<object>(Actual);
                 
             return this;
         }
 
         public ObjectAssertions<TActual> NotBeNull() 
         {
-            if (actual is null)
+            if (Actual is null)
                 throw new NotNullException();
 
             return this;
@@ -41,7 +34,7 @@ namespace NetFabric.Assertive
 
         public ObjectAssertions<TActual> Equal<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
         {
-            if (actual is null)
+            if (Actual is null)
             {
                 if (expected is object)
                     throw new NotNullException();
@@ -49,10 +42,10 @@ namespace NetFabric.Assertive
             else
             {
                 if (expected is null)
-                    throw new NullException<object>(actual);
+                    throw new NullException<object>(Actual);
 
-                if (!comparer(actual, expected))
-                    throw new ExpectedAssertionException<object, object>(actual, expected, $"Expected {actual.ToFriendlyString()} to be equal");
+                if (!comparer(Actual, expected))
+                    throw new ExpectedAssertionException<object, object>(Actual, expected, $"Expected {Actual.ToFriendlyString()} to be equal");
             }
                 
             return this;
@@ -75,7 +68,7 @@ namespace NetFabric.Assertive
             if (!typeof(TActualItem).IsAssignableFrom(actualItemType))
                 throw new AssertionException($"Expected {actualType} to be an enumerable of {typeof(TActualItem)} but found an enumerable of {actualItemType}.");
 
-            return new EnumerableObjectAssertions<TActual, TActualItem>(actual, enumerableInfo);
+            return new EnumerableObjectAssertions<TActual, TActualItem>(Actual, enumerableInfo);
         }
     }
 }

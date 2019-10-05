@@ -8,20 +8,20 @@ namespace NetFabric.Assertive
     public class EnumerableObjectAssertions<TActual, TActualItem> 
         : ObjectAssertions<TActual>
     {
-        readonly EnumerableInfo enumerableInfo;
-
         internal EnumerableObjectAssertions(TActual actual, EnumerableInfo enumerableInfo) 
             : base(actual)
         {
-            this.enumerableInfo = enumerableInfo;
+            EnumerableInfo = enumerableInfo;
         }
+
+        public EnumerableInfo EnumerableInfo { get; }
 
         public EnumerableObjectAssertions<TActual, TActualItem> Equal<TExpectedItem>(IEnumerable<TExpectedItem> expected)
             => Equal(expected, (actual, expected) => actual.Equals(expected));
 
         public EnumerableObjectAssertions<TActual, TActualItem> Equal<TExpectedItem>(IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> equalityComparison)
         {
-            if (actual is null)
+            if (Actual is null)
             {
                 if (expected is object)
                     throw new NotNullException();
@@ -29,31 +29,31 @@ namespace NetFabric.Assertive
             else
             {
                 if (expected is null)
-                    throw new NullException<object>(actual);
+                    throw new NullException<object>(Actual);
 
-                if (enumerableInfo.GetEnumerator is null)
+                if (EnumerableInfo.GetEnumerator is null)
                     throw new AssertionException($"Expected {typeof(TActual)} to be an enumerable but it's missing a valid 'GetEnumerator' method.");
-                if (enumerableInfo.Current is null)
-                    throw new AssertionException($"Expected {enumerableInfo.GetEnumerator.ReturnType} to be an enumerator but it's missing a valid 'Current' property.");
-                if (enumerableInfo.MoveNext is null)
-                    throw new AssertionException($"Expected {enumerableInfo.GetEnumerator.ReturnType} to be an enumerator but it's missing a valid 'MoveNext' method.");
+                if (EnumerableInfo.Current is null)
+                    throw new AssertionException($"Expected {EnumerableInfo.GetEnumerator.ReturnType} to be an enumerator but it's missing a valid 'Current' property.");
+                if (EnumerableInfo.MoveNext is null)
+                    throw new AssertionException($"Expected {EnumerableInfo.GetEnumerator.ReturnType} to be an enumerator but it's missing a valid 'MoveNext' method.");
 
 #if !NETSTANDARD2_1
                 // 'Current' may return by-ref but reflection only supports its invocation on netstandard 2.1
-                if (enumerableInfo.Current.PropertyType.IsByRef)
+                if (EnumerableInfo.Current.PropertyType.IsByRef)
                     return this; // what should we do here?????
 #endif
 
-                if (!enumerableInfo.GetEnumerator.DeclaringType.IsInterface)
+                if (!EnumerableInfo.GetEnumerator.DeclaringType.IsInterface)
                 {
-                    var actualItemType = enumerableInfo.Current.PropertyType;
+                    var actualItemType = EnumerableInfo.Current.PropertyType;
                     if (!typeof(TActualItem).IsAssignableFrom(actualItemType))
                         throw new AssertionException($"Expected {typeof(TActual)} to be an enumerable of {typeof(TActualItem)} but found an enumerable of {actualItemType}.");
 
-                    EqualityComparison(new EnumerableWrapper<TActualItem>(actual, enumerableInfo), expected, equalityComparison, enumerableInfo.GetEnumerator.DeclaringType);
+                    EqualityComparison(new EnumerableWrapper<TActualItem>(Actual, EnumerableInfo), expected, equalityComparison, EnumerableInfo.GetEnumerator.DeclaringType);
                 }
 
-                foreach (var @interface in actual.GetType().GetInterfaces())
+                foreach (var @interface in Actual.GetType().GetInterfaces())
                 {
                     if (@interface.IsEnumerable(out var interfaceEnumerableInfo))
                     {
@@ -61,20 +61,20 @@ namespace NetFabric.Assertive
                         if (!typeof(TActualItem).IsAssignableFrom(interfaceItemType))
                             throw new AssertionException($"Expected {typeof(TActual)} to be an enumerable of {typeof(TActualItem)} but found an enumerable of {interfaceItemType}.");
 
-                        var wrapped = new EnumerableWrapper<TActualItem>(actual, interfaceEnumerableInfo);
+                        var wrapped = new EnumerableWrapper<TActualItem>(Actual, interfaceEnumerableInfo);
                         var readOnlyCollectionType = typeof(IReadOnlyCollection<>).MakeGenericType(interfaceItemType);
                         var readOnlyListType = typeof(IReadOnlyList<>).MakeGenericType(interfaceItemType);
 
                         if (@interface == readOnlyCollectionType)
                         {
-                            var actualCount = ((IReadOnlyCollection<TActualItem>)actual).Count;
+                            var actualCount = ((IReadOnlyCollection<TActualItem>)Actual).Count;
                             var expectedCount = wrapped.Count();
                             if (actualCount != expectedCount)
-                                throw new AssertionException($"Expected {actual.ToFriendlyString()} to have count value of {expectedCount} but found {actualCount}.");
+                                throw new AssertionException($"Expected {Actual.ToFriendlyString()} to have count value of {expectedCount} but found {actualCount}.");
                         } 
                         else if (@interface == readOnlyListType)
                         {
-                            EqualityComparison((IReadOnlyList<TActualItem>)actual, expected, equalityComparison);
+                            EqualityComparison((IReadOnlyList<TActualItem>)Actual, expected, equalityComparison);
                         }
                         else
                         {

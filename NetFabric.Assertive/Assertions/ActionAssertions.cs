@@ -6,12 +6,12 @@ namespace NetFabric.Assertive
     [DebuggerNonUserCode]
     public class ActionAssertions<TActual>
     {
-        readonly Action actual;
-
         internal ActionAssertions(Action actual) 
         {
-            this.actual = actual;
+            Actual = actual;
         }
+
+        public Action Actual { get; }
 
         public ExceptionAssertions<TException> ThrowException<TException>() 
             where TException : Exception
@@ -19,7 +19,7 @@ namespace NetFabric.Assertive
             var actualException = (TException)null; 
             try
             {
-                actual.Invoke();
+                Actual.Invoke();
             }
             catch (TException expected)
             {
@@ -42,7 +42,7 @@ namespace NetFabric.Assertive
             var actualException = (TException)null; 
             try
             {
-                actual.Invoke();
+                Actual.Invoke();
             }
             catch (TException expected)
             {

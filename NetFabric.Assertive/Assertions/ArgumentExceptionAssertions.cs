@@ -16,9 +16,9 @@ namespace NetFabric.Assertive
 
         public ArgumentExceptionAssertions<TException> WithParamName(string expected) 
         {
-            if (actual.Message != expected)
-                throw new ExpectedAssertionException<string, string>(actual.ParamName, expected, 
-                    $"Expected parameter name '{expected}' but found '{actual.ParamName}' instead.");
+            if (Actual.Message != expected)
+                throw new ExpectedAssertionException<string, string>(Actual.ParamName, expected, 
+                    $"Expected parameter name '{expected}' but found '{Actual.ParamName}' instead.");
 
             return this;
         }

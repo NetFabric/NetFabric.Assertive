@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace NetFabric.Assertive
 {
-    struct EnumerableInfo
+    public struct EnumerableInfo
     {
         public readonly MethodInfo GetEnumerator;
         public readonly PropertyInfo Current;
