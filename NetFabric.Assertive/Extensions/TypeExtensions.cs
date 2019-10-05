@@ -8,7 +8,7 @@ namespace NetFabric.Assertive
     [DebuggerNonUserCode]
     static class TypeExtensions
     {
-        public static bool  IsEnumerable(this Type type, out EnumerableInfo info)
+        public static bool IsEnumerable(this Type type, out EnumerableInfo info)
         {
             var getEnumerator = type.GetPublicOrExplicitParameterlessMethod("GetEnumerator");
             if (getEnumerator is null)

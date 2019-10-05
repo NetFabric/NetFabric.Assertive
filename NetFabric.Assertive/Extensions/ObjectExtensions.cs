@@ -12,10 +12,12 @@ namespace NetFabric.Assertive
             {
                 null => "<null>",
 
+                Type type => type.ToString(),
+
                 IEnumerable enumerable => enumerable.ToFriendlyString(),
 
                 _ => @object.GetType().IsEnumerable(out var info) ?  
-                    new EnumerableWrapper(@object, info).ToFriendlyString() :
+                    new EnumerableWrapper<object>(@object, info).ToFriendlyString() :
                     @object.ToString(),
             };
      }

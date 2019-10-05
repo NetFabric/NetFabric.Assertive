@@ -29,7 +29,7 @@ namespace NetFabric.Assertive
             else
             {
                 if (expected is null)
-                        throw new NullException<object>(actual);
+                    throw new NullException<object>(actual);
 
                 if (enumerableInfo.GetEnumerator is null)
                     throw new AssertionException($"Expected {typeof(TActual)} to be an enumerable but it's missing a valid 'GetEnumerator' method.");
@@ -45,19 +45,49 @@ namespace NetFabric.Assertive
 #endif
 
                 if (!enumerableInfo.GetEnumerator.DeclaringType.IsInterface)
+                {
+                    var actualItemType = enumerableInfo.Current.PropertyType;
+                    if (!typeof(TActualItem).IsAssignableFrom(actualItemType))
+                        throw new AssertionException($"Expected {typeof(TActual)} to be an enumerable of {typeof(TActualItem)} but found an enumerable of {actualItemType}.");
+
                     EqualityComparison(new EnumerableWrapper<TActualItem>(actual, enumerableInfo), expected, equalityComparison);
+                }
 
                 foreach (var @interface in actual.GetType().GetInterfaces())
                 {
                     if (@interface.IsEnumerable(out var interfaceEnumerableInfo))
-                        EqualityComparison(new EnumerableWrapper<TActualItem>(actual, interfaceEnumerableInfo), expected, equalityComparison);
+                    {
+                        var interfaceItemType = interfaceEnumerableInfo.Current.PropertyType;
+                        if (!typeof(TActualItem).IsAssignableFrom(interfaceItemType))
+                            throw new AssertionException($"Expected {typeof(TActual)} to be an enumerable of {typeof(TActualItem)} but found an enumerable of {interfaceItemType}.");
+
+                        var wrapped = new EnumerableWrapper<TActualItem>(actual, interfaceEnumerableInfo);
+                        var readOnlyCollectionType = typeof(IReadOnlyCollection<>).MakeGenericType(interfaceItemType);
+                        var readOnlyListType = typeof(IReadOnlyList<>).MakeGenericType(interfaceItemType);
+                        
+                        if (@interface == readOnlyCollectionType)
+                        {
+                            var actualCount = ((IReadOnlyCollection<TActualItem>)actual).Count;
+                            var expectedCount = wrapped.Count();
+                            if (actualCount != expectedCount)
+                                throw new AssertionException($"Expected {actual.ToFriendlyString()} to have count value of {expectedCount} but found {actualCount}.");
+                        } 
+                        else if (@interface == readOnlyListType)
+                        {
+                            EqualityComparison((IReadOnlyList<TActualItem>)actual, expected, equalityComparison);
+                        }
+                        else
+                        {
+                            EqualityComparison(wrapped, expected, equalityComparison);
+                        }
+                    }
                 }
             }
 
             return this;
         }
 
-        protected virtual void EqualityComparison<TExpectedItem>(EnumerableWrapper<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> equalityComparison)
+        protected virtual void EqualityComparison<TExpectedItem>(IEnumerable<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> equalityComparison)
         {
             using var actualEnumerator = actual.GetEnumerator();
             using var expectedEnumerator = expected.GetEnumerator();
@@ -91,6 +121,43 @@ namespace NetFabric.Assertive
                             actual, 
                             expected,
                             $"Expected {actual.ToFriendlyString()} to be equal to {expected.ToFriendlyString()} but if differs at index {index} when using {actual.DeclaringType}.GetEnumerator().");
+                }
+            }
+        }
+
+        protected virtual void EqualityComparison<TExpectedItem>(IReadOnlyList<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> equalityComparison)
+        {
+            using var expectedEnumerator = expected.GetEnumerator();
+            checked
+            {
+                for (var index = 0; true; index++)
+                {
+                    var isActualCompleted = index == actual.Count;
+                    var isExpectedCompleted = !expectedEnumerator.MoveNext();
+
+                    if (isActualCompleted && isExpectedCompleted)
+                        return;
+
+                    if (isActualCompleted ^ isExpectedCompleted)
+                    {
+                        if (isActualCompleted)
+                            throw new ExpectedAssertionException<IEnumerable<TActualItem>, IEnumerable<TExpectedItem>>(
+                                actual, 
+                                expected,
+                                $"Expected {actual.ToFriendlyString()} to be equal to {expected.ToFriendlyString()} but it has less items when using the indexer.");
+
+                        if (isExpectedCompleted)
+                            throw new ExpectedAssertionException<IEnumerable<TActualItem>, IEnumerable<TExpectedItem>>(
+                                actual, 
+                                expected,
+                                $"Expected {actual.ToFriendlyString()} to be equal to {expected.ToFriendlyString()} but it has more items when using the indexer.");
+                    }
+
+                    if (!equalityComparison(actual[index], expectedEnumerator.Current))
+                        throw new ExpectedAssertionException<IEnumerable<TActualItem>, IEnumerable<TExpectedItem>>(
+                            actual, 
+                            expected,
+                            $"Expected {actual.ToFriendlyString()} to be equal to {expected.ToFriendlyString()} but if differs at index {index} when using the indexer.");
                 }
             }
         }

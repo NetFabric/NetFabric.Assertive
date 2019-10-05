@@ -16,14 +16,5 @@ namespace NetFabric.Assertive
 
         public static EnumerableAssertions<IEnumerable> Must(this IEnumerable actual) 
             => new EnumerableAssertions<IEnumerable>(actual); 
-
-        public static EnumerableOfTypeAssertions<IEnumerable<T>, T> Must<T>(this IEnumerable<T> actual) 
-            => new EnumerableOfTypeAssertions<IEnumerable<T>, T>(actual); 
-
-        public static ReadOnlyCollectionAssertions<IReadOnlyCollection<T>, T> Must<T>(this IReadOnlyCollection<T> actual) 
-            => new ReadOnlyCollectionAssertions<IReadOnlyCollection<T>, T>(actual); 
-
-        public static ReadOnlyListAssertions<IReadOnlyList<T>, T> Must<T>(this IReadOnlyList<T> actual) 
-            => new ReadOnlyListAssertions<IReadOnlyList<T>, T>(actual); 
     }
 }
