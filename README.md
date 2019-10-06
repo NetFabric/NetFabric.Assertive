@@ -1,6 +1,6 @@
 # NetFabric.Assertive
 
-This is a minimal assertions library that performs full coverage on any enumerable.
+This is a minimal assertions library that performs full coverage on any enumerable type.
 
 ## Syntax
 
@@ -13,7 +13,17 @@ source.Must()
 
 ## Enumerables
 
-A collection to be enumerable by a `foreach` loop does not have to implement any interface. It just needs to have a `GetEnumerator()` method that returns a type that has a property `Current` and a method `MoveNext()`that returns `bool`.
+The combination of the methods `BeEnumerable<>()` and `BeEqualTo<>()` allow the test of any type of enumerable in a single assertion:
+
+- `BeEnumerable<TActualItem>()` - asserts that the type `TActual`, passed in to `Must<TActual>()`, is an enumerable that returns a stream of items of type `TActualItem`.
+
+- `BeEqualTo<TExpectedItem>(IEnumerable<TExpectedItem> expected)` - asserts that the actual enumerable object contains the same items and in the same order as `expected`. It tests all the enumeration forms implemented by the type `TActual`, passed in to `Must<TActual>()`.
+
+It can handle any of the following enumerable implementations:
+
+### No enumerable interfaces
+
+A collection, to be enumerable by a `foreach` loop, does not have to implement any interface. It just needs to have a `GetEnumerator()` method that returns a type that has a property `Current` with a getter and a parameterless method `MoveNext()`that returns `bool`.
 
 Here's the [minimal implementation of an enumerable](https://sharplab.io/#v2:EYLgtghgzgLgpgJwDQxAgrgOwD4AEBMAjALABQZuAzAAQHUCiYADjAJ72bpiITAA2cADwAVAHxkA3mWozaNRi3aduCXgJGjqAcTgwOXHjAD2CABQBKagF5NMABYBLKAG4y02VWrDqAYXQIEOEwYa00AEzgAMwh0PhhXclJZOWpgIyM+agBZIwA3OAA5OAAPGAtQ6mi+KDgEgF83UgIaSXcZAnxqNuopJOTZSJM4CABjO1NciARqSb50OGoHTGpMOAB3BmY2fRU1ISWYUQtzbuSASFxCAE4JiDm4cwTkhtI6oA===):
 
@@ -62,7 +72,9 @@ public readonly struct MyRange
 
 _NOTE: The advantage here is performance. The enumerator is a value type so the method calls are not virtual. The use of interfaces would box the enumerator and turn method calls into virtual. The enumerator is not disposable, so the `foreach` does not generate a `try`/`finally` clause, making it inlinable. The example also uses the C# 8 'struct read-only members' feature to avoid defensive copies._
 
-Collections can have multiple forms of enumeration. For example, a collection that implements `IReadOnlyList<T>` can be enumerated using the indexer, using `IEnumerable<T>.GetEnumerator()`, using `IEnumerable.GetEnumerator()` and using a public `GetEnumerator()` that is not an override of any of these interfaces. There's no guarantee that they all are correctly implemented. The `Count` property can also return the wrong value.
+### Enumerable interfaces
+
+Collections can have multiple forms of enumeration. For example; a collection that implements `IReadOnlyList<T>` can be enumerated using the indexer, using `IEnumerable<T>.GetEnumerator()`, using `IEnumerable.GetEnumerator()` and using a public `GetEnumerator()` that is not an override of any of these interfaces. There's no guarantee that they all are correctly implemented. The `Count` property can also return the wrong value.
 
 Here's an example of [a collection with multiple possible enumerations](https://sharplab.io/#v2:EYLgtghgzgLgpgJwD4AEBMBGAsAKBQBgAIUMA6AYQHsAbauAYxgEtKA7KAblwOIwBYuObgGZCCOBAAmbagE9CsBAFdGhALKyAShFYBzOIRCEAkpomSA8qzkAZJrAA8TVjAB8uAN6FvhXD+KiGtp6cAAUzjCE9JRKLgCUfj4eif7eVLGRALxRMS6C/gC+Kb44/iii4lIy8hGE6S6EXvowHIRFpT7F5YS1MAAW9gDatc6ScAAeALrFyR3eAJDNxf6zqWs9AGaE4axj44QOhERISD27E4Su2fUwCXPrawAqfQiUAO7G5+MWSjAWG8F9ABRcb0OAAB2YbFCcUEy3WKAA7Gc9nD7g8UHxCM9Xh8vj8/gCdMDQRCoawYYRMq5CP1cYRWHA3iZ8b9/oC4CCwZCWBTYfDvO1CsUuhVzNVCEDWEowIgIDBKAhCABxOAwKUyuUKhCU6kMpmS6WyhDyxWhG78+6VaTWeTGDXG00IJwuGkkYQutykVXqo1as1xKk0xnMgAi9nBlCgEGAdAd/p1FvyPmtEvtfpN2t4wm9avjmYDQf1YYjUZjcYzTvNuVuye8ooUMGUqnzTpmArE4ttZ0i0QyddStXoSgQ4jyHY73Vb2p2vZrdweqwePn69lIfYa2Q3LQ7/mHo7gm8IAFoMAPhejOpfvN1U93auQR2OsjT98/z1eMaJgJQaOpKAAbnAAByEwwLqNIANSQW+h6RIc24DkKn4+OghDhlAkbRrGnKVlmRjppqBbOhE7j3Euax3nIPY5P2HZDk+cEfvW14BOhpbYRWRFVkO84dhRy6rlA641lStHjqxe6MUep7MW0E6sd0D7SS+UQqXJlDAAAVgwkSEY62oUCpRawRJDyTt+v7UP+QGgeM4GBnq0GmfB4k7qxFnEFiZhQGqEFqQeMlngpX5eexmFRmEgYeMhgq4O03BoKInhdGgaAlCsHYbIqEj0H0oQARASqFdQSgGM4xbqFoxJhBg+BxAu6zzCQACcBUQKVcCWheBRAA):
 
@@ -136,7 +148,9 @@ _NOTE: The indexer uses a local function so that the accessor does not throw an 
 
 This example has two enumerators so that it can take advantage of the performance features described above and also; be casted to an interface and take advantage of extension methods for collections (like LINQ). It can also be enumerated using the indexer.
 
-New interfaces can add even more possible enumerations. Here's an interface that restricts the enumerator to a value type and adds a `GetEnumerator()` that explicitly returns the enumerator type. This allows the use of an enumerable interface without boxing the enumerator:
+### Custom enumerable interfaces
+
+Custom enumerable interfaces can add even more possible enumerations. Here's an interface that restricts the enumerator to a value type and adds a `GetEnumerator()` that explicitly returns the enumerator type. This allows the use of an enumerable interface without boxing the enumerator:
 
 ```csharp
 public interface IValueEnumerable<T, TEnumerator>
@@ -204,8 +218,58 @@ public readonly struct MyRange
 }
 ```
 
-The combination of the methods `BeEnumerable<>()` and `BeEqualTo<>()` supplied by this library, allow the test of all these conditions in one single assertion:
+### Explicit interface implementations
 
-- `BeEnumerable<TActualItem>()` - asserts that the actual object is an enumerable that contains items of type `TActualItem`.
+Enumerables usually implement interfaces by overriding them using public implementations, or using a mix but, an enumerable can be implemented [using only explicit interface implementations](https://sharplab.io/#v2:EYLgdgpgLgZgHgGiiATgVzAHwAICYCMAsAFDYAMABNvgHQDCA9gDZMQDGUAlg2AM4DcJclXwAWQcSEBmKrgoBZAJ4AlAIZgA5hAogRUgDycwUAHwkA3hSsUS1iigiqAJjyaKKRqBTYMMUCXa21tgySmqaEAAUnt6+xgCUQVbmSXYUUAAWnLw0Pn4UALyxfgHWAL4kqQCSAKJgaAC2ECiqUAwohsYmep2mNADi0HWNza3tkfGF3ZAA7hTDTS1tKJF5CaVWtfWLYyh6A0Pbo8sTUxSz80dL42tQ8Rs2xHZ4lyPXe7pbb7u9Zk/WKX+aXsjhcYDcHmMxWMDzsMTYaBQDhhqUCQLSIVeOxO8Lid1RAIJwMy2VyeMK0P8RLSCKREChRQAtPhYeVqdSYl9se1fvREcivAVurSBayrAxgAArdheLnHdp8ukM4X8+lU9Fo4FWYAMZgUOXvGjyBgANwgADkIHAoKchRQANT2kVqij6Slix5aqiifULeUoGjKCC8aC2lVKwUUZke6nYH1VAAi2QADgxeKpgKwaEneKmQ6dzBV0UWi0JcDILKk8HJUoCvTB2o42BlIibVHs20w0NojOcIHMwuotJF8GR4okNdYAJDUACcrdUXYg91SJaAA=):
 
-- `BeEqualTo<TExpectedItem>(IEnumerable<TExpectedItem> expected)` - asserts that the actual enumerable object contains the same items and in the same order as `expected`. It tests all the enumeration forms implemented by type `TActual` passed in to `Must<TActual>()`.
+```csharp
+public class MyRange : IEnumerable<int>
+{    
+    readonly int count;
+    
+    public MyRange(int count)
+    {
+        this.count = count;
+    }
+
+    IEnumerator<int> IEnumerable<int>.GetEnumerator() => new Enumerator(count);
+    IEnumerator IEnumerable.GetEnumerator() => new Enumerator(count);
+    
+    class Enumerator : IEnumerator<int>
+    {
+        readonly int count;
+        int current;
+        
+        public Enumerator(int count)
+        {
+            this.count = count;
+            current = -1;
+        }
+        
+        int IEnumerator<int>.Current => current;
+        object IEnumerator.Current => current;
+        
+        bool IEnumerator.MoveNext() => ++current < count;
+        
+        void IEnumerator.Reset() => current = -1;
+        
+        void IDisposable.Dispose() {}
+    }
+}
+```
+
+## References
+
+- [Enumeration in .NET](https://blog.usejournal.com/enumeration-in-net-d5674921512e) by Antão Almada
+- [Performance of value-type vs reference-type enumerators](https://medium.com/@antao.almada/performance-of-value-type-vs-reference-type-enumerators-820ab1acc291) by Antão Almada
+
+## Credits
+
+The following open-source projects are used to build and test this project:
+
+- [.NET](https://github.com/dotnet)
+- [xUnit.net](https://xunit.net/)
+
+## License
+
+This project is licensed under the MIT license. See the [LICENSE](LICENSE.txt) file for more info.
