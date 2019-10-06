@@ -16,10 +16,10 @@ namespace NetFabric.Assertive
         public TActual Actual { get; }
         public EnumerableInfo EnumerableInfo { get; }
 
-        public EnumerableObjectAssertions<TActual, TActualItem> Equal<TExpectedItem>(IEnumerable<TExpectedItem> expected)
-            => Equal(expected, (actual, expected) => actual.Equals(expected));
+        public EnumerableObjectAssertions<TActual, TActualItem> BeEqualTo<TExpectedItem>(IEnumerable<TExpectedItem> expected)
+            => BeEqualTo(expected, (actual, expected) => actual.Equals(expected));
 
-        public EnumerableObjectAssertions<TActual, TActualItem> Equal<TExpectedItem>(IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> equalityComparison)
+        public EnumerableObjectAssertions<TActual, TActualItem> BeEqualTo<TExpectedItem>(IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> equalityComparison)
         {
             if (Actual is null)
             {

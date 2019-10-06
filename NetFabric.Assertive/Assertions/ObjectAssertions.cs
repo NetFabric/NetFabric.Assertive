@@ -29,10 +29,10 @@ namespace NetFabric.Assertive
             return this;
         }
 
-        public ObjectAssertions<TActual> Equal(TActual expected)
-            => Equal(expected, (actual, expected) => actual.Equals(expected));
+        public ObjectAssertions<TActual> BeEqualTo(TActual expected)
+            => BeEqualTo(expected, (actual, expected) => actual.Equals(expected));
 
-        public ObjectAssertions<TActual> Equal<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
+        public ObjectAssertions<TActual> BeEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
         {
             if (Actual is null)
             {
