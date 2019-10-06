@@ -31,12 +31,12 @@ namespace NetFabric.Assertive
             if (Actual is null)
             {
                 if (expected is object)
-                    throw new NotNullException();
+                    throw new NotNullException<object>(Actual);
             }
             else
             {
                 if (expected is null)
-                    throw new NullException<object>(Actual);
+                    throw new NullException();
 
                 if (EnumerableInfo.GetEnumerator is null)
                     throw new AssertionException($"Expected {typeof(TActual)} to be an enumerable but it's missing a valid 'GetEnumerator' method.");

@@ -2,10 +2,10 @@ using System;
 
 namespace NetFabric.Assertive
 {
-    public class NotNullException : AssertionException
+    public class NotNullException<TActual> : ActualAssertionException<TActual>
     {
-        public NotNullException()
-            : base($"Expected not to be <null> but found <null>.")
+        public NotNullException(TActual actual)
+            : base(actual, $"Expected to be <null> but found {actual.ToFriendlyString()}.")
         {
         }
     }

@@ -16,15 +16,15 @@ namespace NetFabric.Assertive
         public ObjectAssertions<TActual> BeNull() 
         {
             if (Actual is object)
-                throw new NullException<object>(Actual);
+                throw new NotNullException<object>(Actual);
                 
             return this;
         }
 
-        public ObjectAssertions<TActual> NotBeNull() 
+        public ObjectAssertions<TActual> BeNotNull() 
         {
             if (Actual is null)
-                throw new NotNullException();
+                throw new NullException();
 
             return this;
         }
@@ -37,12 +37,12 @@ namespace NetFabric.Assertive
             if (Actual is null)
             {
                 if (expected is object)
-                    throw new NotNullException();
+                    throw new NotNullException<object>(Actual);
             }
             else
             {
                 if (expected is null)
-                    throw new NullException<object>(Actual);
+                    throw new NullException();
 
                 if (!comparer(Actual, expected))
                     throw new ExpectedAssertionException<object, object>(Actual, expected, $"Expected {Actual.ToFriendlyString()} to be equal");
