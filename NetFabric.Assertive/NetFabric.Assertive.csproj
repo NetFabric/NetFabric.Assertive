@@ -1,7 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
+    <PackageId>NetFabric.Assertive</PackageId>
+    <Title>NetFabric.Assertive</Title>
+    <Description>A fluent assertions library that performs full coverage on any enumerable type.</Description>
+    <Version>1.0.0-beta1</Version>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageTags>netfabric, enumeration, extensions, unittest, assertion</PackageTags>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <DefineConstants>CONTRACTS_FULL</DefineConstants>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
