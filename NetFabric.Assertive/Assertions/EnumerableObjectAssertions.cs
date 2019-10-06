@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace NetFabric.Assertive
 {
@@ -15,6 +16,12 @@ namespace NetFabric.Assertive
 
         public TActual Actual { get; }
         public EnumerableInfo EnumerableInfo { get; }
+
+        public EnumerableObjectAssertions<TActual, TActualItem> BeEmpty()
+            => BeEqualTo(Enumerable.Empty<TActualItem>());
+
+        public EnumerableObjectAssertions<TActual, TActualItem> BeEqualTo(IEnumerable<TActualItem> expected)
+            => BeEqualTo<TActualItem>(expected);
 
         public EnumerableObjectAssertions<TActual, TActualItem> BeEqualTo<TExpectedItem>(IEnumerable<TExpectedItem> expected)
             => BeEqualTo(expected, (actual, expected) => actual.Equals(expected));
