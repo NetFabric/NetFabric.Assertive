@@ -4,49 +4,23 @@ using System.Diagnostics;
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public class ObjectAssertions<TActual> 
+    public class ValueTypeAssertions<TActual> 
+        where TActual : struct
     {
-        internal ObjectAssertions(TActual actual) 
+        internal ValueTypeAssertions(TActual actual) 
         {
             Actual = actual;
         }
 
         public TActual Actual { get; }
 
-        public ObjectAssertions<TActual> BeNull() 
-        {
-            if (Actual is object)
-                throw new NotNullException<object>(Actual);
-                
-            return this;
-        }
-
-        public ObjectAssertions<TActual> BeNotNull() 
-        {
-            if (Actual is null)
-                throw new NullException();
-
-            return this;
-        }
-
-        public ObjectAssertions<TActual> BeEqualTo(TActual expected)
+        public ValueTypeAssertions<TActual> BeEqualTo(TActual expected)
             => BeEqualTo(expected, (actual, expected) => actual.Equals(expected));
 
-        public ObjectAssertions<TActual> BeEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
+        public ValueTypeAssertions<TActual> BeEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
         {
-            if (Actual is null)
-            {
-                if (expected is object)
-                    throw new NotNullException<object>(Actual);
-            }
-            else
-            {
-                if (expected is null)
-                    throw new NullException();
-
-                if (!comparer(Actual, expected))
-                    throw new ExpectedAssertionException<object, object>(Actual, expected, $"Expected {Actual.ToFriendlyString()} to be equal");
-            }
+            if (!comparer(Actual, expected))
+                throw new EqualToAssertionException<TActual, TExpected>(Actual, expected);
                 
             return this;
         }
