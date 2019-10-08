@@ -38,8 +38,16 @@ namespace NetFabric.Assertive
                 throw new ActualAssertionException<TActual>(actual, $"Expected '{enumerableInfo.GetEnumerator.ReturnType}' to be an enumerator but it's missing a valid 'MoveNext' method.");
 
             var actualItemType = enumerableInfo.Current.PropertyType;
-            if (!typeof(TActualItem).IsAssignableFrom(actualItemType))
-                throw new ActualAssertionException<TActual>(actual, $"Expected '{actualType}' to be an enumerable of '{typeof(TActualItem)}' but found an enumerable of '{actualItemType}'.");
+            if (actualItemType.IsByRef)
+            {
+                if (!typeof(TActualItem).MakeByRefType().IsAssignableFrom(actualItemType))
+                    throw new ActualAssertionException<TActual>(actual, $"Expected '{actualType}' to be an enumerable of '{typeof(TActualItem)}' but found an enumerable of '{actualItemType}'.");
+            }
+            else
+            {
+                if (!typeof(TActualItem).IsAssignableFrom(actualItemType))
+                    throw new ActualAssertionException<TActual>(actual, $"Expected '{actualType}' to be an enumerable of '{typeof(TActualItem)}' but found an enumerable of '{actualItemType}'.");
+            }
         }
 
         public static EnumerableInfo GetEnumerableInfo(this Type type)

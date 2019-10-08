@@ -31,11 +31,11 @@ namespace NetFabric.Assertive.UnitTests
         public static TheoryData<RangeNonGenericEnumerable, int[], string> RangeNonGenericEnumerable_NotEqualData =>
             new TheoryData<RangeNonGenericEnumerable, int[], string> 
             {
-                { new RangeNonGenericEnumerable(0, 0), new int[] { 0 }, "Expected '' to be equal to '0' but it has less items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
-                { new RangeNonGenericEnumerable(1, 0), new int[] { }, "Expected '0' to be equal to '' but it has more items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
+                { new RangeNonGenericEnumerable(0, 0), new int[] { 0 }, "Expected '0' but found '' with less items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
+                { new RangeNonGenericEnumerable(1, 0), new int[] { }, "Expected '' but found '0' with more items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
 
-                { new RangeNonGenericEnumerable(1, 0), new int[] { 0 }, "Expected '' to be equal to '0' but it has less items when using 'System.Collections.IEnumerable.GetEnumerator()'." },
-                { new RangeNonGenericEnumerable(0, 1), new int[] { }, "Expected '0' to be equal to '' but it has more items when using 'System.Collections.IEnumerable.GetEnumerator()'." },
+                { new RangeNonGenericEnumerable(1, 0), new int[] { 0 }, "Expected '0' but found '' with less items when using 'System.Collections.IEnumerable.GetEnumerator()'." },
+                { new RangeNonGenericEnumerable(0, 1), new int[] { }, "Expected '' but found '0' with more items when using 'System.Collections.IEnumerable.GetEnumerator()'." },
             };
 
         [Theory]
@@ -49,6 +49,8 @@ namespace NetFabric.Assertive.UnitTests
 
             // Assert
             var exception = Assert.Throws<EqualToAssertionException<RangeNonGenericEnumerable, IEnumerable<int>>>(action);
+            Assert.Same(actual, exception.Actual);
+            Assert.Same(expected, exception.Expected);
             Assert.Equal(message, exception.Message);
         }
     }

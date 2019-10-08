@@ -31,7 +31,7 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
             var exception = Assert.Throws<EqualToAssertionException<object, object>>(action);
             Assert.Equal(actual, exception.Actual);
-            Assert.Equal(null, exception.Expected);
+            Assert.Null(exception.Expected);
             Assert.Equal("Expected '<null>' but found 'System.Object'.", exception.Message);
         }
 
@@ -47,6 +47,7 @@ namespace NetFabric.Assertive.UnitTests
 
             // Assert
             var exception = Assert.Throws<NullException<object>>(action);
+            Assert.Same(actual, exception.Actual);
             Assert.Equal("Expected not '<null>' but found '<null>'.", exception.Message);
         }
 
@@ -177,6 +178,18 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
         }
 
+        [Fact]
+        public void BeEnumerable_With_ByRefCurrent_Should_NotThrow()
+        {
+            // Arrange
+            var actual = new ByRefEnumerable<int>(new int[] { });
+
+            // Act
+            actual.Must().BeEnumerable<int>();
+
+            // Assert
+        }
+
         class MissingGetEnumeratorEnumerable<T>
         {
         }
@@ -213,8 +226,36 @@ namespace NetFabric.Assertive.UnitTests
             object IEnumerator.Current => default;
 
             bool IEnumerator.MoveNext() => false;
-            void IEnumerator.Reset() {}
+            void IEnumerator.Reset() => throw new NotSupportedException();
             void IDisposable.Dispose() {}
+        }
+
+        class ByRefEnumerable<T>
+        {
+            readonly T[] source;
+
+            public ByRefEnumerable(T[] source)
+            {
+                this.source = source;
+            }
+
+            public Enumerator GetEnumerator() => new Enumerator(this);
+
+            public struct Enumerator
+            {
+                readonly T[] source;
+                int current;
+
+                internal Enumerator(ByRefEnumerable<T> enumerable)
+                {
+                    source = enumerable.source;
+                    current = -1;
+                }
+
+                public readonly ref readonly T Current => ref source[current];
+
+                public bool MoveNext() => ++current < source.Length; 
+            }
         }
     }
 }

@@ -7,7 +7,7 @@
     <Description>A fluent assertions library that performs full coverage on any enumerable type.</Description>
     <Version>1.0.0-beta1</Version>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageTags>netfabric, enumeration, extensions, unittest, assertion</PackageTags>
+    <PackageTags>netfabric, enumeration, test, testing, unittest, assertion, TDD, fluent, netcore, netstandard</PackageTags>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <DefineConstants>CONTRACTS_FULL</DefineConstants>
     <LangVersion>latest</LangVersion>

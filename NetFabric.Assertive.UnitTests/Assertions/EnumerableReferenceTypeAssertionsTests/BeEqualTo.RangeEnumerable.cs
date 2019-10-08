@@ -31,8 +31,9 @@ namespace NetFabric.Assertive.UnitTests
         public static TheoryData<RangeEnumerable, int[], string> RangeEnumerable_NotEqualData =>
             new TheoryData<RangeEnumerable, int[], string> 
             {
-                { new RangeEnumerable(0), new int[] { 0 }, "Expected '' to be equal to '0' but it has less items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
-                { new RangeEnumerable(1), new int[] { }, "Expected '0' to be equal to '' but it has more items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
+                { new RangeEnumerable(0), new int[] { 0 }, "Expected '0' but found '' with less items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
+                { new RangeEnumerable(1), new int[] { }, "Expected '' but found '0' with more items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
+                { new RangeEnumerable(3), new int[] { 0, 5, 2 }, "Expected '0, 5, 2' but found '0, 1, 2' that differs at index 1 when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
             };
 
         [Theory]
@@ -46,6 +47,31 @@ namespace NetFabric.Assertive.UnitTests
 
             // Assert
             var exception = Assert.Throws<EqualToAssertionException<RangeEnumerable, IEnumerable<int>>>(action);
+            Assert.Same(actual, exception.Actual);
+            Assert.Same(expected, exception.Expected);
+            Assert.Equal(message, exception.Message);
+        }
+
+        public static TheoryData<RangeEnumerable, int[], string> RangeEnumerable_NotEqualNullData =>
+            new TheoryData<RangeEnumerable, int[], string>
+            {
+                { null, new int[] { }, "Expected '' but found '<null>'." },
+                { new RangeEnumerable(0), null, "Expected '<null>' but found ''." },
+            };
+
+        [Theory]
+        [MemberData(nameof(RangeEnumerable_NotEqualNullData))]
+        public void RangeEnumerable_BeEqualTo_With_NotEqual_Null_Should_Throw(RangeEnumerable actual, int[] expected, string message)
+        {
+            // Arrange
+
+            // Act
+            void action() => actual.Must().BeEnumerable<int>().BeEqualTo(expected);
+
+            // Assert
+            var exception = Assert.Throws<EqualToAssertionException<RangeEnumerable, IEnumerable<int>>>(action);
+            Assert.Equal(actual, exception.Actual);
+            Assert.Equal(expected, exception.Expected);
             Assert.Equal(message, exception.Message);
         }
     }

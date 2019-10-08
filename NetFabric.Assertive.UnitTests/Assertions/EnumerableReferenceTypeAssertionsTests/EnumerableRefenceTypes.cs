@@ -20,13 +20,13 @@ namespace NetFabric.Assertive.UnitTests
             readonly int count;
             int current;
 
-            public Enumerator(int count)
+            internal Enumerator(int count)
             {
                 this.count = count;
                 current = -1;
             }
 
-            public int Current => current;
+            public readonly int Current => current;
 
             public bool MoveNext() => ++current < count;
         }
@@ -49,7 +49,7 @@ namespace NetFabric.Assertive.UnitTests
             readonly int count;
             int current;
 
-            public Enumerator(int count)
+            internal Enumerator(int count)
             {
                 this.count = count;
                 current = -1;
@@ -82,7 +82,7 @@ namespace NetFabric.Assertive.UnitTests
             readonly int count;
             int current;
 
-            public Enumerator(int count)
+            internal Enumerator(int count)
             {
                 this.count = count;
                 current = -1;

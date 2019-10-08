@@ -17,8 +17,7 @@ namespace NetFabric.Assertive
         public object Actual { get; }
         public Type DeclaringType => info.GetEnumerator.DeclaringType;
 
-        public Enumerator GetEnumerator() => new Enumerator(this);
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => new Enumerator(this);
+        public IEnumerator<T> GetEnumerator() => new Enumerator(this);
         IEnumerator IEnumerable.GetEnumerator() => new Enumerator(this);
 
         public sealed class Enumerator : IEnumerator<T>

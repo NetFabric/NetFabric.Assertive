@@ -264,7 +264,7 @@ When a collection is enumerated more than once, using for example two `forech` l
 
 When a collection is checked for empty using LINQ's `Any()` and later is projected using `Select()`, it is expected the projection is performed on all items.
 
-For this to happen, the enumerators returned by `GetEnumerator()` have to independent of each other. This is mistake that can happen, for example, when using `yield return` to generate the enumerator instead of the enumerable.
+For this to happen, all enumerators returned by `GetEnumerator()` must not share state.
 
 ## References
 
