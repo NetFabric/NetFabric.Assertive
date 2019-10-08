@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net461;netstandard2.0;netstandard2.1</TargetFrameworks>
     <PackageId>NetFabric.Assertive</PackageId>
     <Title>NetFabric.Assertive</Title>
     <Description>A fluent assertions library that performs full coverage on any enumerable type.</Description>

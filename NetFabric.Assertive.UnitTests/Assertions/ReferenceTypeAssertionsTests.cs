@@ -44,7 +44,7 @@ namespace NetFabric.Assertive.UnitTests
             void action() => actual.Must().BeNotNull();
 
             // Assert
-            var exception = Assert.Throws<NullException>(action);
+            var exception = Assert.Throws<NullException<object>>(action);
             Assert.Equal(exception.Message, "Expected not <null> but found <null>.");
         }
 

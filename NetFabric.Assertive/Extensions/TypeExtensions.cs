@@ -25,6 +25,22 @@ namespace NetFabric.Assertive
             return true;
         }
 
+        public static void AssertIsEnumerable<TItem>(this Type type, out EnumerableInfo enumerableInfo)
+        {
+            enumerableInfo = type.GetEnumerableInfo();
+
+            if (enumerableInfo.GetEnumerator is null)
+                throw new AssertionException($"Expected {type} to be an enumerable but it's missing a valid 'GetEnumerator' method.");
+            if (enumerableInfo.Current is null)
+                throw new AssertionException($"Expected {enumerableInfo.GetEnumerator.ReturnType} to be an enumerator but it's missing a valid 'Current' property.");
+            if (enumerableInfo.MoveNext is null)
+                throw new AssertionException($"Expected {enumerableInfo.GetEnumerator.ReturnType} to be an enumerator but it's missing a valid 'MoveNext' method.");
+
+            var itemType = enumerableInfo.Current.PropertyType;
+            if (!type.IsAssignableFrom(itemType))
+                throw new AssertionException($"Expected {type} to be an enumerable of {typeof(TItem)} but found an enumerable of {itemType}.");
+        }
+
         public static EnumerableInfo GetEnumerableInfo(this Type type)
         {
             var getEnumerator = type.GetPublicOrExplicitParameterlessMethod("GetEnumerator");
