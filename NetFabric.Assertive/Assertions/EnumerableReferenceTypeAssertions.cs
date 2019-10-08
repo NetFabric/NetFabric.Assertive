@@ -40,7 +40,7 @@ namespace NetFabric.Assertive
                     throw new NullException<TActual>();
             }
 
-            EqualityComparer.AssertEquality<TActual, TActualItem, TExpectedItem>(Actual, EnumerableInfo, expected, equalityComparison);
+            EqualityComparer.AssertEquality(Actual, EnumerableInfo, expected, equalityComparison);
 
             return this;
         }

@@ -32,7 +32,7 @@ namespace NetFabric.Assertive
             if (expected is null)
                 throw new Exception($"{typeof(TActual)} is a value type so it can't be expected to be <null>.");
 
-            EqualityComparer.AssertEquality<TActual, TActualItem, TExpectedItem>(Actual, EnumerableInfo, expected, equalityComparison);
+            EqualityComparer.AssertEquality(Actual, EnumerableInfo, expected, equalityComparison);
 
             return this;
         }
