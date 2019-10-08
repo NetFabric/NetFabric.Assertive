@@ -6,7 +6,7 @@ namespace NetFabric.Assertive.UnitTests
     public class ValueTypeAssertionsTests
     {
         [Theory]
-       [InlineData(0)]
+        [InlineData(0)]
         public void BeEqualTo_With_Equal_Should_NotThrow(int value)
         {
             // Arrange

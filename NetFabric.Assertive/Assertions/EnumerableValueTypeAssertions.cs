@@ -30,7 +30,7 @@ namespace NetFabric.Assertive
         public EnumerableValueTypeAssertions<TActual, TActualItem> BeEqualTo<TExpectedItem>(IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> equalityComparison)
         {
             if (expected is null)
-                throw new Exception($"{typeof(TActual)} is a value type so it can't be expected to be <null>.");
+                throw new ArgumentNullException(nameof(expected), $"{typeof(TActual)} is a value type so it can't be expected to be <null>.");
 
             EqualityComparer.AssertEquality(Actual, EnumerableInfo, expected, equalityComparison);
 

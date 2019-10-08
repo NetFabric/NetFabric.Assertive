@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace NetFabric.Assertive
@@ -14,7 +15,12 @@ namespace NetFabric.Assertive
         }
 
         public ValueTypeAssertions<TActual> BeEqualTo(TActual expected)
-            => BeEqualTo(expected, (actual, expected) => actual.Equals(expected));
+        {
+            if (!EqualityComparer<TActual>.Default.Equals(Actual, expected))
+                throw new EqualToAssertionException<TActual, TActual>(Actual, expected);
+                
+            return this;
+        }
 
         public ValueTypeAssertions<TActual> BeEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
         {
