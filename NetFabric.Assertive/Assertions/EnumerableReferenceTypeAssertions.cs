@@ -7,16 +7,13 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class EnumerableReferenceTypeAssertions<TActual, TActualItem> 
+        : EnumerableAssertionsBase<TActual>
         where TActual : class
     {
         internal EnumerableReferenceTypeAssertions(TActual actual, EnumerableInfo enumerableInfo) 
+            : base(actual, enumerableInfo)
         {
-            Actual = actual;
-            EnumerableInfo = enumerableInfo;
         }
-
-        public TActual Actual { get; }
-        public EnumerableInfo EnumerableInfo { get; }
 
         public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEmpty()
             => BeEqualTo(Enumerable.Empty<TActualItem>());
@@ -37,10 +34,10 @@ namespace NetFabric.Assertive
             else
             {
                 if (expected is null)
-                    throw new NullException<TActual>();
-            }
+                    throw new EqualToAssertionException<TActual, IEnumerable<TExpectedItem>>(Actual, expected);
 
-            EqualityComparer.AssertEquality(Actual, EnumerableInfo, expected, equalityComparison);
+                EqualityComparer.AssertEquality(Actual, EnumerableInfo, expected, equalityComparison);
+            }
 
             return this;
         }

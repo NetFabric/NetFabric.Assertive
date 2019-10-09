@@ -4,9 +4,9 @@ using System.Diagnostics;
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public class CommonAssertions<TActual> 
+    public class AssertionsBase<TActual> 
     {
-        internal CommonAssertions(TActual actual) 
+        internal AssertionsBase(TActual actual) 
         {
             Actual = actual;
         }

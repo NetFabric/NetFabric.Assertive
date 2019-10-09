@@ -6,7 +6,7 @@ namespace NetFabric.Assertive
         where TActual : class
     {
         public NullException()
-            : base(null, $"Expected not <null> but found <null>.")
+            : base(null, $"Expected not '<null>' but found '<null>'.")
         {
         }
     }

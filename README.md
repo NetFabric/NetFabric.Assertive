@@ -97,7 +97,7 @@ public readonly struct MyRange : IReadOnlyList<int>
 
             return index;
 
-            void ThrowIndexOutOfRangeException() => throw new IndexOutOfRangeException();
+            static void ThrowIndexOutOfRangeException() => throw new IndexOutOfRangeException();
         }
     }
     

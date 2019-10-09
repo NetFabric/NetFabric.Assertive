@@ -6,7 +6,7 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class ValueTypeAssertions<TActual> 
-        : CommonAssertions<TActual>
+        : AssertionsBase<TActual>
         where TActual : struct
     {
         internal ValueTypeAssertions(TActual actual) 
@@ -32,7 +32,7 @@ namespace NetFabric.Assertive
 
         public EnumerableValueTypeAssertions<TActual, TActualItem> BeEnumerable<TActualItem>()
         {
-            typeof(TActual).AssertIsEnumerable<TActualItem>(out var enumerableInfo);
+            TypeExtensions.AssertIsEnumerable<TActual, TActualItem>(Actual, out var enumerableInfo);
 
             return new EnumerableValueTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
         }

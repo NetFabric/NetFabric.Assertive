@@ -27,7 +27,7 @@ namespace NetFabric.Assertive
     {
 
         [Pure]
-        public static ActionAssertions<Action> Must(this Action actual) 
-            => new ActionAssertions<Action>(actual); 
+        public static ActionAssertions Must(this Action actual) 
+            => new ActionAssertions(actual); 
     }
 }

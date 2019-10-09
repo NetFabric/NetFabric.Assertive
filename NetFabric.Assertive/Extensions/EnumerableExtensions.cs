@@ -29,7 +29,7 @@ namespace NetFabric.Assertive
 
         public static string ToFriendlyString(this IEnumerable enumerable)
         {
-            var builder = new StringBuilder('\'');
+            var builder = new StringBuilder();
             var enumerator = enumerable.GetEnumerator();
             var first = true;
             var separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator;
@@ -43,7 +43,6 @@ namespace NetFabric.Assertive
                 builder.Append(enumerator.Current.ToString());
                 first = false;
             }
-            builder.Append('\'');
             return builder.ToString();
         }
     }

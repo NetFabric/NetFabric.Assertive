@@ -6,7 +6,7 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class ReferenceTypeAssertions<TActual> 
-        : CommonAssertions<TActual>
+        : AssertionsBase<TActual>
         where TActual : class
     {
         internal ReferenceTypeAssertions(TActual actual) 
@@ -48,7 +48,7 @@ namespace NetFabric.Assertive
 
         public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEnumerable<TActualItem>()
         {
-            typeof(TActual).AssertIsEnumerable<TActualItem>(out var enumerableInfo);
+            TypeExtensions.AssertIsEnumerable<TActual, TActualItem>(Actual, out var enumerableInfo);
 
             return new EnumerableReferenceTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
         }

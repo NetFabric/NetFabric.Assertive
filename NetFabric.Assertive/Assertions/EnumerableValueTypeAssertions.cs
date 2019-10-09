@@ -7,16 +7,13 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class EnumerableValueTypeAssertions<TActual, TActualItem> 
+        : EnumerableAssertionsBase<TActual>
         where TActual : struct
     {
         internal EnumerableValueTypeAssertions(TActual actual, EnumerableInfo enumerableInfo) 
+            : base(actual, enumerableInfo)
         {
-            Actual = actual;
-            EnumerableInfo = enumerableInfo;
         }
-
-        public TActual Actual { get; }
-        public EnumerableInfo EnumerableInfo { get; }
 
         public EnumerableValueTypeAssertions<TActual, TActualItem> BeEmpty()
             => BeEqualTo(Enumerable.Empty<TActualItem>());

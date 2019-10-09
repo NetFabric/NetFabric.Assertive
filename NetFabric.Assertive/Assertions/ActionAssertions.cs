@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public class ActionAssertions<TActual>
+    public class ActionAssertions
     {
         internal ActionAssertions(Action actual) 
         {
@@ -27,11 +27,11 @@ namespace NetFabric.Assertive
             }
             catch (Exception notExpected)
             {
-                throw new AssertionException($"Expected exception {typeof(TException)} but exception {notExpected.GetType()} was thrown instead.");
+                throw new AssertionException($"Expected exception '{typeof(TException)}' but exception '{notExpected.GetType()}' was thrown instead.");
             }
 
             if (actualException is null)
-                throw new AssertionException($"Expected exception {typeof(TException)} but not exception was thrown.");
+                throw new AssertionException($"Expected exception '{typeof(TException)}' but not exception was thrown.");
 
             return new ExceptionAssertions<TException>(actualException);
         }
