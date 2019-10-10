@@ -1,6 +1,6 @@
 # NetFabric.Assertive
 
-This is a minimal assertions library that performs full coverage on any enumerable type.
+This is a minimal assertions library that performs full coverage on any enumerable type and checks edge scenarios that many developers are not aware of.
 
 ## Syntax
 
@@ -257,6 +257,14 @@ public class MyRange : IEnumerable<int>
     }
 }
 ```
+
+### Enumerator independence
+
+When a collection is enumerated more than once, using for example two `forech` loops, it is expected that both go through the exact same items.
+
+When a collection is checked for empty using LINQ's `Any()` and later is projected using `Select()`, it is expected the projection is performed on all items.
+
+For this to happen, the enumerators returned by `GetEnumerator()` have to independent of each other. This is mistake that can happen, for example, when using `yield return` to generate the enumerator instead of the enumerable.
 
 ## References
 
