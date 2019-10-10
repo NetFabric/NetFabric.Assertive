@@ -4,34 +4,6 @@ using Xunit;
 
 namespace NetFabric.Assertive.UnitTests
 {
-    public class RangeEnumerable
-    {
-        readonly int count;
-
-        public RangeEnumerable(int enumerableCount)
-        {
-            count = enumerableCount;
-        }
-
-        public Enumerator GetEnumerator() => new Enumerator(count);
-
-        public struct Enumerator
-        {
-            readonly int count;
-            int current;
-
-            public Enumerator(int count)
-            {
-                this.count = count;
-                current = -1;
-            }
-
-            public int Current => current;
-
-            public bool MoveNext() => ++current < count;
-        }
-    }
-
     public partial class EnumerableReferenceTypeAssertionsTests
     {
         public static TheoryData<RangeEnumerable, int[]> RangeEnumerable_EqualData =>
@@ -41,6 +13,7 @@ namespace NetFabric.Assertive.UnitTests
                 { new RangeEnumerable(0), new int[] { } },
                 { new RangeEnumerable(1), new int[] { 0 } },
                 { new RangeEnumerable(3), new int[] { 0, 1, 2 } },
+                { new RangeNonGenericEnumerable(3, 0), new int[] { 0, 1, 2 } },
             };
 
         [Theory]
@@ -65,7 +38,7 @@ namespace NetFabric.Assertive.UnitTests
 
         [Theory]
         [MemberData(nameof(RangeEnumerable_NotEqualData))]
-        public void RangeEnumerable_BeEqualTo_With_NotEqual_Should_NotThrow(RangeEnumerable actual, int[] expected, string message)
+        public void RangeEnumerable_BeEqualTo_With_NotEqual_Should_Throw(RangeEnumerable actual, int[] expected, string message)
         {
             // Arrange
 

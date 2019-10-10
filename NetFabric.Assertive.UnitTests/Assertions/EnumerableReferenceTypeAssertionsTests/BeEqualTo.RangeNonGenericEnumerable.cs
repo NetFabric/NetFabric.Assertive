@@ -1,43 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Xunit;
 
 namespace NetFabric.Assertive.UnitTests
 {
-    public class RangeNonGenericEnumerable : RangeEnumerable, IEnumerable
-    {
-        readonly int count;
-
-        public RangeNonGenericEnumerable(int enumerableCount, int nonGenericEnumerableCount)
-            : base(enumerableCount)
-        {
-            count = nonGenericEnumerableCount;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => new Enumerator(count);
-
-        new class Enumerator : IEnumerator
-        {
-            readonly int count;
-            int current;
-
-            public Enumerator(int count)
-            {
-                this.count = count;
-                current = -1;
-            }
-
-            public object Current => current;
-
-            public bool MoveNext() => ++current < count;
-
-            public void Reset() => current = -1;
-
-            public void Dispose() {}
-        }
-    }
-
     public partial class EnumerableReferenceTypeAssertionsTests
     {
         public static TheoryData<RangeNonGenericEnumerable, int[]> RangeNonGenericEnumerable_EqualData =>
@@ -47,6 +13,7 @@ namespace NetFabric.Assertive.UnitTests
                 { new RangeNonGenericEnumerable(0, 0), new int[] { } },
                 { new RangeNonGenericEnumerable(1, 1), new int[] { 0 } },
                 { new RangeNonGenericEnumerable(3, 3), new int[] { 0, 1, 2 } },
+                { new RangeGenericEnumerable(3, 3, 0), new int[] { 0, 1, 2 } },
             };
 
         [Theory]
@@ -64,14 +31,18 @@ namespace NetFabric.Assertive.UnitTests
         public static TheoryData<RangeNonGenericEnumerable, int[], string> RangeNonGenericEnumerable_NotEqualData =>
             new TheoryData<RangeNonGenericEnumerable, int[], string> 
             {
-                { new RangeNonGenericEnumerable(0, 0), new int[] { 0 }, "Expected '' to be equal to '0' but it has less items when using 'NetFabric.Assertive.UnitTests.RangeNonGenericEnumerable.GetEnumerator()'." },
-                { new RangeNonGenericEnumerable(1, 1), new int[] { }, "Expected '0' to be equal to '' but it has more items when using 'NetFabric.Assertive.UnitTests.RangeNonGenericEnumerable.GetEnumerator()'." },
-                { new RangeNonGenericEnumerable(1, 1), new int[] { 0, 1 }, "Expected '0' to be equal to '0, 1' but it has less items when using 'NetFabric.Assertive.UnitTests.RangeNonGenericEnumerable.GetEnumerator()'." },
+                { new RangeNonGenericEnumerable(0, 0), new int[] { 0 }, "Expected '' to be equal to '0' but it has less items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
+                { new RangeNonGenericEnumerable(1, 0), new int[] { }, "Expected '0' to be equal to '' but it has more items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
+                { new RangeNonGenericEnumerable(1, 0), new int[] { 0, 1 }, "Expected '0' to be equal to '0, 1' but it has less items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
+
+                // { new RangeNonGenericEnumerable(1, 0), new int[] { 0 }, "Expected '' to be equal to '0' but it has less items when using 'System.Collections.IEnumerable.GetEnumerator()'." },
+                // { new RangeNonGenericEnumerable(0, 1), new int[] { }, "Expected '0' to be equal to '' but it has more items when using 'System.Collections.IEnumerable.GetEnumerator()'." },
+                // { new RangeNonGenericEnumerable(2, 1), new int[] { 0, 1 }, "Expected '0' to be equal to '0, 1' but it has less items when using 'System.Collections.IEnumerable.GetEnumerator()'." },
             };
 
         [Theory]
         [MemberData(nameof(RangeNonGenericEnumerable_NotEqualData))]
-        public void RangeNonGenericEnumerable_BeEqualTo_With_NotEqual_Should_NotThrow(RangeNonGenericEnumerable actual, int[] expected, string message)
+        public void RangeNonGenericEnumerable_BeEqualTo_With_NotEqual_Should_Throw(RangeNonGenericEnumerable actual, int[] expected, string message)
         {
             // Arrange
 

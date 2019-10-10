@@ -22,7 +22,7 @@ namespace NetFabric.Assertive
                 CompareEnumerable(actual, wrapped, expected, equalityComparison, enumerableInfo.GetEnumerator.DeclaringType);
             }
 
-            foreach (var @interface in actual.GetType().GetInterfaces())
+            foreach (var @interface in typeof(TActual).GetInterfaces())
             {
                 if (@interface.IsEnumerable(out var interfaceEnumerableInfo))
                 {
@@ -43,7 +43,7 @@ namespace NetFabric.Assertive
                     
                     if (@interface == readOnlyListType)
                     {
-                        CompareReadOnlyList<IReadOnlyList<TActualItem>, TActualItem, TExpected, TExpectedItem>((IReadOnlyList<TActualItem>)actual, expected, equalityComparison);
+                        CompareReadOnlyList((IReadOnlyList<TActualItem>)actual, expected, equalityComparison);
                     }
                 }
             }
@@ -70,20 +70,20 @@ namespace NetFabric.Assertive
                             throw new EqualToAssertionException<TActual, TExpected>(
                                 actual, 
                                 expected,
-                                $"Expected '{actual.ToFriendlyString()}' to be equal to '{expected.ToFriendlyString()}' but it has less items when using '{type}.GetEnumerator()'.");
+                                $"Expected '{wrappedActual.ToFriendlyString()}' to be equal to '{expected.ToFriendlyString()}' but it has less items when using '{type}.GetEnumerator()'.");
 
                         if (isExpectedCompleted)
                             throw new EqualToAssertionException<TActual, TExpected>(
                                 actual, 
                                 expected,
-                                $"Expected '{actual.ToFriendlyString()}' to be equal to '{expected.ToFriendlyString()}' but it has more items when using '{type}.GetEnumerator()'.");
+                                $"Expected '{wrappedActual.ToFriendlyString()}' to be equal to '{expected.ToFriendlyString()}' but it has more items when using '{type}.GetEnumerator()'.");
                     }
 
                     if (!equalityComparison(actualEnumerator.Current, expectedEnumerator.Current))
                         throw new EqualToAssertionException<TActual, TExpected>(
                             actual, 
                             expected,
-                            $"Expected '{actual.ToFriendlyString()}' to be equal to '{expected.ToFriendlyString()}' but it differs at index {index} when using '{type}.GetEnumerator()'.");
+                            $"Expected '{wrappedActual.ToFriendlyString()}' to be equal to '{expected.ToFriendlyString()}' but it differs at index {index} when using '{type}.GetEnumerator()'.");
                 }
             }
         }
