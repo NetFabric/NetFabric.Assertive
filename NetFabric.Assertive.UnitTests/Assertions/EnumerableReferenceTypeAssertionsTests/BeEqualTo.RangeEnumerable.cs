@@ -33,7 +33,6 @@ namespace NetFabric.Assertive.UnitTests
             {
                 { new RangeEnumerable(0), new int[] { 0 }, "Expected '' to be equal to '0' but it has less items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
                 { new RangeEnumerable(1), new int[] { }, "Expected '0' to be equal to '' but it has more items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
-                { new RangeEnumerable(1), new int[] { 0, 1 }, "Expected '0' to be equal to '0, 1' but it has less items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
             };
 
         [Theory]

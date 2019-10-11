@@ -33,11 +33,9 @@ namespace NetFabric.Assertive.UnitTests
             {
                 { new RangeNonGenericEnumerable(0, 0), new int[] { 0 }, "Expected '' to be equal to '0' but it has less items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
                 { new RangeNonGenericEnumerable(1, 0), new int[] { }, "Expected '0' to be equal to '' but it has more items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
-                { new RangeNonGenericEnumerable(1, 0), new int[] { 0, 1 }, "Expected '0' to be equal to '0, 1' but it has less items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
 
-                // { new RangeNonGenericEnumerable(1, 0), new int[] { 0 }, "Expected '' to be equal to '0' but it has less items when using 'System.Collections.IEnumerable.GetEnumerator()'." },
-                // { new RangeNonGenericEnumerable(0, 1), new int[] { }, "Expected '0' to be equal to '' but it has more items when using 'System.Collections.IEnumerable.GetEnumerator()'." },
-                // { new RangeNonGenericEnumerable(2, 1), new int[] { 0, 1 }, "Expected '0' to be equal to '0, 1' but it has less items when using 'System.Collections.IEnumerable.GetEnumerator()'." },
+                { new RangeNonGenericEnumerable(1, 0), new int[] { 0 }, "Expected '' to be equal to '0' but it has less items when using 'System.Collections.IEnumerable.GetEnumerator()'." },
+                { new RangeNonGenericEnumerable(0, 1), new int[] { }, "Expected '0' to be equal to '' but it has more items when using 'System.Collections.IEnumerable.GetEnumerator()'." },
             };
 
         [Theory]
