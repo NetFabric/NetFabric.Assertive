@@ -6,7 +6,7 @@ namespace NetFabric.Assertive.UnitTests
 {
     public partial class EnumerableReferenceTypeAssertionsTests
     {
-        public static TheoryData<RangeReadOnlyCollection, int[]> RangeReadOnlyCollection_EqualData =>
+        public static TheoryData<RangeReadOnlyCollection, int[]> ReadOnlyCollection_EqualData =>
             new TheoryData<RangeReadOnlyCollection, int[]> 
             {
                 { null, null },
@@ -17,8 +17,8 @@ namespace NetFabric.Assertive.UnitTests
             };
 
         [Theory]
-        [MemberData(nameof(RangeReadOnlyCollection_EqualData))]
-        public void RangeReadOnlyCollection_BeEqualTo_With_Equal_Should_NotThrow(RangeReadOnlyCollection actual, int[] expected)
+        [MemberData(nameof(ReadOnlyCollection_EqualData))]
+        public void ReadOnlyCollection_BeEqualTo_With_Equal_Should_NotThrow(RangeReadOnlyCollection actual, int[] expected)
         {
             // Arrange
 
@@ -28,7 +28,7 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
         }
 
-        public static TheoryData<RangeReadOnlyCollection, int[], string> RangeReadOnlyCollection_NotEqualData =>
+        public static TheoryData<RangeReadOnlyCollection, int[], string> ReadOnlyCollection_NotEqualData =>
             new TheoryData<RangeReadOnlyCollection, int[], string> 
             {
                 { new RangeReadOnlyCollection(0, 0, 0, 0), new int[] { 0 }, "Expected '0' but found '' with less items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
@@ -45,7 +45,7 @@ namespace NetFabric.Assertive.UnitTests
             };
 
         [Theory]
-        [MemberData(nameof(RangeReadOnlyCollection_NotEqualData))]
+        [MemberData(nameof(ReadOnlyCollection_NotEqualData))]
         public void RangeReadOnlyCollection_BeEqualTo_With_NotEqual_Should_Throw(RangeReadOnlyCollection actual, int[] expected, string message)
         {
             // Arrange
