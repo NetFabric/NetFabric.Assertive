@@ -12,4 +12,14 @@
     <DefineConstants>CONTRACTS_FULL</DefineConstants>
   </PropertyGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)'=='net461'">
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'!='netstandard2.1'">
+    <Compile Remove="Platforms\netcoreapp2.1\**" />
+    <EmbeddedResource Remove="Platforms\netcoreapp2.1\**" />
+    <None Remove="Platforms\netcoreapp2.1\**" />
+  </ItemGroup>
+
 </Project>

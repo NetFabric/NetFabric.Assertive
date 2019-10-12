@@ -6,7 +6,7 @@ namespace NetFabric.Assertive.UnitTests
 {
     public partial class EnumerableReferenceTypeAssertionsTests
     {
-        public static TheoryData<RangeEnumerable, int[]> RangeEnumerable_EqualData =>
+        public static TheoryData<RangeEnumerable, int[]> Enumerable_EqualData =>
             new TheoryData<RangeEnumerable, int[]> 
             {
                 { null, null },
@@ -17,8 +17,8 @@ namespace NetFabric.Assertive.UnitTests
             };
 
         [Theory]
-        [MemberData(nameof(RangeEnumerable_EqualData))]
-        public void RangeEnumerable_BeEqualTo_With_Equal_Should_NotThrow(RangeEnumerable actual, int[] expected)
+        [MemberData(nameof(Enumerable_EqualData))]
+        public void Enumerable_BeEqualTo_With_Equal_Should_NotThrow(RangeEnumerable actual, int[] expected)
         {
             // Arrange
 
@@ -28,7 +28,7 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
         }
 
-        public static TheoryData<RangeEnumerable, int[], string> RangeEnumerable_NotEqualData =>
+        public static TheoryData<RangeEnumerable, int[], string> Enumerable_NotEqualData =>
             new TheoryData<RangeEnumerable, int[], string> 
             {
                 { new RangeEnumerable(0), new int[] { 0 }, "Expected '0' but found '' with less items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
@@ -37,8 +37,8 @@ namespace NetFabric.Assertive.UnitTests
             };
 
         [Theory]
-        [MemberData(nameof(RangeEnumerable_NotEqualData))]
-        public void RangeEnumerable_BeEqualTo_With_NotEqual_Should_Throw(RangeEnumerable actual, int[] expected, string message)
+        [MemberData(nameof(Enumerable_NotEqualData))]
+        public void Enumerable_BeEqualTo_With_NotEqual_Should_Throw(RangeEnumerable actual, int[] expected, string message)
         {
             // Arrange
 
@@ -52,7 +52,7 @@ namespace NetFabric.Assertive.UnitTests
             Assert.Equal(message, exception.Message);
         }
 
-        public static TheoryData<RangeEnumerable, int[], string> RangeEnumerable_NotEqualNullData =>
+        public static TheoryData<RangeEnumerable, int[], string> Enumerable_NotEqualNullData =>
             new TheoryData<RangeEnumerable, int[], string>
             {
                 { null, new int[] { }, "Expected '' but found '<null>'." },
@@ -60,8 +60,8 @@ namespace NetFabric.Assertive.UnitTests
             };
 
         [Theory]
-        [MemberData(nameof(RangeEnumerable_NotEqualNullData))]
-        public void RangeEnumerable_BeEqualTo_With_NotEqual_Null_Should_Throw(RangeEnumerable actual, int[] expected, string message)
+        [MemberData(nameof(Enumerable_NotEqualNullData))]
+        public void Enumerable_BeEqualTo_With_NotEqual_Null_Should_Throw(RangeEnumerable actual, int[] expected, string message)
         {
             // Arrange
 

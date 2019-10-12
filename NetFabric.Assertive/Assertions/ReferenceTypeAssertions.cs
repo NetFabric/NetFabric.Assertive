@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public class ReferenceTypeAssertions<TActual> 
+    public partial class ReferenceTypeAssertions<TActual> 
         : AssertionsBase<TActual>
         where TActual : class
     {
@@ -51,13 +51,6 @@ namespace NetFabric.Assertive
             TypeExtensions.AssertIsEnumerable<TActual, TActualItem>(Actual, out var enumerableInfo);
 
             return new EnumerableReferenceTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
-        }
-
-        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeAsyncEnumerable<TActualItem>()
-        {
-            TypeExtensions.AssertIsAsyncEnumerable<TActual, TActualItem>(Actual, out var enumerableInfo);
-
-            return new AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
         }
     }
 }

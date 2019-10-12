@@ -29,7 +29,7 @@ namespace NetFabric.Assertive
             if (expected is null)
                 throw new ArgumentNullException(nameof(expected), $"{typeof(TActual)} is a value type so it can't be expected to be <null>.");
 
-            EqualityComparer.AssertEquality(Actual, EnumerableInfo, expected, equalityComparison);
+            AsyncEqualityComparer.AssertEquality(Actual, EnumerableInfo, expected, equalityComparison);
 
             return this;
         }

@@ -6,7 +6,7 @@ namespace NetFabric.Assertive.UnitTests
 {
     public partial class EnumerableReferenceTypeAssertionsTests
     {
-        public static TheoryData<RangeGenericEnumerable, int[]> RangeGenericEnumerable_EqualData =>
+        public static TheoryData<RangeGenericEnumerable, int[]> GenericEnumerable_EqualData =>
             new TheoryData<RangeGenericEnumerable, int[]> 
             {
                 { null, null },
@@ -17,8 +17,8 @@ namespace NetFabric.Assertive.UnitTests
             };
 
         [Theory]
-        [MemberData(nameof(RangeGenericEnumerable_EqualData))]
-        public void RangeGenericEnumerable_BeEqualTo_With_Equal_Should_NotThrow(RangeGenericEnumerable actual, int[] expected)
+        [MemberData(nameof(GenericEnumerable_EqualData))]
+        public void GenericEnumerable_BeEqualTo_With_Equal_Should_NotThrow(RangeGenericEnumerable actual, int[] expected)
         {
             // Arrange
 
@@ -28,7 +28,7 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
         }
 
-        public static TheoryData<RangeGenericEnumerable, int[], string> RangeGenericEnumerable_NotEqualData =>
+        public static TheoryData<RangeGenericEnumerable, int[], string> GenericEnumerable_NotEqualData =>
             new TheoryData<RangeGenericEnumerable, int[], string> 
             {
                 { new RangeGenericEnumerable(0, 0, 0), new int[] { 0 }, "Expected '0' but found '' with less items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
@@ -42,8 +42,8 @@ namespace NetFabric.Assertive.UnitTests
             };
 
         [Theory]
-        [MemberData(nameof(RangeGenericEnumerable_NotEqualData))]
-        public void RangeGenericEnumerable_BeEqualTo_With_NotEqual_Should_Throw(RangeGenericEnumerable actual, int[] expected, string message)
+        [MemberData(nameof(GenericEnumerable_NotEqualData))]
+        public void GenericEnumerable_BeEqualTo_With_NotEqual_Should_Throw(RangeGenericEnumerable actual, int[] expected, string message)
         {
             // Arrange
 

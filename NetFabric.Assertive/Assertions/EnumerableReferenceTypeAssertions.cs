@@ -15,6 +15,14 @@ namespace NetFabric.Assertive
         {
         }
 
+        public EnumerableReferenceTypeAssertions<TActual, TActualItem> NotShareState()
+        {
+            if (Actual is object)
+                EqualityComparer.AssertNotSharing<TActual, TActualItem>(Actual, EnumerableInfo);
+
+            return this;
+        }
+
         public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEmpty()
             => BeEqualTo(Enumerable.Empty<TActualItem>());
 

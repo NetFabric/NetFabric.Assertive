@@ -36,7 +36,7 @@ namespace NetFabric.Assertive
                 if (expected is null)
                     throw new EqualToAssertionException<TActual, IEnumerable<TExpectedItem>>(Actual, expected);
 
-                EqualityComparer.AssertEquality(Actual, EnumerableInfo, expected, equalityComparison);
+                AsyncEqualityComparer.AssertEquality(Actual, EnumerableInfo, expected, equalityComparison);
             }
 
             return this;

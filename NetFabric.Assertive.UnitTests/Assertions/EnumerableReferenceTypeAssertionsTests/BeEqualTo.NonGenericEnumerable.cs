@@ -6,7 +6,7 @@ namespace NetFabric.Assertive.UnitTests
 {
     public partial class EnumerableReferenceTypeAssertionsTests
     {
-        public static TheoryData<RangeNonGenericEnumerable, int[]> RangeNonGenericEnumerable_EqualData =>
+        public static TheoryData<RangeNonGenericEnumerable, int[]> NonGenericEnumerable_EqualData =>
             new TheoryData<RangeNonGenericEnumerable, int[]> 
             {
                 { null, null },
@@ -17,8 +17,8 @@ namespace NetFabric.Assertive.UnitTests
             };
 
         [Theory]
-        [MemberData(nameof(RangeNonGenericEnumerable_EqualData))]
-        public void RangeNonGenericEnumerable_BeEqualTo_With_Equal_Should_NotThrow(RangeNonGenericEnumerable actual, int[] expected)
+        [MemberData(nameof(NonGenericEnumerable_EqualData))]
+        public void NonGenericEnumerable_BeEqualTo_With_Equal_Should_NotThrow(RangeNonGenericEnumerable actual, int[] expected)
         {
             // Arrange
 
@@ -28,7 +28,7 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
         }
 
-        public static TheoryData<RangeNonGenericEnumerable, int[], string> RangeNonGenericEnumerable_NotEqualData =>
+        public static TheoryData<RangeNonGenericEnumerable, int[], string> NonGenericEnumerable_NotEqualData =>
             new TheoryData<RangeNonGenericEnumerable, int[], string> 
             {
                 { new RangeNonGenericEnumerable(0, 0), new int[] { 0 }, "Expected '0' but found '' with less items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
@@ -39,8 +39,8 @@ namespace NetFabric.Assertive.UnitTests
             };
 
         [Theory]
-        [MemberData(nameof(RangeNonGenericEnumerable_NotEqualData))]
-        public void RangeNonGenericEnumerable_BeEqualTo_With_NotEqual_Should_Throw(RangeNonGenericEnumerable actual, int[] expected, string message)
+        [MemberData(nameof(NonGenericEnumerable_NotEqualData))]
+        public void NonGenericEnumerable_BeEqualTo_With_NotEqual_Should_Throw(RangeNonGenericEnumerable actual, int[] expected, string message)
         {
             // Arrange
 

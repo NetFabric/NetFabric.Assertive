@@ -6,11 +6,11 @@ using System.Reflection;
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    static class TypeExtensions
+    static partial class TypeExtensions
     {
         public static bool IsEnumerable(this Type type, out EnumerableInfo info)
         {
-            var getEnumerator = type.GetPublicOrExplicitParameterlessMethod("GetEnumerator");
+            var getEnumerator = type.GetPublicOrExplicitMethod("GetEnumerator");
             if (getEnumerator is null)
             {
                 info = default;
@@ -20,25 +20,8 @@ namespace NetFabric.Assertive
             var enumeratorType = getEnumerator.ReturnType;
             info = new EnumerableInfo(getEnumerator,
                 enumeratorType.GetPublicOrExplicitProperty("Current"),
-                enumeratorType.GetPublicOrExplicitParameterlessMethod("MoveNext"),
-                enumeratorType.GetPublicOrExplicitParameterlessMethod("Dispose"));
-            return true;
-        }
-
-        public static bool IsAsyncEnumerable(this Type type, out EnumerableInfo info)
-        {
-            var getEnumerator = type.GetPublicOrExplicitParameterlessMethod("GetAsyncEnumerator");
-            if (getEnumerator is null)
-            {
-                info = default;
-                return false;
-            }
-
-            var enumeratorType = getEnumerator.ReturnType;
-            info = new EnumerableInfo(getEnumerator,
-                enumeratorType.GetPublicOrExplicitProperty("Current"),
-                enumeratorType.GetPublicOrExplicitParameterlessMethod("MoveNextAsync"),
-                enumeratorType.GetPublicOrExplicitParameterlessMethod("DisposeAsync"));
+                enumeratorType.GetPublicOrExplicitMethod("MoveNext"),
+                enumeratorType.GetPublicOrExplicitMethod("Dispose"));
             return true;
         }
 
@@ -67,34 +50,9 @@ namespace NetFabric.Assertive
             }
         }
 
-        public static void AssertIsAsyncEnumerable<TActual, TActualItem>(TActual actual, out EnumerableInfo enumerableInfo)
-        {
-            var actualType = typeof(TActual);
-            enumerableInfo = actualType.GetEnumerableInfo();
-
-            if (enumerableInfo.GetEnumerator is null)
-                throw new ActualAssertionException<TActual>(actual, $"Expected '{actualType}' to be an enumerable but it's missing a valid 'GetAsyncEnumerator' method.");
-            if (enumerableInfo.Current is null)
-                throw new ActualAssertionException<TActual>(actual, $"Expected '{enumerableInfo.GetEnumerator.ReturnType}' to be an enumerator but it's missing a valid 'Current' property.");
-            if (enumerableInfo.MoveNext is null)
-                throw new ActualAssertionException<TActual>(actual, $"Expected '{enumerableInfo.GetEnumerator.ReturnType}' to be an enumerator but it's missing a valid 'MoveNextAsync' method.");
-
-            var actualItemType = enumerableInfo.Current.PropertyType;
-            if (actualItemType.IsByRef)
-            {
-                if (!typeof(TActualItem).MakeByRefType().IsAssignableFrom(actualItemType))
-                    throw new ActualAssertionException<TActual>(actual, $"Expected '{actualType}' to be an enumerable of '{typeof(TActualItem)}' but found an enumerable of '{actualItemType}'.");
-            }
-            else
-            {
-                if (!typeof(TActualItem).IsAssignableFrom(actualItemType))
-                    throw new ActualAssertionException<TActual>(actual, $"Expected '{actualType}' to be an enumerable of '{typeof(TActualItem)}' but found an enumerable of '{actualItemType}'.");
-            }
-        }
-
         public static EnumerableInfo GetEnumerableInfo(this Type type)
         {
-            var getEnumerator = type.GetPublicOrExplicitParameterlessMethod("GetEnumerator");
+            var getEnumerator = type.GetPublicOrExplicitMethod("GetEnumerator");
             if (getEnumerator is null)
                 return default;
 
@@ -102,22 +60,8 @@ namespace NetFabric.Assertive
             return new EnumerableInfo(
                 getEnumerator,
                 enumeratorType.GetPublicOrExplicitProperty("Current"),
-                enumeratorType.GetPublicOrExplicitParameterlessMethod("MoveNext"),
-                enumeratorType.GetPublicOrExplicitParameterlessMethod("Dispose"));
-        }
-
-        public static EnumerableInfo GetAsyncEnumerableInfo(this Type type)
-        {
-            var getEnumerator = type.GetPublicOrExplicitParameterlessMethod("GetAsyncEnumerator");
-            if (getEnumerator is null)
-                return default;
-
-            var enumeratorType = getEnumerator.ReturnType;
-            return new EnumerableInfo(
-                getEnumerator,
-                enumeratorType.GetPublicOrExplicitProperty("Current"),
-                enumeratorType.GetPublicOrExplicitParameterlessMethod("MoveNextAsync"),
-                enumeratorType.GetPublicOrExplicitParameterlessMethod("DisposeAsync"));
+                enumeratorType.GetPublicOrExplicitMethod("MoveNext"),
+                enumeratorType.GetPublicOrExplicitMethod("Dispose"));
         }
 
         public static PropertyInfo GetPublicOrExplicitProperty(this Type type, string name)
@@ -136,15 +80,15 @@ namespace NetFabric.Assertive
             return null;
         }
 
-        public static MethodInfo GetPublicOrExplicitParameterlessMethod(this Type type, string name)
+        public static MethodInfo GetPublicOrExplicitMethod(this Type type, string name, params Type[] parameters)
         {
-            var method = type.GetPublicParameterlessMethod(name);
+            var method = type.GetPublicMethod(name, parameters);
             if (method is object)
                 return method;
 
             foreach (var @interface in type.GetInterfaces())
             {
-                method = @interface.GetPublicParameterlessMethod(name);
+                method = @interface.GetPublicMethod(name, parameters);
                 if (method is object)
                     return method;
             }
@@ -158,8 +102,8 @@ namespace NetFabric.Assertive
             => type.GetProperties(InstancePublicFlatten)
                 .FirstOrDefault(property => property.Name == name && property.GetGetMethod() is object);
 
-        static MethodInfo GetPublicParameterlessMethod(this Type type, string name)
+        static MethodInfo GetPublicMethod(this Type type, string name, Type[] parameters)
             => type.GetMethods(InstancePublicFlatten)
-                .FirstOrDefault(method => method.Name == name && method.GetParameters().Length == 0);
+                .FirstOrDefault(method => method.Name == name && parameters.SequenceEqual(method.GetParameters().Select(parameter => parameter.ParameterType)));
     }
 }
