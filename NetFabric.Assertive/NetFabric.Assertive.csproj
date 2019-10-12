@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net461;netstandard2.0;netstandard2.1</TargetFrameworks>
@@ -10,7 +10,6 @@
     <PackageTags>netfabric, enumeration, test, testing, unittest, assertion, TDD, fluent, netcore, netstandard</PackageTags>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <DefineConstants>CONTRACTS_FULL</DefineConstants>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
 </Project>
