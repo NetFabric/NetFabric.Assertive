@@ -25,6 +25,23 @@ namespace NetFabric.Assertive
             return true;
         }
 
+        public static bool IsAsyncEnumerable(this Type type, out EnumerableInfo info)
+        {
+            var getEnumerator = type.GetPublicOrExplicitParameterlessMethod("GetAsyncEnumerator");
+            if (getEnumerator is null)
+            {
+                info = default;
+                return false;
+            }
+
+            var enumeratorType = getEnumerator.ReturnType;
+            info = new EnumerableInfo(getEnumerator,
+                enumeratorType.GetPublicOrExplicitProperty("Current"),
+                enumeratorType.GetPublicOrExplicitParameterlessMethod("MoveNextAsync"),
+                enumeratorType.GetPublicOrExplicitParameterlessMethod("DisposeAsync"));
+            return true;
+        }
+
         public static void AssertIsEnumerable<TActual, TActualItem>(TActual actual, out EnumerableInfo enumerableInfo)
         {
             var actualType = typeof(TActual);
@@ -36,6 +53,31 @@ namespace NetFabric.Assertive
                 throw new ActualAssertionException<TActual>(actual, $"Expected '{enumerableInfo.GetEnumerator.ReturnType}' to be an enumerator but it's missing a valid 'Current' property.");
             if (enumerableInfo.MoveNext is null)
                 throw new ActualAssertionException<TActual>(actual, $"Expected '{enumerableInfo.GetEnumerator.ReturnType}' to be an enumerator but it's missing a valid 'MoveNext' method.");
+
+            var actualItemType = enumerableInfo.Current.PropertyType;
+            if (actualItemType.IsByRef)
+            {
+                if (!typeof(TActualItem).MakeByRefType().IsAssignableFrom(actualItemType))
+                    throw new ActualAssertionException<TActual>(actual, $"Expected '{actualType}' to be an enumerable of '{typeof(TActualItem)}' but found an enumerable of '{actualItemType}'.");
+            }
+            else
+            {
+                if (!typeof(TActualItem).IsAssignableFrom(actualItemType))
+                    throw new ActualAssertionException<TActual>(actual, $"Expected '{actualType}' to be an enumerable of '{typeof(TActualItem)}' but found an enumerable of '{actualItemType}'.");
+            }
+        }
+
+        public static void AssertIsAsyncEnumerable<TActual, TActualItem>(TActual actual, out EnumerableInfo enumerableInfo)
+        {
+            var actualType = typeof(TActual);
+            enumerableInfo = actualType.GetEnumerableInfo();
+
+            if (enumerableInfo.GetEnumerator is null)
+                throw new ActualAssertionException<TActual>(actual, $"Expected '{actualType}' to be an enumerable but it's missing a valid 'GetAsyncEnumerator' method.");
+            if (enumerableInfo.Current is null)
+                throw new ActualAssertionException<TActual>(actual, $"Expected '{enumerableInfo.GetEnumerator.ReturnType}' to be an enumerator but it's missing a valid 'Current' property.");
+            if (enumerableInfo.MoveNext is null)
+                throw new ActualAssertionException<TActual>(actual, $"Expected '{enumerableInfo.GetEnumerator.ReturnType}' to be an enumerator but it's missing a valid 'MoveNextAsync' method.");
 
             var actualItemType = enumerableInfo.Current.PropertyType;
             if (actualItemType.IsByRef)
@@ -62,6 +104,20 @@ namespace NetFabric.Assertive
                 enumeratorType.GetPublicOrExplicitProperty("Current"),
                 enumeratorType.GetPublicOrExplicitParameterlessMethod("MoveNext"),
                 enumeratorType.GetPublicOrExplicitParameterlessMethod("Dispose"));
+        }
+
+        public static EnumerableInfo GetAsyncEnumerableInfo(this Type type)
+        {
+            var getEnumerator = type.GetPublicOrExplicitParameterlessMethod("GetAsyncEnumerator");
+            if (getEnumerator is null)
+                return default;
+
+            var enumeratorType = getEnumerator.ReturnType;
+            return new EnumerableInfo(
+                getEnumerator,
+                enumeratorType.GetPublicOrExplicitProperty("Current"),
+                enumeratorType.GetPublicOrExplicitParameterlessMethod("MoveNextAsync"),
+                enumeratorType.GetPublicOrExplicitParameterlessMethod("DisposeAsync"));
         }
 
         public static PropertyInfo GetPublicOrExplicitProperty(this Type type, string name)
