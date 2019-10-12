@@ -1,6 +1,6 @@
 # NetFabric.Assertive
 
-This is a minimal assertions library that performs full coverage on any enumerable type and checks edge scenarios that many developers are not aware of.
+This is a assertions library that performs full coverage on any enumerable type and checks edge scenarios that many developers are not aware of.
 
 ## Syntax
 
@@ -30,9 +30,9 @@ It can handle any of the following enumerable implementations:
 
 A collection, to be enumerable by a `foreach` loop, does not have to implement any interface. It just needs to have a `GetEnumerator()` method that returns a type that has a property `Current` with a getter and a parameterless method `MoveNext()`that returns `bool`.
 
-The same applies to [async streams](https://docs.microsoft.com/en-us/dotnet/csharp/tutorials/generate-consume-asynchronous-stream) that, to be enumerable by a `await foreach` loop, don't have to implement any interface. They just needs to have a `GetAsyncEnumerator()` method that returns a type that has a property `Current` with a getter and a parameterless method `MoveNextAsync()`that returns `ValueTask<bool>`.
+The same applies to [async streams](https://docs.microsoft.com/en-us/dotnet/csharp/tutorials/generate-consume-asynchronous-stream) that, to be enumerable by a `await foreach` loop, also don't have to implement any interface. They just needs to have a `GetAsyncEnumerator()` method that returns a type that has a property `Current` with a getter and a parameterless method `MoveNextAsync()`that returns `ValueTask<bool>`.
 
-Here's the minimal implementations of both types of enumerables:
+Here's the minimal implementations for both types of enumerables:
 
 ``` csharp
 public class EmptyEnumerable<T>
@@ -62,7 +62,7 @@ public class EmptyAsyncEnumerable<T>
 }
 ```
 
-Here's the implementation, of both types of enumerable, returning values from 0 to `count`:
+Here's the implementation, for both types of enumerable, returning values from 0 to `count`:
 
 ```csharp
 public readonly struct RangeEnumerable
@@ -321,11 +321,11 @@ public class MyRange : IEnumerable<int>
 
 ### Enumerator independence
 
-When a collection is enumerated more than once, using for example two `forech` loops, it is expected that both go through the exact same items.
+When a collection is enumerated more than once, for example using two `foreach` loops, it is expected that both go through the exact same items.
 
 When a collection is checked for empty using LINQ's `Any()` and later is projected using `Select()`, it is expected the projection is performed on all items.
 
-For this to happen, all enumerators returned by `GetEnumerator()` must not share state.
+For this to happen, all enumerators returned by any of the `GetEnumerator()` implementation, must not share state.
 
 ## References
 
