@@ -10,6 +10,8 @@ namespace NetFabric.Assertive
         {
             var getEnumerator = type.GetPublicOrExplicitMethod("GetAsyncEnumerator");
             if (getEnumerator is null)
+                getEnumerator = type.GetPublicOrExplicitMethod("GetAsyncEnumerator", typeof(CancellationToken));
+            if (getEnumerator is null)
             {
                 info = default;
                 return false;
@@ -53,7 +55,6 @@ namespace NetFabric.Assertive
             var getEnumerator = type.GetPublicOrExplicitMethod("GetAsyncEnumerator");
             if (getEnumerator is null)
                 getEnumerator = type.GetPublicOrExplicitMethod("GetAsyncEnumerator", typeof(CancellationToken));
-
             if (getEnumerator is null)
                 return default;
 

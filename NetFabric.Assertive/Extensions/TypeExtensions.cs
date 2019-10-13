@@ -102,8 +102,10 @@ namespace NetFabric.Assertive
             => type.GetProperties(InstancePublicFlatten)
                 .FirstOrDefault(property => property.Name == name && property.GetGetMethod() is object);
 
-        static MethodInfo GetPublicMethod(this Type type, string name, Type[] parameters)
+        static MethodInfo GetPublicMethod(this Type type, string name, params Type[] parameters)
             => type.GetMethods(InstancePublicFlatten)
-                .FirstOrDefault(method => method.Name == name && parameters.SequenceEqual(method.GetParameters().Select(parameter => parameter.ParameterType)));
+                .FirstOrDefault(method => 
+                    method.Name == name && 
+                    parameters.SequenceEqual(method.GetParameters().Select(parameter => parameter.ParameterType)));
     }
 }
