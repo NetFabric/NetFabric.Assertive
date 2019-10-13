@@ -14,7 +14,7 @@ source.Must()
 
 ## Enumerables
 
-The combination of the methods `BeEnumerable<>()` and `BeEqualTo<>()` allow the test of any type of enumerable in a single assertion:
+This framework uses fluent syntax and the combination of the following methods allow the testing of any type of enumerable in a single assertion:
 
 - `BeEnumerable<TActualItem>()` - asserts that the type `TActual`, passed in to `Must<TActual>()`, is an enumerable that returns a stream of items of type `TActualItem`.
 
@@ -28,9 +28,9 @@ It can handle any of the following enumerable implementations:
 
 ### No enumerable interfaces
 
-A collection, to be enumerable by a `foreach` loop, does not have to implement any interface. It just needs to have a `GetEnumerator()` method that returns a type that has a property `Current` with a getter and a parameterless method `MoveNext()`that returns `bool`.
+A collection, to be enumerated by a `foreach` loop, does not have to implement any interface. It just needs to have a `GetEnumerator()` method that returns a type that has a property `Current` with a getter and a parameterless method `MoveNext()`that returns `bool`.
 
-The same applies to [async streams](https://docs.microsoft.com/en-us/dotnet/csharp/tutorials/generate-consume-asynchronous-stream) that, to be enumerable by a `await foreach` loop, also don't have to implement any interface. They just needs to have a `GetAsyncEnumerator()` method that returns a type that has a property `Current` with a getter and a parameterless method `MoveNextAsync()`that returns `ValueTask<bool>`.
+The same applies to [async streams](https://docs.microsoft.com/en-us/dotnet/csharp/tutorials/generate-consume-asynchronous-stream) that, to be enumerated by an `await foreach` loop, also don't have to implement any interface. They just needs to have a `GetAsyncEnumerator()` method that returns a type that has a property `Current` with a getter and a parameterless method `MoveNextAsync()`that returns `ValueTask<bool>`.
 
 Here's the minimal implementations for both types of enumerables:
 
@@ -62,7 +62,7 @@ public class EmptyAsyncEnumerable<T>
 }
 ```
 
-Here's the implementation, for both types of enumerable, returning values from 0 to `count`:
+Here's the implementation of a range collection, for sync and async enumerables, returning values from 0 to `count`:
 
 ```csharp
 public readonly struct RangeEnumerable
@@ -133,11 +133,13 @@ readonly struct RangeAsyncEnumerable
 
 _NOTE: The advantage here is performance. The enumerator is a value type so the method calls are not virtual. The use of interfaces would box the enumerator and turn method calls into virtual. The enumerator is not disposable, so the `foreach` does not generate a `try`/`finally` clause, making it inlinable. The example also uses the C# 8 'struct read-only members' feature to avoid defensive copies._
 
+In this case, `GetAsyncEnumerator()` has a `CancellationToken` parameters which is also supported.
+
 ### Enumerable interfaces
 
 Collections can have multiple forms of enumeration. For example; a collection that implements `IReadOnlyList<T>` can be enumerated using the indexer, using `IEnumerable<T>.GetEnumerator()`, using `IEnumerable.GetEnumerator()` and using a public `GetEnumerator()` that is not an override of any of these interfaces. There's no guarantee that they all are correctly implemented. The `Count` property can also return the wrong value.
 
-Here's an example of a collection with multiple possible enumerations:
+Here's an example of a collection with multiple possible enumerations and enumerator implementations:
 
 ```csharp
 public readonly struct MyRange : IReadOnlyList<int>
@@ -211,7 +213,9 @@ This example has two enumerators so that it can take advantage of the performanc
 
 ### Custom enumerable interfaces
 
-Custom enumerable interfaces can add even more possible enumerations. Here's an interface that restricts the enumerator to a value type and adds a `GetEnumerator()` that explicitly returns the enumerator type. This allows the use of an enumerable interface without boxing the enumerator:
+Custom enumerable interfaces can add even more possible enumerations, that would increase the number of tests required.
+
+Here's an interface that restricts the enumerator to a value type and adds a `GetEnumerator()` that explicitly returns the enumerator type. This allows the use of an enumerable interface without boxing the enumerator:
 
 ```csharp
 public interface IValueEnumerable<T, TEnumerator>
@@ -281,7 +285,7 @@ public readonly struct MyRange
 
 ### Explicit interface implementations
 
-Enumerables usually implement interfaces by overriding them using public implementations, or using a mix but, an enumerable can be implemented [using only explicit interface implementations](https://sharplab.io/#v2:EYLgdgpgLgZgHgGiiATgVzAHwAICYCMAsAFDYAMABNvgHQDCA9gDZMQDGUAlg2AM4DcJclXwAWQcSEBmKrgoBZAJ4AlAIZgA5hAogRUgDycwUAHwkA3hSsUS1iigiqAJjyaKKRqBTYMMUCXa21tgySmqaEAAUnt6+xgCUQVbmSXYUUAAWnLw0Pn4UALyxfgHWAL4kqQCSAKJgaAC2ECiqUAwohsYmep2mNADi0HWNza3tkfGF3ZAA7hTDTS1tKJF5CaVWtfWLYyh6A0Pbo8sTUxSz80dL42tQ8Rs2xHZ4lyPXe7pbb7u9Zk/WKX+aXsjhcYDcHmMxWMDzsMTYaBQDhhqUCQLSIVeOxO8Lid1RAIJwMy2VyeMK0P8RLSCKREChRQAtPhYeVqdSYl9se1fvREcivAVurSBayrAxgAArdheLnHdp8ukM4X8+lU9Fo4FWYAMZgUOXvGjyBgANwgADkIHAoKchRQANT2kVqij6Slix5aqiifULeUoGjKCC8aC2lVKwUUZke6nYH1VAAi2QADgxeKpgKwaEneKmQ6dzBV0UWi0JcDILKk8HJUoCvTB2o42BlIibVHs20w0NojOcIHMwuotJF8GR4okNdYAJDUACcrdUXYg91SJaAA=):
+Enumerables usually implement interfaces by overriding them using public implementations, or using a mix but, an enumerable can be implemented using only explicit interface implementations:
 
 ```csharp
 public class MyRange : IEnumerable<int>
@@ -341,4 +345,4 @@ The following open-source projects are used to build and test this project:
 
 ## License
 
-This project is licensed under the MIT license. See the [LICENSE](LICENSE.txt) file for more info.
+This project is licensed under the MIT license. See the [LICENSE](LICENSE) file for more info.
