@@ -64,7 +64,7 @@ public class EmptyAsyncEnumerable<T>
 
 Here's the implementation of a range collection, for sync and async enumerables, returning values from 0 to `count`:
 
-```csharp
+``` csharp
 public readonly struct RangeEnumerable
 {
     readonly int count;
@@ -82,7 +82,7 @@ public readonly struct RangeEnumerable
         readonly int count;
         int current;
         
-        public Enumerator(int count)
+        internal Enumerator(int count)
         {
             this.count = count;
             current = -1;
@@ -112,7 +112,7 @@ readonly struct RangeAsyncEnumerable
         readonly CancellationToken token;
         int current;
 
-        public Enumerator(int count, CancellationToken token)
+        internal Enumerator(int count, CancellationToken token)
         {
             this.count = count;
             this.token = token;
@@ -141,7 +141,7 @@ Collections can have multiple forms of enumeration. For example; a collection th
 
 Here's an example of a collection with multiple possible enumerations and enumerator implementations:
 
-```csharp
+``` csharp
 public readonly struct MyRange : IReadOnlyList<int>
 {    
     public MyRange(int count)
@@ -173,7 +173,7 @@ public readonly struct MyRange : IReadOnlyList<int>
         readonly int count;
         int current;
         
-        public Enumerator(int count)
+        internal Enumerator(int count)
         {
             this.count = count;
             current = -1;
@@ -217,7 +217,7 @@ Custom enumerable interfaces can add even more possible enumerations, that would
 
 Here's an interface that restricts the enumerator to a value type and adds a `GetEnumerator()` that explicitly returns the enumerator type. This allows the use of an enumerable interface without boxing the enumerator:
 
-```csharp
+``` csharp
 public interface IValueEnumerable<T, TEnumerator>
     : IEnumerable<T>
     where TEnumerator : struct, IEnumerator<T>
@@ -228,7 +228,7 @@ public interface IValueEnumerable<T, TEnumerator>
 
 Here's a possible implementation:
 
-```csharp
+``` csharp
 public readonly struct MyRange 
     : IValueEnumerable<int, MyRange.DisposableEnumerator>
 {    
@@ -249,7 +249,7 @@ public readonly struct MyRange
         readonly int count;
         int current;
         
-        public Enumerator(int count)
+        internal Enumerator(int count)
         {
             this.count = count;
             current = -1;
@@ -287,7 +287,7 @@ public readonly struct MyRange
 
 Enumerables usually implement interfaces by overriding them using public implementations, or using a mix but, an enumerable can be implemented using only explicit interface implementations:
 
-```csharp
+``` csharp
 public class MyRange : IEnumerable<int>
 {    
     readonly int count;
@@ -305,7 +305,7 @@ public class MyRange : IEnumerable<int>
         readonly int count;
         int current;
         
-        public Enumerator(int count)
+        internal Enumerator(int count)
         {
             this.count = count;
             current = -1;
@@ -322,6 +322,59 @@ public class MyRange : IEnumerable<int>
     }
 }
 ```
+
+### By reference return
+
+The `Current` property can return the item by reference. 
+
+_NOTE: In this case, you should also be careful to declare the enumeration variable as `foreach (ref var item in source)` or `foreach (ref readonly var item in source)`. If you use `foreach (var item in source)`, no warning is shown and a copy of the item is made on each iteraton. You can use [NetFabric.Hyperlinq.Analyzer](https://www.nuget.org/packages/NetFabric.Hyperlinq.Analyzer/) to warn you of this case._
+
+Here's possible implementation of a sync enumerable:
+
+``` csharp
+readonly struct WhereEnumerable<T>
+{
+    readonly T[] source;
+    readonly Func<T, bool> predicate;
+    
+    public WhereEnumerable(T[] source, Func<T, bool> predicate)
+    {
+        this.source = source;
+        this.predicate = predicate;
+    }
+    
+    public Enumerator GetEnumerator() => new Enumerator(this);
+    
+    public struct Enumerator
+    {
+        readonly T[] source;
+        readonly Func<T, bool> predicate;
+        int index;
+        
+        internal Enumerator(in WhereEnumerable<T> enumerable)
+        {
+            source = enumerable.source;
+            predicate = enumerable.predicate;
+            index = -1;
+        }
+        
+        public readonly ref readonly T Current => ref source[index];
+        
+        public bool MoveNext()
+        {
+            while (++index < source.Length)
+            {
+                if (predicate(source[index]))
+                    return true;
+            }
+            return false;
+        }
+
+    }
+}
+```
+
+_NOTE: To make the enumeration independent of any interface, this framework uses reflection to enumerate the items. Invocation of methods that return by reference is only possible in `netstandard2.1` so, the validation of this type of enumerable is only possible when running the tests on `netcoreapp3.0`._
 
 ### Enumerator independence
 
