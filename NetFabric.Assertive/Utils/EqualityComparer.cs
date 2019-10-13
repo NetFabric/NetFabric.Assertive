@@ -14,7 +14,7 @@ namespace NetFabric.Assertive
                 var actualItemType = enumerableInfo.Current.PropertyType;
                 var wrapped = new EnumerableWrapper<TActualItem>(actual, enumerableInfo);
 
-#if NETSTANDARD2_1 
+#if !NETSTANDARD2_1 
                 // 'Current' may return by-ref but reflection only supports its invocation on netstandard 2.1
                 if (enumerableInfo.Current.PropertyType.IsByRef)
                 {
@@ -50,7 +50,7 @@ namespace NetFabric.Assertive
                                     $"Expected '{expected.ToFriendlyString()}' but found '{wrapped.ToFriendlyString()}' with more items when using '{getEnumeratorDeclaringType}.GetEnumerator()'.");
                             }
                     }
-#if NETSTANDARD2_1 
+#if !NETSTANDARD2_1 
                 }
 #endif
             }

@@ -15,45 +15,33 @@ namespace NetFabric.Assertive
                 var actualItemType = enumerableInfo.Current.PropertyType;
                 var wrapped = new AsyncEnumerableWrapper<TActualItem>(actual, enumerableInfo);
 
-#if NETSTANDARD2_1 
-                // 'Current' may return by-ref but reflection only supports its invocation on netstandard 2.1
-                if (enumerableInfo.Current.PropertyType.IsByRef)
+                (var result, var index) = wrapped.CompareAsync(expected, equalityComparison).GetAwaiter().GetResult(); ;
+                switch (result)
                 {
-                    // what to do here?????
-                }
-                else
-                {
-#endif
-                    (var result, var index) = wrapped.CompareAsync(expected, equalityComparison).GetAwaiter().GetResult(); ;
-                    switch (result)
-                    {
-                        case EqualityResult.NotEqualAtIndex:
-                            {
-                                throw new EqualToAssertionException<TActual, TExpected>(
-                                    actual,
-                                    expected,
-                                    $"Expected '{expected.ToFriendlyString()}' but found '{wrapped.ToFriendlyString()}' that differs at index {index} when using '{getEnumeratorDeclaringType}.GetEnumerator()'.");
-                            }
+                    case EqualityResult.NotEqualAtIndex:
+                        {
+                            throw new EqualToAssertionException<TActual, TExpected>(
+                                actual,
+                                expected,
+                                $"Expected '{expected.ToFriendlyString()}' but found '{wrapped.ToFriendlyString()}' that differs at index {index} when using '{getEnumeratorDeclaringType}.GetEnumerator()'.");
+                        }
 
-                        case EqualityResult.LessItem:
-                            {
-                                throw new EqualToAssertionException<TActual, TExpected>(
-                                    actual,
-                                    expected,
-                                    $"Expected '{expected.ToFriendlyString()}' but found '{wrapped.ToFriendlyString()}' with less items when using '{getEnumeratorDeclaringType}.GetEnumerator()'.");
-                            }
+                    case EqualityResult.LessItem:
+                        {
+                            throw new EqualToAssertionException<TActual, TExpected>(
+                                actual,
+                                expected,
+                                $"Expected '{expected.ToFriendlyString()}' but found '{wrapped.ToFriendlyString()}' with less items when using '{getEnumeratorDeclaringType}.GetEnumerator()'.");
+                        }
 
-                        case EqualityResult.MoreItems:
-                            {
-                                throw new EqualToAssertionException<TActual, TExpected>(
-                                    actual,
-                                    expected,
-                                    $"Expected '{expected.ToFriendlyString()}' but found '{wrapped.ToFriendlyString()}' with more items when using '{getEnumeratorDeclaringType}.GetEnumerator()'.");
-                            }
-                    }
-#if NETSTANDARD2_1 
+                    case EqualityResult.MoreItems:
+                        {
+                            throw new EqualToAssertionException<TActual, TExpected>(
+                                actual,
+                                expected,
+                                $"Expected '{expected.ToFriendlyString()}' but found '{wrapped.ToFriendlyString()}' with more items when using '{getEnumeratorDeclaringType}.GetEnumerator()'.");
+                        }
                 }
-#endif
             }
 
             foreach (var @interface in typeof(TActual).GetInterfaces())
