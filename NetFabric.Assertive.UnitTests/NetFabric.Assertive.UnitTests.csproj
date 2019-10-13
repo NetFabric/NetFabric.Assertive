@@ -21,9 +21,5 @@
     <Compile Remove="Platforms\netcoreapp3.0\**" />
     <EmbeddedResource Remove="Platforms\netcoreapp3.0\**" />
     <None Remove="Platforms\netcoreapp3.0\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Assertions\ObservableReferenceTYpeAssertionsTests\" />
   </ItemGroup>  
 </Project>

@@ -17,5 +17,18 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
             Assert.IsType<BooleanAssertions>(result);
         }
+
+        [Fact]
+        public void Must_With_Action_Should_Return_ActionAssertions()
+        {
+            // Arrange
+            Action action = () => { };
+
+            // Act
+            var result = action.Must();
+
+            // Assert
+            Assert.IsType<ActionAssertions>(result);
+        }
     }
 }

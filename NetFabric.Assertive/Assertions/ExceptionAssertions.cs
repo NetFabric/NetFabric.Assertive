@@ -22,5 +22,14 @@ namespace NetFabric.Assertive
 
             return this;
         }
+
+        public ExceptionAssertions<TException> EvaluatesTrue(Func<TException, bool> func)
+        {
+            if (!func(Actual))
+                throw new ActualAssertionException<TException>(Actual,
+                    $"Evaluates to 'false'.");
+
+            return this;
+        }
     }
 }
