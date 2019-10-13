@@ -28,9 +28,9 @@ It can handle any of the following enumerable implementations:
 
 ### No enumerable interfaces
 
-A collection, to be enumerated by a `foreach` loop, does not have to implement any interface. It just needs to have a `GetEnumerator()` method that returns a type that has a property `Current` with a getter and a parameterless method `MoveNext()`that returns `bool`.
+A collection, to be enumerated by a `foreach` loop, does not have to implement any interface. It just needs to have a parameterless `GetEnumerator()` method that returns a type that has a property `Current` with a getter and a parameterless `MoveNext()` method that returns `bool`.
 
-The same applies to [async streams](https://docs.microsoft.com/en-us/dotnet/csharp/tutorials/generate-consume-asynchronous-stream) that, to be enumerated by an `await foreach` loop, also don't have to implement any interface. They just needs to have a `GetAsyncEnumerator()` method that returns a type that has a property `Current` with a getter and a parameterless method `MoveNextAsync()`that returns `ValueTask<bool>`.
+The same applies to [async streams](https://docs.microsoft.com/en-us/dotnet/csharp/tutorials/generate-consume-asynchronous-stream) that, to be enumerated by an `await foreach` loop, they also don't have to implement any interface. They just needs to have a parameterless `GetAsyncEnumerator()` method that returns a type that has a property `Current` with a getter and a parameterless `MoveNextAsync()` method that returns `ValueTask<bool>`.
 
 Here's the minimal implementations for both types of enumerables:
 
