@@ -189,7 +189,7 @@ public readonly struct MyRange : IReadOnlyList<int>
         readonly int count;
         int current;
         
-        public DisposableEnumerator(int count)
+        internal DisposableEnumerator(int count)
         {
             this.count = count;
             current = -1;
@@ -265,7 +265,7 @@ public readonly struct MyRange
         readonly int count;
         int current;
         
-        public DisposableEnumerator(int count)
+        internal DisposableEnumerator(int count)
         {
             this.count = count;
             current = -1;
