@@ -15,6 +15,15 @@ namespace NetFabric.Assertive
         {
         }
 
+        public EnumerableReferenceTypeAssertions<TActual, TActualItem> EvaluatesTrue(Func<TActual, bool> func)
+        {
+            if (!func(Actual))
+                throw new ActualAssertionException<TActual>(Actual,
+                    $"Evaluates to 'false'.");
+
+            return this;
+        }
+
         public EnumerableReferenceTypeAssertions<TActual, TActualItem> NotShareState()
         {
             if (Actual is object)

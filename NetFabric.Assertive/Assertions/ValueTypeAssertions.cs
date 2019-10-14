@@ -14,6 +14,15 @@ namespace NetFabric.Assertive
         {
         }
 
+        public ValueTypeAssertions<TActual> EvaluatesTrue(Func<TActual, bool> func)
+        {
+            if (!func(Actual))
+                throw new ActualAssertionException<TActual>(Actual,
+                    $"Evaluates to 'false'.");
+
+            return this;
+        }
+
         public ValueTypeAssertions<TActual> BeEqualTo(TActual expected)
         {
             if (!EqualityComparer<TActual>.Default.Equals(Actual, expected))

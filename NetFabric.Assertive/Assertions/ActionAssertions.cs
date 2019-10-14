@@ -17,5 +17,14 @@ namespace NetFabric.Assertive
 
         protected override void Invoke()
             => Actual();
+
+        public ActionAssertions EvaluatesTrue(Func<Action, bool> func)
+        {
+            if (!func(Actual))
+                throw new ActualAssertionException<Action>(Actual,
+                    $"Evaluates to 'false'.");
+
+            return this;
+        }
     }
 }

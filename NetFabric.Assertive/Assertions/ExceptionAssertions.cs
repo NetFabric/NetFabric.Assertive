@@ -14,16 +14,7 @@ namespace NetFabric.Assertive
         {
         }
 
-        public ExceptionAssertions<TException> WithMessage(string expected) 
-        {
-            if (Actual.Message != expected)
-                throw new ExpectedAssertionException<string, string>(Actual.Message, expected, 
-                    $"Expected message '{expected}' but found '{Actual.Message}' instead.");
-
-            return this;
-        }
-
-        public ExceptionAssertions<TException> EvaluatesTrue(Func<TException, bool> func)
+        public new ExceptionAssertions<TException> EvaluatesTrue(Func<TException, bool> func)
         {
             if (!func(Actual))
                 throw new ActualAssertionException<TException>(Actual,
