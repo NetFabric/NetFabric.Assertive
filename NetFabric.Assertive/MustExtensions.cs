@@ -23,6 +23,11 @@ namespace NetFabric.Assertive
         public static ValueTypeAssertions<TActual> Must<TActual>(this TActual actual) 
             where TActual : struct
             => new ValueTypeAssertions<TActual>(actual);
+
+        [Pure]
+        public static NullableValueTypeAssertions<TActual> Must<TActual>(this Nullable<TActual> actual)
+            where TActual : struct
+            => new NullableValueTypeAssertions<TActual>(actual);
     }
 
     [DebuggerNonUserCode]

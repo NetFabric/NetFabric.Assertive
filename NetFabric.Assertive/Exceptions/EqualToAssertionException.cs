@@ -6,7 +6,7 @@ namespace NetFabric.Assertive
         : ExpectedAssertionException<TActual, TExpected>
     {
         public EqualToAssertionException(TActual actual, TExpected expected)
-            : this(actual, expected, $"Expected '{expected.ToFriendlyString()}' but found '{actual.ToFriendlyString()}'.")
+            : this(actual, expected, $"Expected '{expected.ToFriendlyString()}' to be equivalent to '{actual.ToFriendlyString()}' but it's not.")
         {
         }
 

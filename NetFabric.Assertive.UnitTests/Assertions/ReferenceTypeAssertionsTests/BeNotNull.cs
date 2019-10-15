@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Xunit;
 
 namespace NetFabric.Assertive.UnitTests
@@ -17,9 +15,10 @@ namespace NetFabric.Assertive.UnitTests
             void action() => actual.Must().BeNotNull();
 
             // Assert
-            var exception = Assert.Throws<NullException<object>>(action);
+            var exception = Assert.Throws<NotEqualToAssertionException<object, object>>(action);
             Assert.Same(actual, exception.Actual);
-            Assert.Equal("Expected not '<null>' but found '<null>'.", exception.Message);
+            Assert.Null(exception.NotExpected);
+            Assert.Equal("Expected '<null>' to be not equivalent to '<null>' but it is.", exception.Message);
         }
 
         [Fact]

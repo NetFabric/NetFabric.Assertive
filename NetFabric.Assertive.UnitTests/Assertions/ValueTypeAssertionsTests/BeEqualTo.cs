@@ -20,7 +20,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         [Theory]
-        [InlineData(0, 1, "Expected '1' but found '0'.")]
+        [InlineData(0, 1, "Expected '1' to be equivalent to '0' but it's not.")]
         public void BeEqualTo_With_NotEqual_Should_Throw(int actual, int expected, string message)
         {
             // Arrange

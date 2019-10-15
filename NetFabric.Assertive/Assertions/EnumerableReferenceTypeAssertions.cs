@@ -58,5 +58,23 @@ namespace NetFabric.Assertive
 
             return this;
         }
+
+        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeSameAs(TActual expected)
+        {
+            if (!Object.ReferenceEquals(Actual, expected))
+                throw new ExpectedAssertionException<TActual, TActual>(Actual, expected,
+                    $"Expected '{Actual.ToFriendlyString()}' to be same as '{expected.ToFriendlyString()}' but it's not.");
+
+            return this;
+        }
+
+        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeNotSameAs(TActual expected)
+        {
+            if (Object.ReferenceEquals(Actual, expected))
+                throw new ExpectedAssertionException<TActual, TActual>(Actual, expected,
+                    $"Expected '{Actual.ToFriendlyString()}' to be not same as '{expected.ToFriendlyString()}' but it is.");
+
+            return this;
+        }
     }
 }

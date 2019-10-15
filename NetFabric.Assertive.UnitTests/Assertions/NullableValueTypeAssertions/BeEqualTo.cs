@@ -5,12 +5,12 @@ using Xunit;
 
 namespace NetFabric.Assertive.UnitTests
 {
-    public partial class ReferenceTypeAssertionsTests
+    public partial class NullableValueTypeAssertionsTests
     {
         [Theory]
         [InlineData(null)]
         [InlineData(0)]
-        public void BeEqualTo_With_Equal_Should_NotThrow(object value)
+        public void BeEqualTo_With_Equal_Should_NotThrow(int? value)
         {
             // Arrange
 
@@ -24,7 +24,7 @@ namespace NetFabric.Assertive.UnitTests
         [InlineData(null, 0, "Expected '0' to be equivalent to '<null>' but it's not.")]
         [InlineData(0, null, "Expected '<null>' to be equivalent to '0' but it's not.")]
         [InlineData(0, 1, "Expected '1' to be equivalent to '0' but it's not.")]
-        public void BeEqualTo_With_NotEqual_Should_Throw(object actual, object expected, string message)
+        public void BeEqualTo_With_NotEqual_Should_Throw(int? actual, int? expected, string message)
         {
             // Arrange
 
@@ -32,10 +32,10 @@ namespace NetFabric.Assertive.UnitTests
             void action() => actual.Must().BeEqualTo(expected);
 
             // Assert
-            var exception = Assert.Throws<EqualToAssertionException<object, object>>(action);
-            Assert.Equal(actual, exception.Actual);
-            Assert.Equal(expected, exception.Expected);
-            Assert.Equal(exception.Message, message);
+            var exception = Assert.Throws<EqualToAssertionException<int?, int?>>(action);
+            Assert.Equal(exception.Actual, actual);
+            Assert.Equal(exception.Expected, expected);
+            Assert.Equal(message, exception.Message);
         }
     }
 }

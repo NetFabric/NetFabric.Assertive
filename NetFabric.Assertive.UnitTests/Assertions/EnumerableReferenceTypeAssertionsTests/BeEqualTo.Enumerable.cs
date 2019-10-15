@@ -55,8 +55,8 @@ namespace NetFabric.Assertive.UnitTests
         public static TheoryData<RangeEnumerable, int[], string> Enumerable_NotEqualNullData =>
             new TheoryData<RangeEnumerable, int[], string>
             {
-                { null, new int[] { }, "Expected '' but found '<null>'." },
-                { new RangeEnumerable(0), null, "Expected '<null>' but found ''." },
+                { null, new int[] { }, "Expected '' to be equivalent to '<null>' but it's not." },
+                { new RangeEnumerable(0), null, "Expected '<null>' to be equivalent to '' but it's not." },
             };
 
         [Theory]

@@ -34,7 +34,7 @@ namespace NetFabric.Assertive
         public ReferenceTypeAssertions<TActual> BeNotNull() 
         {
             if (Actual is null)
-                throw new NullException<TActual>();
+                throw new NotEqualToAssertionException<TActual, TActual>(Actual, null);
 
             return this;
         }
@@ -43,7 +43,7 @@ namespace NetFabric.Assertive
         {
             if (!EqualityComparer<TActual>.Default.Equals(Actual, expected))
                 throw new EqualToAssertionException<TActual, TActual>(Actual, expected);
-                
+
             return this;
         }
 
@@ -51,7 +51,41 @@ namespace NetFabric.Assertive
         {
             if (!comparer(Actual, expected))
                 throw new EqualToAssertionException<TActual, TExpected>(Actual, expected);
-                
+
+            return this;
+        }
+
+        public ReferenceTypeAssertions<TActual> BeNotEqualTo(TActual expected)
+        {
+            if (EqualityComparer<TActual>.Default.Equals(Actual, expected))
+                throw new NotEqualToAssertionException<TActual, TActual>(Actual, expected);
+
+            return this;
+        }
+
+        public ReferenceTypeAssertions<TActual> BeNotEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
+        {
+            if (comparer(Actual, expected))
+                throw new NotEqualToAssertionException<TActual, TExpected>(Actual, expected);
+
+            return this;
+        }
+
+        public ReferenceTypeAssertions<TActual> BeSameAs(TActual expected)
+        {
+            if (!Object.ReferenceEquals(Actual, expected))
+                throw new ExpectedAssertionException<TActual, TActual>(Actual, expected, 
+                    $"Expected '{Actual.ToFriendlyString()}' to be same as '{expected.ToFriendlyString()}' but it's not.");
+
+            return this;
+        }
+
+        public ReferenceTypeAssertions<TActual> BeNotSameAs(TActual expected)
+        {
+            if (Object.ReferenceEquals(Actual, expected))
+                throw new ExpectedAssertionException<TActual, TActual>(Actual, expected,
+                    $"Expected '{Actual.ToFriendlyString()}' to be not same as '{expected.ToFriendlyString()}' but it is.");
+
             return this;
         }
 

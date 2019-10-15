@@ -23,11 +23,12 @@ namespace NetFabric.Assertive
             return this;
         }
 
+
         public ValueTypeAssertions<TActual> BeEqualTo(TActual expected)
         {
             if (!EqualityComparer<TActual>.Default.Equals(Actual, expected))
                 throw new EqualToAssertionException<TActual, TActual>(Actual, expected);
-                
+
             return this;
         }
 
@@ -35,7 +36,23 @@ namespace NetFabric.Assertive
         {
             if (!comparer(Actual, expected))
                 throw new EqualToAssertionException<TActual, TExpected>(Actual, expected);
-                
+
+            return this;
+        }
+
+        public ValueTypeAssertions<TActual> BeNotEqualTo(TActual expected)
+        {
+            if (EqualityComparer<TActual>.Default.Equals(Actual, expected))
+                throw new NotEqualToAssertionException<TActual, TActual>(Actual, expected);
+
+            return this;
+        }
+
+        public ValueTypeAssertions<TActual> BeNotEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
+        {
+            if (comparer(Actual, expected))
+                throw new NotEqualToAssertionException<TActual, TExpected>(Actual, expected);
+
             return this;
         }
 
