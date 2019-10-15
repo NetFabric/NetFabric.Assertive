@@ -4,16 +4,16 @@ using System.Diagnostics;
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public class ActionAssertions
-        : DelegateAssertions<Action>
+    public class FunctionAssertions<TActual>
+        : DelegateAssertions<Func<TActual>>
     {
-        internal ActionAssertions(Action actual)
+        internal FunctionAssertions(Func<TActual> actual)
             : base(actual)
         {
             Actual = actual;
         }
 
-        public new Action Actual { get; }
+        public new Func<TActual> Actual { get; }
 
         protected override void Invoke()
             => Actual();

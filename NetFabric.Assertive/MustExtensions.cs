@@ -14,6 +14,10 @@ namespace NetFabric.Assertive
         [Pure]
         public static ActionAssertions Must(this Action actual)
             => new ActionAssertions(actual);
+
+        [Pure]
+        public static FunctionAssertions<TActual> Must<TActual>(this Func<TActual> actual)
+            => new FunctionAssertions<TActual>(actual);
     }
 
     [DebuggerNonUserCode]

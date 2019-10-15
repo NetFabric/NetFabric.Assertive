@@ -23,7 +23,7 @@ namespace NetFabric.Assertive
             return this;
         }
 
-        public ValueTypeAssertions<TActual> BeOfType<TType>(TActual expected)
+        public ValueTypeAssertions<TActual> BeOfType<TType>()
         {
             if (!typeof(TType).IsAssignableFrom(typeof(TActual)))
                 throw new ActualAssertionException<TActual>(Actual, $"Expected '{Actual.ToFriendlyString()}' to be of type '{typeof(TType)}' but it's not.");
@@ -31,7 +31,7 @@ namespace NetFabric.Assertive
             return this;
         }
 
-        public ValueTypeAssertions<TActual> NotBeOfType<TType>(TActual expected)
+        public ValueTypeAssertions<TActual> NotBeOfType<TType>()
         {
             if (typeof(TType).IsAssignableFrom(typeof(TActual)))
                 throw new ActualAssertionException<TActual>(Actual, $"Expected '{Actual.ToFriendlyString()}' not to be of type '{typeof(TType)}' but it is.");
