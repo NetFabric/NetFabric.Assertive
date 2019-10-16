@@ -23,6 +23,15 @@ namespace NetFabric.Assertive
             return this;
         }
 
+        public NullableValueTypeAssertions<TActual> EvaluatesFalse(Func<Nullable<TActual>, bool> func)
+        {
+            if (func(Actual))
+                throw new ActualAssertionException<Nullable<TActual>>(Actual,
+                    $"Evaluates to 'true'.");
+
+            return this;
+        }
+
         public NullableValueTypeAssertions<TActual> HaveValue()
         {
             if (!Actual.HasValue)

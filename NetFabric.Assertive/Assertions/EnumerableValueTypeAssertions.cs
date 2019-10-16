@@ -24,6 +24,15 @@ namespace NetFabric.Assertive
             return this;
         }
 
+        public EnumerableValueTypeAssertions<TActual, TActualItem> EvaluatesFalse(Func<TActual, bool> func)
+        {
+            if (func(Actual))
+                throw new ActualAssertionException<TActual>(Actual,
+                    $"Evaluates to 'true'.");
+
+            return this;
+        }
+
         public EnumerableValueTypeAssertions<TActual, TActualItem> NotShareState()
         {
             EqualityComparer.AssertNotSharing<TActual, TActualItem>(Actual, EnumerableInfo);

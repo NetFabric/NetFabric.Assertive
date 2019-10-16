@@ -23,9 +23,18 @@ namespace NetFabric.Assertive
             return this;
         }
 
+        public ValueTypeAssertions<TActual> EvaluatesFalse(Func<TActual, bool> func)
+        {
+            if (func(Actual))
+                throw new ActualAssertionException<TActual>(Actual,
+                    $"Evaluates to 'true'.");
+
+            return this;
+        }
+
         public ValueTypeAssertions<TActual> BeOfType<TType>()
         {
-            if (!typeof(TType).IsAssignableFrom(typeof(TActual)))
+            if (typeof(TActual) != typeof(TType))
                 throw new ActualAssertionException<TActual>(Actual, $"Expected '{Actual.ToFriendlyString()}' to be of type '{typeof(TType)}' but it's not.");
 
             return this;
@@ -33,11 +42,33 @@ namespace NetFabric.Assertive
 
         public ValueTypeAssertions<TActual> NotBeOfType<TType>()
         {
-            if (typeof(TType).IsAssignableFrom(typeof(TActual)))
+            if (typeof(TActual) == typeof(TType))
                 throw new ActualAssertionException<TActual>(Actual, $"Expected '{Actual.ToFriendlyString()}' not to be of type '{typeof(TType)}' but it is.");
 
             return this;
         }
+
+        public ValueTypeAssertions<TActual> BeAssignableTo<TType>()
+        {
+            if (!typeof(TType).IsAssignableFrom(typeof(TActual)))
+                throw new ActualAssertionException<TActual>(Actual, $"Expected '{Actual.ToFriendlyString()}' to be assignable to '{typeof(TType)}' but it's not.");
+
+            return this;
+        }
+
+        public ValueTypeAssertions<TActual> BeNotAssignableTo<TType>()
+        {
+            if (typeof(TType).IsAssignableFrom(typeof(TActual)))
+                throw new ActualAssertionException<TActual>(Actual, $"Expected '{Actual.ToFriendlyString()}' to be not assignable to '{typeof(TType)}' but it is.");
+
+            return this;
+        }
+
+        public ValueTypeAssertions<TActual> BeDefault()
+            => BeEqualTo(default);
+
+        public ValueTypeAssertions<TActual> BeNotDefault()
+            => BeNotEqualTo(default);
 
         public ValueTypeAssertions<TActual> BeEqualTo(TActual expected)
         {
@@ -70,6 +101,9 @@ namespace NetFabric.Assertive
 
             return this;
         }
+
+        public EnumerableValueTypeAssertions<TActual, KeyValuePair<TActualKey, TActualItem>> BeDictionary<TActualKey, TActualItem>()
+            => BeEnumerable<KeyValuePair<TActualKey, TActualItem>>();
 
         public EnumerableValueTypeAssertions<TActual, TActualItem> BeEnumerable<TActualItem>()
         {
