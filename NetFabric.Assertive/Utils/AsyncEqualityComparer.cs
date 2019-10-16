@@ -13,7 +13,7 @@ namespace NetFabric.Assertive
             if (!getEnumeratorDeclaringType.IsInterface)
             {
                 var actualItemType = enumerableInfo.Current.PropertyType;
-                var wrapped = new AsyncEnumerableWrapper<TActualItem>(actual, enumerableInfo);
+                var wrapped = new AsyncEnumerableWrapper<TActual, TActualItem>(actual, enumerableInfo);
 
                 (var result, var index) = wrapped.CompareAsync(expected, equalityComparison).GetAwaiter().GetResult(); ;
                 switch (result)
@@ -49,7 +49,7 @@ namespace NetFabric.Assertive
                 if (@interface.IsEnumerable(out var interfaceEnumerableInfo))
                 {
                     var interfaceItemType = interfaceEnumerableInfo.Current.PropertyType;
-                    var wrapped = new AsyncEnumerableWrapper<TActualItem>(actual, interfaceEnumerableInfo);
+                    var wrapped = new AsyncEnumerableWrapper<TActual, TActualItem>(actual, interfaceEnumerableInfo);
 
                     (var result, var index) = wrapped.CompareAsync(expected, equalityComparison).GetAwaiter().GetResult();
                     switch (result)

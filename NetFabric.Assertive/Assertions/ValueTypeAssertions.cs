@@ -112,6 +112,13 @@ namespace NetFabric.Assertive
             return new EnumerableValueTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
         }
 
+        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> BeAsyncEnumerable<TActualItem>()
+        {
+            TypeExtensions.AssertIsAsyncEnumerable<TActual, TActualItem>(Actual, out var enumerableInfo);
+
+            return new AsyncEnumerableValueTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
+        }
+
         public ObservableValueTypeAssertions<TActual, TActualItem> BeObservable<TActualItem>()
         {
             var actualType = typeof(TActual);
