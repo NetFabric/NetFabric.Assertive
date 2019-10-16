@@ -26,10 +26,4 @@
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.0.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'!='netstandard2.1'">
-    <Compile Remove="Platforms\netcoreapp2.1\**" />
-    <EmbeddedResource Remove="Platforms\netcoreapp2.1\**" />
-    <None Remove="Platforms\netcoreapp2.1\**" />
-  </ItemGroup>
-
 </Project>

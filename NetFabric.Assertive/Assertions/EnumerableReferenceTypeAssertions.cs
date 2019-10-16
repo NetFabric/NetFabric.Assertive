@@ -44,13 +44,12 @@ namespace NetFabric.Assertive
         public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEmpty()
             => BeEqualTo(Enumerable.Empty<TActualItem>());
 
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo(IEnumerable<TActualItem> expected)
-            => BeEqualTo<TActualItem>(expected);
+        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected>(TExpected expected)
+            where TExpected : IEnumerable<TActualItem>
+            => BeEqualTo<TExpected, TActualItem>(expected);
 
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpectedItem>(IEnumerable<TExpectedItem> expected)
-            => BeEqualTo(expected, (actual, expected) => actual.Equals(expected));
-
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpectedItem>(IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> equalityComparison)
+        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected expected)
+            where TExpected : IEnumerable<TExpectedItem>
         {
             if (Actual is null)
             {
@@ -62,7 +61,7 @@ namespace NetFabric.Assertive
                 if (expected is null)
                     throw new EqualToAssertionException<TActual, IEnumerable<TExpectedItem>>(Actual, expected);
 
-                EqualityComparer.AssertEquality(Actual, EnumerableInfo, expected, equalityComparison);
+                EqualityComparer.AssertEquality<TActual, TActualItem, TExpected, TExpectedItem>(Actual, EnumerableInfo, expected);
             }
 
             return this;

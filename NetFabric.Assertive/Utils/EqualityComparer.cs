@@ -1,19 +1,17 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace NetFabric.Assertive
 {
     static partial class EqualityComparer
     {
-        public static void AssertEquality<TActual, TActualItem, TExpected, TExpectedItem>(TActual actual, EnumerableInfo enumerableInfo, TExpected expected, Func<TActualItem, TExpectedItem, bool> equalityComparison)
+        public static void AssertEquality<TActual, TActualItem, TExpected, TExpectedItem>(TActual actual, EnumerableInfo enumerableInfo, TExpected expected)
             where TExpected : IEnumerable<TExpectedItem>
         {
             var getEnumeratorDeclaringType = enumerableInfo.GetEnumerator.DeclaringType;
             if (!getEnumeratorDeclaringType.IsInterface)
             {
-                var actualItemType = enumerableInfo.Current.PropertyType;
-                var wrapped = new EnumerableWrapper<TActualItem>(actual, enumerableInfo);
-
 #if !NETSTANDARD2_1 
                 // 'Current' may return by-ref but reflection only supports its invocation on netstandard 2.1
                 if (enumerableInfo.Current.PropertyType.IsByRef)
@@ -23,7 +21,8 @@ namespace NetFabric.Assertive
                 else
                 {
 #endif
-                    (var result, var index) = wrapped.Compare(expected, equalityComparison);
+                    var wrapped = new EnumerableWrapper<TActual>(actual, enumerableInfo);
+                    (var result, var index) = wrapped.Compare(expected);
                     switch (result)
                     {
                         case EqualityResult.NotEqualAtIndex:
@@ -60,11 +59,11 @@ namespace NetFabric.Assertive
                 if (@interface.IsEnumerable(out var interfaceEnumerableInfo))
                 {
                     var interfaceItemType = interfaceEnumerableInfo.Current.PropertyType;
-                    var wrapped = new EnumerableWrapper<TActualItem>(actual, interfaceEnumerableInfo);
+                    var wrapped = new EnumerableWrapper<TActual>(actual, interfaceEnumerableInfo);
                     var readOnlyCollectionType = typeof(IReadOnlyCollection<>).MakeGenericType(interfaceItemType);
                     var readOnlyListType = typeof(IReadOnlyList<>).MakeGenericType(interfaceItemType);
 
-                    (var result, var index) = wrapped.Compare(expected, equalityComparison);
+                    (var result, var index) = wrapped.Compare(expected);
                     switch (result)
                     {
                         case EqualityResult.NotEqualAtIndex:
@@ -106,7 +105,7 @@ namespace NetFabric.Assertive
                     if (@interface == readOnlyListType)
                     {
                         var readOnlyListActual = (IReadOnlyList<TActualItem>)actual;
-                        (result, index) = readOnlyListActual.Compare(expected, equalityComparison);
+                        (result, index) = readOnlyListActual.Compare(expected);
                         switch (result)
                         {
                             case EqualityResult.NotEqualAtIndex:
@@ -146,9 +145,6 @@ namespace NetFabric.Assertive
             var getEnumeratorDeclaringType = enumerableInfo.GetEnumerator.DeclaringType;
             if (!getEnumeratorDeclaringType.IsInterface)
             {
-                var actualItemType = enumerableInfo.Current.PropertyType;
-                var wrapped = new EnumerableWrapper<TActualItem>(actual, enumerableInfo);
-
 #if NETSTANDARD2_1
                 // 'Current' may return by-ref but reflection only supports its invocation on netstandard 2.1
                 if (enumerableInfo.Current.PropertyType.IsByRef)
@@ -158,7 +154,8 @@ namespace NetFabric.Assertive
                 else
                 {
 #endif
-                    (var result, var _) = wrapped.Compare(wrapped, (actual, expected) => EqualityComparer<TActualItem>.Default.Equals(actual, expected));
+                    var wrapped = new EnumerableWrapper<TActual>(actual, enumerableInfo);
+                    (var result, var _) = wrapped.Compare(wrapped);
                     if (result != EqualityResult.Equal)
                         throw new ActualAssertionException<TActual>(actual, $"Enumerators returned by '{getEnumeratorDeclaringType}.GetEnumerator()' do share state.");
 #if NETSTANDARD2_1
@@ -170,16 +167,52 @@ namespace NetFabric.Assertive
             {
                 if (@interface.IsEnumerable(out var interfaceEnumerableInfo))
                 {
-                    var wrapped = new EnumerableWrapper<TActualItem>(actual, interfaceEnumerableInfo);
-
-                    (var result, var _) = wrapped.Compare(wrapped, (actual, expected) => EqualityComparer<TActualItem>.Default.Equals(actual, expected));
+                    var wrapped = new EnumerableWrapper<TActual>(actual, interfaceEnumerableInfo);
+                    (var result, var _) = wrapped.Compare(wrapped);
                     if (result != EqualityResult.Equal)
                         throw new ActualAssertionException<TActual>(actual, $"Enumerators returned by '{@interface}.GetEnumerator()' do share state.");
                 }
             }
         }
 
-        static (EqualityResult Result, int Index) Compare<TActualItem, TExpectedItem>(this IEnumerable<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> equalityComparison)
+        static (EqualityResult Result, int Index) Compare(this IEnumerable actual, IEnumerable expected)
+        {
+            var actualEnumerator = actual.GetEnumerator();
+            var expectedEnumerator = expected.GetEnumerator();
+            try
+            {
+                checked
+                {
+                    for (var index = 0; true; index++)
+                    {
+                        var isActualCompleted = !actualEnumerator.MoveNext();
+                        var isExpectedCompleted = !expectedEnumerator.MoveNext();
+
+                        if (isActualCompleted && isExpectedCompleted)
+                            return (EqualityResult.Equal, index);
+
+                        if (isActualCompleted)
+                            return (EqualityResult.LessItem, index);
+
+                        if (isExpectedCompleted)
+                            return (EqualityResult.MoreItems, index);
+
+                        if (!actualEnumerator.Current.Equals(expectedEnumerator.Current))
+                            return (EqualityResult.NotEqualAtIndex, index);
+                    }
+                }
+            }
+            finally
+            {
+                if (actualEnumerator is IDisposable actualDisposable)
+                    actualDisposable.Dispose();
+
+                if (expectedEnumerator is IDisposable expectedDisposable)
+                    expectedDisposable.Dispose();
+            }
+        }
+
+        static (EqualityResult Result, int Index) Compare<TActualItem, TExpectedItem>(this IEnumerable<TActualItem> actual, IEnumerable<TExpectedItem> expected)
         {
             using var actualEnumerator = actual.GetEnumerator();
             using var expectedEnumerator = expected.GetEnumerator();
@@ -199,13 +232,13 @@ namespace NetFabric.Assertive
                     if (isExpectedCompleted)
                         return (EqualityResult.MoreItems, index);
 
-                    if (!equalityComparison(actualEnumerator.Current, expectedEnumerator.Current))
+                    if (!actualEnumerator.Current.Equals(expectedEnumerator.Current))
                         return (EqualityResult.NotEqualAtIndex, index);
                 }
             }
         }
 
-        static (EqualityResult Result, int Index) Compare<TActualItem, TExpectedItem>(this IReadOnlyList<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> equalityComparison)
+        static (EqualityResult Result, int Index) Compare<TActualItem, TExpectedItem>(this IReadOnlyList<TActualItem> actual, IEnumerable<TExpectedItem> expected)
         {
             using var expectedEnumerator = expected.GetEnumerator();
             checked
@@ -234,7 +267,7 @@ namespace NetFabric.Assertive
                     if (isExpectedCompleted)
                         return (EqualityResult.MoreItems, index);
 
-                    if (!equalityComparison(actualItem, expectedEnumerator.Current))
+                    if (!actualItem.Equals(expectedEnumerator.Current))
                         return (EqualityResult.NotEqualAtIndex, index);
                 }
             }

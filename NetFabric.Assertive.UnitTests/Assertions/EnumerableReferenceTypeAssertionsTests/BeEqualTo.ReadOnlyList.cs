@@ -56,7 +56,7 @@ namespace NetFabric.Assertive.UnitTests
             void action() => actual.Must().BeEnumerable<int>().BeEqualTo(expected);
 
             // Assert
-            var exception = Assert.Throws<EqualToAssertionException<RangeReadOnlyList, IEnumerable<int>>>(action);
+            var exception = Assert.Throws<EqualToAssertionException<RangeReadOnlyList, int[]>>(action);
             Assert.Same(actual, exception.Actual);
             Assert.Same(expected, exception.Expected);
             Assert.Equal(message, exception.Message);
