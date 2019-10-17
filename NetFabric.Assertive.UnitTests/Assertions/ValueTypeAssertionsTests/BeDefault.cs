@@ -28,7 +28,7 @@ namespace NetFabric.Assertive.UnitTests
 
             // Assert
             var exception = Assert.Throws<EqualToAssertionException<int, int>>(action);
-            Assert.Equal(exception.Actual, actual);
+            Assert.Equal(actual, exception.Actual);
             Assert.Equal(exception.Expected, default);
             Assert.Equal(message, exception.Message);
         }

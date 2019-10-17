@@ -15,21 +15,9 @@ namespace NetFabric.Assertive
         }
 
         public new ExceptionAssertions<TException> EvaluatesTrue(Func<TException, bool> func)
-        {
-            if (!func(Actual))
-                throw new ActualAssertionException<TException>(Actual,
-                    $"Evaluates to 'false'.");
-
-            return this;
-        }
+            => this.EvaluatesTrue<ExceptionAssertions<TException>, TException>(func);
 
         public new ExceptionAssertions<TException> EvaluatesFalse(Func<TException, bool> func)
-        {
-            if (func(Actual))
-                throw new ActualAssertionException<TException>(Actual,
-                    $"Evaluates to 'true'.");
-
-            return this;
-        }
+            => this.EvaluatesFalse<ExceptionAssertions<TException>, TException>(func);
     }
 }

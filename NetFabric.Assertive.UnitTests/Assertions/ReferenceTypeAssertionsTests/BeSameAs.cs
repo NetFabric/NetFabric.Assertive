@@ -43,7 +43,7 @@ namespace NetFabric.Assertive.UnitTests
             var exception = Assert.Throws<ExpectedAssertionException<object, object>>(action);
             Assert.Same(actual, exception.Actual);
             Assert.Same(expected, exception.Expected);
-            Assert.Equal(exception.Message, message);
+            Assert.Equal(message, exception.Message);;
         }
     }
 }

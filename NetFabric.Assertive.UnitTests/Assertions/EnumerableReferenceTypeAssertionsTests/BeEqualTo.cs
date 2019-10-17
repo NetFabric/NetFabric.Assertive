@@ -23,7 +23,7 @@ namespace NetFabric.Assertive.UnitTests
             void action() => actual.Must().BeEnumerable<int>().BeEqualTo(expected);
 
             // Assert
-            var exception = Assert.Throws<EqualToAssertionException<RangeEnumerable, IEnumerable<int>>>(action);
+            var exception = Assert.Throws<EqualToAssertionException<RangeEnumerable, int[]>>(action);
             Assert.Equal(actual, exception.Actual);
             Assert.Equal(expected, exception.Expected);
             Assert.Equal(message, exception.Message);

@@ -14,23 +14,23 @@ namespace NetFabric.Assertive
         {
         }
 
-        public NullableValueTypeAssertions<TActual> EvaluatesTrue(Func<Nullable<TActual>, bool> func)
-        {
-            if (!func(Actual))
-                throw new ActualAssertionException<Nullable<TActual>>(Actual,
-                    $"Evaluates to 'false'.");
+        public new NullableValueTypeAssertions<TActual> EvaluatesTrue(Func<Nullable<TActual>, bool> func)
+            => this.EvaluatesTrue<NullableValueTypeAssertions<TActual>, Nullable<TActual>>(func);
 
-            return this;
-        }
+        public new NullableValueTypeAssertions<TActual> EvaluatesFalse(Func<Nullable<TActual>, bool> func)
+            => this.EvaluatesFalse<NullableValueTypeAssertions<TActual>, Nullable<TActual>>(func);
 
-        public NullableValueTypeAssertions<TActual> EvaluatesFalse(Func<Nullable<TActual>, bool> func)
-        {
-            if (func(Actual))
-                throw new ActualAssertionException<Nullable<TActual>>(Actual,
-                    $"Evaluates to 'true'.");
+        public new NullableValueTypeAssertions<TActual> BeEqualTo(Nullable<TActual> expected)
+            => this.BeEqualTo<NullableValueTypeAssertions<TActual>, Nullable<TActual>>(expected);
 
-            return this;
-        }
+        public new NullableValueTypeAssertions<TActual> BeEqualTo<TExpected>(TExpected expected, Func<Nullable<TActual>, TExpected, bool> comparer)
+            => this.BeEqualTo<NullableValueTypeAssertions<TActual>, Nullable<TActual>, TExpected>(expected, comparer);
+
+        public new NullableValueTypeAssertions<TActual> BeNotEqualTo(Nullable<TActual> expected)
+            => this.BeNotEqualTo<NullableValueTypeAssertions<TActual>, Nullable<TActual>>(expected);
+
+        public new NullableValueTypeAssertions<TActual> BeNotEqualTo<TExpected>(TExpected expected, Func<Nullable<TActual>, TExpected, bool> comparer)
+            => this.BeNotEqualTo<NullableValueTypeAssertions<TActual>, Nullable<TActual>, TExpected>(expected, comparer);
 
         public NullableValueTypeAssertions<TActual> HaveValue()
         {
@@ -44,22 +44,6 @@ namespace NetFabric.Assertive
         {
             if (Actual.HasValue)
                 throw new EqualToAssertionException<Nullable<TActual>, Nullable<TActual>>(Actual, null);
-
-            return this;
-        }
-
-        public NullableValueTypeAssertions<TActual> BeEqualTo(Nullable<TActual> expected)
-        {
-            if (!EqualityComparer<Nullable<TActual>>.Default.Equals(Actual, expected))
-                throw new EqualToAssertionException<Nullable<TActual>, Nullable<TActual>>(Actual, expected);
-
-            return this;
-        }
-
-        public NullableValueTypeAssertions<TActual> BeNotEqualTo(Nullable<TActual> expected)
-        {
-            if (EqualityComparer<Nullable<TActual>>.Default.Equals(Actual, expected))
-                throw new NotEqualToAssertionException<Nullable<TActual>, Nullable<TActual>>(Actual, expected);
 
             return this;
         }

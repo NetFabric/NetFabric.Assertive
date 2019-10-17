@@ -14,121 +14,47 @@ namespace NetFabric.Assertive
         {
         }
 
-        public ReferenceTypeAssertions<TActual> EvaluatesTrue(Func<TActual, bool> func)
-        {
-            if (!func(Actual))
-                throw new ActualAssertionException<TActual>(Actual,
-                    $"Evaluates to 'false'.");
+        public new ReferenceTypeAssertions<TActual> EvaluatesTrue(Func<TActual, bool> func)
+            => this.EvaluatesTrue<ReferenceTypeAssertions<TActual>, TActual>(func);
 
-            return this;
-        }
-
-        public ReferenceTypeAssertions<TActual> EvaluatesFalse(Func<TActual, bool> func)
-        {
-            if (func(Actual))
-                throw new ActualAssertionException<TActual>(Actual,
-                    $"Evaluates to 'true'.");
-
-            return this;
-        }
+        public new ReferenceTypeAssertions<TActual> EvaluatesFalse(Func<TActual, bool> func)
+            => this.EvaluatesFalse<ReferenceTypeAssertions<TActual>, TActual>(func);
 
         public ReferenceTypeAssertions<TActual> BeOfType<TType>()
-        {
-            if (typeof(TActual) != typeof(TType))
-                throw new ActualAssertionException<TActual>(Actual, $"Expected '{Actual.ToFriendlyString()}' to be of type '{typeof(TType)}' but it's not.");
-
-            return this;
-        }
+            => this.BeOfType<ReferenceTypeAssertions<TActual>, TActual, TType>();
 
         public ReferenceTypeAssertions<TActual> NotBeOfType<TType>()
-        {
-            if (typeof(TActual) == typeof(TType))
-                throw new ActualAssertionException<TActual>(Actual, $"Expected '{Actual.ToFriendlyString()}' not to be of type '{typeof(TType)}' but it is.");
-
-            return this;
-        }
+            => this.NotBeOfType<ReferenceTypeAssertions<TActual>, TActual, TType>();
 
         public ReferenceTypeAssertions<TActual> BeAssignableTo<TType>()
-        {
-            if (!typeof(TType).IsAssignableFrom(typeof(TActual)))
-                throw new ActualAssertionException<TActual>(Actual, $"Expected '{Actual.ToFriendlyString()}' to be assignable to '{typeof(TType)}' but it's not.");
-
-            return this;
-        }
+            => this.BeAssignableTo<ReferenceTypeAssertions<TActual>, TActual, TType>();
 
         public ReferenceTypeAssertions<TActual> BeNotAssignableTo<TType>()
-        {
-            if (typeof(TType).IsAssignableFrom(typeof(TActual)))
-                throw new ActualAssertionException<TActual>(Actual, $"Expected '{Actual.ToFriendlyString()}' to be not assignable to '{typeof(TType)}' but it is.");
+            => this.BeNotAssignableTo<ReferenceTypeAssertions<TActual>, TActual, TType>();
 
-            return this;
-        }
+        public ReferenceTypeAssertions<TActual> BeNull()
+            => this.BeNull<ReferenceTypeAssertions<TActual>, TActual>();
 
-        public ReferenceTypeAssertions<TActual> BeNull() 
-        {
-            if (Actual is object)
-                throw new EqualToAssertionException<TActual, TActual>(Actual, null);
-                
-            return this;
-        }
-
-        public ReferenceTypeAssertions<TActual> BeNotNull() 
-        {
-            if (Actual is null)
-                throw new NotEqualToAssertionException<TActual, TActual>(Actual, null);
-
-            return this;
-        }
-
-        public ReferenceTypeAssertions<TActual> BeEqualTo(TActual expected)
-        {
-            if (!EqualityComparer<TActual>.Default.Equals(Actual, expected))
-                throw new EqualToAssertionException<TActual, TActual>(Actual, expected);
-
-            return this;
-        }
-
-        public ReferenceTypeAssertions<TActual> BeEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
-        {
-            if (!comparer(Actual, expected))
-                throw new EqualToAssertionException<TActual, TExpected>(Actual, expected);
-
-            return this;
-        }
-
-        public ReferenceTypeAssertions<TActual> BeNotEqualTo(TActual expected)
-        {
-            if (EqualityComparer<TActual>.Default.Equals(Actual, expected))
-                throw new NotEqualToAssertionException<TActual, TActual>(Actual, expected);
-
-            return this;
-        }
-
-        public ReferenceTypeAssertions<TActual> BeNotEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
-        {
-            if (comparer(Actual, expected))
-                throw new NotEqualToAssertionException<TActual, TExpected>(Actual, expected);
-
-            return this;
-        }
+        public ReferenceTypeAssertions<TActual> BeNotNull()
+            => this.BeNotNull<ReferenceTypeAssertions<TActual>, TActual>();
 
         public ReferenceTypeAssertions<TActual> BeSameAs<TExpected>(TExpected expected)
-        {
-            if (!Object.ReferenceEquals(Actual, expected))
-                throw new ExpectedAssertionException<TActual, TExpected>(Actual, expected, 
-                    $"Expected '{Actual.ToFriendlyString()}' to be same as '{expected.ToFriendlyString()}' but it's not.");
-
-            return this;
-        }
+            => this.BeSameAs<ReferenceTypeAssertions<TActual>, TActual, TExpected>(expected);
 
         public ReferenceTypeAssertions<TActual> BeNotSameAs<TExpected>(TExpected expected)
-        {
-            if (Object.ReferenceEquals(Actual, expected))
-                throw new ExpectedAssertionException<TActual, TExpected>(Actual, expected,
-                    $"Expected '{Actual.ToFriendlyString()}' to be not same as '{expected.ToFriendlyString()}' but it is.");
+            => this.BeNotSameAs<ReferenceTypeAssertions<TActual>, TActual, TExpected>(expected);
 
-            return this;
-        }
+        public new ReferenceTypeAssertions<TActual> BeEqualTo(TActual expected)
+            => this.BeEqualTo<ReferenceTypeAssertions<TActual>, TActual>(expected);
+
+        public new ReferenceTypeAssertions<TActual> BeEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
+            => this.BeEqualTo<ReferenceTypeAssertions<TActual>, TActual, TExpected>(expected, comparer);
+
+        public new ReferenceTypeAssertions<TActual> BeNotEqualTo(TActual expected)
+            => this.BeNotEqualTo<ReferenceTypeAssertions<TActual>, TActual>(expected);
+
+        public new ReferenceTypeAssertions<TActual> BeNotEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
+            => this.BeNotEqualTo<ReferenceTypeAssertions<TActual>, TActual, TExpected>(expected, comparer);
 
         public EnumerableReferenceTypeAssertions<TActual, KeyValuePair<TActualKey, TActualItem>> BeDictionary<TActualKey, TActualItem>()
             => BeEnumerable<KeyValuePair<TActualKey, TActualItem>>();

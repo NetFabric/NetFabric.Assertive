@@ -15,23 +15,11 @@ namespace NetFabric.Assertive
         {
         }
 
-        public EnumerableValueTypeAssertions<TActual, TActualItem> EvaluatesTrue(Func<TActual, bool> func)
-        {
-            if (!func(Actual))
-                throw new ActualAssertionException<TActual>(Actual,
-                    $"Evaluates to 'false'.");
+        public new EnumerableValueTypeAssertions<TActual, TActualItem> EvaluatesTrue(Func<TActual, bool> func)
+            => this.EvaluatesTrue<EnumerableValueTypeAssertions<TActual, TActualItem>, TActual>(func);
 
-            return this;
-        }
-
-        public EnumerableValueTypeAssertions<TActual, TActualItem> EvaluatesFalse(Func<TActual, bool> func)
-        {
-            if (func(Actual))
-                throw new ActualAssertionException<TActual>(Actual,
-                    $"Evaluates to 'true'.");
-
-            return this;
-        }
+        public new EnumerableValueTypeAssertions<TActual, TActualItem> EvaluatesFalse(Func<TActual, bool> func)
+            => this.EvaluatesFalse<EnumerableValueTypeAssertions<TActual, TActualItem>, TActual>(func);
 
         public EnumerableValueTypeAssertions<TActual, TActualItem> NotShareState()
         {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -48,6 +49,8 @@ namespace NetFabric.Assertive
         public static void AssertIsEnumerable<TActual, TActualItem>(TActual actual, out EnumerableInfo enumerableInfo)
         {
             var actualType = typeof(TActual);
+            if (actualType == typeof(TActualItem[])) // convert TActualItem[] to IList<TActualItem>
+                actualType = typeof(IList<>).MakeGenericType(typeof(TActualItem));
             enumerableInfo = actualType.GetEnumerableInfo();
 
             if (enumerableInfo.GetEnumerator is null)
@@ -127,15 +130,15 @@ namespace NetFabric.Assertive
 
         public static PropertyInfo GetPublicOrExplicitProperty(this Type type, string name)
         {
-            var method = type.GetPublicProperty(name);
-            if (method is object)
-                return method;
+            var property = type.GetPublicProperty(name);
+            if (property is object)
+                return property;
 
             foreach (var @interface in type.GetInterfaces())
             {
-                method = @interface.GetPublicProperty(name);
-                if (method is object)
-                    return method;
+                property = @interface.GetPublicProperty(name);
+                if (property is object)
+                    return property;
             }
 
             return null;

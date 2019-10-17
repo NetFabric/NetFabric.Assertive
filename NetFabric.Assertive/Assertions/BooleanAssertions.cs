@@ -12,6 +12,18 @@ namespace NetFabric.Assertive
         {
         }
 
+        public new BooleanAssertions BeEqualTo(bool expected)
+            => this.BeEqualTo<BooleanAssertions, bool>(expected);
+
+        public new BooleanAssertions BeEqualTo<TExpected>(TExpected expected, Func<bool, TExpected, bool> comparer)
+            => this.BeEqualTo<BooleanAssertions, bool, TExpected>(expected, comparer);
+
+        public new BooleanAssertions BeNotEqualTo(bool expected)
+            => this.BeNotEqualTo<BooleanAssertions, bool>(expected);
+
+        public new BooleanAssertions BeNotEqualTo<TExpected>(TExpected expected, Func<bool, TExpected, bool> comparer)
+            => this.BeNotEqualTo<BooleanAssertions, bool, TExpected>(expected, comparer);
+
         public BooleanAssertions BeTrue()
         {
             if (!Actual)
@@ -24,22 +36,6 @@ namespace NetFabric.Assertive
         {
             if (Actual)
                 throw new EqualToAssertionException<bool, bool>(Actual, false);
-
-            return this;
-        }
-
-        public BooleanAssertions BeEqualTo(bool expected)
-        {
-            if (Actual != expected)
-                throw new EqualToAssertionException<bool, bool>(Actual, expected);
-
-            return this;
-        }
-
-        public BooleanAssertions BeEqualTo<TExpected>(TExpected expected, Func<bool, TExpected, bool> comparer)
-        {
-            if (!comparer(Actual, expected))
-                throw new EqualToAssertionException<bool, TExpected>(Actual, expected);
 
             return this;
         }

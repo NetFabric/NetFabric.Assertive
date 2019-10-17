@@ -103,6 +103,18 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
         }
 
+        [Fact]
+        public void BeEnumerable_With_Array_Should_NotThrow()
+        {
+            // Arrange
+            var actual = new int[] { 0, 1, 2, 3 };
+
+            // Act
+            actual.Must().BeEnumerable<int>();
+
+            // Assert
+        }
+
         class MissingGetEnumeratorEnumerable<T>
         {
         }

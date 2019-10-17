@@ -18,7 +18,7 @@ namespace NetFabric.Assertive.UnitTests
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingGetEnumeratorEnumerable<int>>>(action);
-            Assert.Equal(exception.Actual, actual);
+            Assert.Equal(actual, exception.Actual);
             Assert.Equal(exception.Message, "Expected 'NetFabric.Assertive.UnitTests.ValueTypeAssertionsTests+MissingGetEnumeratorEnumerable`1[System.Int32]' to be an enumerable but it's missing a valid 'GetEnumerator' method.");
         }
 
@@ -33,7 +33,7 @@ namespace NetFabric.Assertive.UnitTests
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingCurrentEnumerable<int>>>(action);
-            Assert.Equal(exception.Actual, actual);
+            Assert.Equal(actual, exception.Actual);
             Assert.Equal(exception.Message, "Expected 'NetFabric.Assertive.UnitTests.ValueTypeAssertionsTests+MissingCurrentEnumerable`1[System.Int32]' to be an enumerator but it's missing a valid 'Current' property.");
         }
 
@@ -48,7 +48,7 @@ namespace NetFabric.Assertive.UnitTests
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<EmptyEnumerable<int>>>(action);
-            Assert.Equal(exception.Actual, actual);
+            Assert.Equal(actual, exception.Actual);
             Assert.Equal(exception.Message, "Expected 'NetFabric.Assertive.UnitTests.ValueTypeAssertionsTests+EmptyEnumerable`1[System.Int32]' to be an enumerable of 'System.String' but found an enumerable of 'System.Int32'.");
         }
 
@@ -63,7 +63,7 @@ namespace NetFabric.Assertive.UnitTests
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingMoveNextEnumerable<int>>>(action);
-            Assert.Equal(exception.Actual, actual);
+            Assert.Equal(actual, exception.Actual);
             Assert.Equal(exception.Message, "Expected 'NetFabric.Assertive.UnitTests.ValueTypeAssertionsTests+MissingMoveNextEnumerable`1[System.Int32]' to be an enumerator but it's missing a valid 'MoveNext' method.");
         }
 
