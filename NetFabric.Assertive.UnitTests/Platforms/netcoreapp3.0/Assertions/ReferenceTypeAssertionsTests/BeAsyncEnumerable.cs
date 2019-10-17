@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,12 +15,12 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new MissingGetAsyncEnumeratorAsyncEnumerable<int>();
 
             // Act
-            void action() => actual.Must().BeAsyncEnumerable<int>();
+            void action() => actual.Must().BeAsyncEnumerableOf<int>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingGetAsyncEnumeratorAsyncEnumerable<int>>>(action);
             Assert.Equal(actual, exception.Actual);
-            Assert.Equal("Expected 'NetFabric.Assertive.UnitTests.ReferenceTypeAssertionsTests+MissingGetAsyncEnumeratorAsyncEnumerable`1[System.Int32]' to be an async enumerable but it's missing a valid 'GetAsyncEnumerator' method.", exception.Message);
+            Assert.Equal($"Expected to be an async enumerable but it's missing a valid 'GetAsyncEnumerator' method.{Environment.NewLine}Actual: NetFabric.Assertive.UnitTests.ReferenceTypeAssertionsTests+MissingGetAsyncEnumeratorAsyncEnumerable`1[System.Int32]", exception.Message);
         }
 
         [Fact]
@@ -31,12 +30,12 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new MissingCurrentAsyncEnumerable<int>();
 
             // Act
-            void action() => actual.Must().BeAsyncEnumerable<int>();
+            void action() => actual.Must().BeAsyncEnumerableOf<int>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingCurrentAsyncEnumerable<int>>>(action);
             Assert.Equal(actual, exception.Actual);
-            Assert.Equal("Expected 'NetFabric.Assertive.UnitTests.ReferenceTypeAssertionsTests+MissingCurrentAsyncEnumerable`1[System.Int32]' to be an async enumerator but it's missing a valid 'Current' property.", exception.Message);
+            Assert.Equal($"Expected to be an async enumerator but it's missing a valid 'Current' property.{Environment.NewLine}Actual: NetFabric.Assertive.UnitTests.ReferenceTypeAssertionsTests+MissingCurrentAsyncEnumerable`1[System.Int32]", exception.Message);
         }
 
         [Fact]
@@ -46,12 +45,12 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new EmptyAsyncEnumerable<int>();
 
             // Act
-            void action() => actual.Must().BeAsyncEnumerable<string>();
+            void action() => actual.Must().BeAsyncEnumerableOf<string>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<EmptyAsyncEnumerable<int>>>(action);
             Assert.Equal(actual, exception.Actual);
-            Assert.Equal("Expected 'NetFabric.Assertive.UnitTests.ReferenceTypeAssertionsTests+EmptyAsyncEnumerable`1[System.Int32]' to be an async enumerable of 'System.String' but found an enumerable of 'System.Int32'.", exception.Message);
+            Assert.Equal($"Expected to be an async enumerable of 'System.String' but found an enumerable of 'System.Int32'.{Environment.NewLine}Actual: {{}}", exception.Message);
         }
 
         [Fact]
@@ -61,12 +60,12 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new MissingMoveNextAsyncAsyncEnumerable<int>();
 
             // Act
-            void action() => actual.Must().BeAsyncEnumerable<int>();
+            void action() => actual.Must().BeAsyncEnumerableOf<int>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingMoveNextAsyncAsyncEnumerable<int>>>(action);
             Assert.Equal(actual, exception.Actual);
-            Assert.Equal("Expected 'NetFabric.Assertive.UnitTests.ReferenceTypeAssertionsTests+MissingMoveNextAsyncAsyncEnumerable`1[System.Int32]' to be an async enumerator but it's missing a valid 'MoveNextAsync' method.", exception.Message);
+            Assert.Equal($"Expected to be an async enumerator but it's missing a valid 'MoveNextAsync' method.{Environment.NewLine}Actual: NetFabric.Assertive.UnitTests.ReferenceTypeAssertionsTests+MissingMoveNextAsyncAsyncEnumerable`1[System.Int32]", exception.Message);
         }
 
         [Fact]
@@ -76,7 +75,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new EmptyAsyncEnumerable<int>();
 
             // Act
-            actual.Must().BeAsyncEnumerable<int>();
+            actual.Must().BeAsyncEnumerableOf<int>();
 
             // Assert
         }
@@ -88,7 +87,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new EmptyAsyncEnumerableExplicitInterfaces<int>();
 
             // Act
-            actual.Must().BeAsyncEnumerable<int>();
+            actual.Must().BeAsyncEnumerableOf<int>();
 
             // Assert
         }
@@ -100,7 +99,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new ByRefAsyncEnumerable<int>(new int[] { });
 
             // Act
-            actual.Must().BeAsyncEnumerable<int>();
+            actual.Must().BeAsyncEnumerableOf<int>();
 
             // Assert
         }

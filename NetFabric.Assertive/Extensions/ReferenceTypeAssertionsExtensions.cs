@@ -32,7 +32,7 @@ namespace NetFabric.Assertive
         {
             if (!Object.ReferenceEquals(assertions.Actual, expected))
                 throw new ExpectedAssertionException<TActual, TExpected>(assertions.Actual, expected,
-                    $"Expected '{assertions.Actual.ToFriendlyString()}' to be same as '{expected.ToFriendlyString()}' but it's not.");
+                    $"Not the same instance.");
 
             return assertions;
         }
@@ -43,7 +43,7 @@ namespace NetFabric.Assertive
         {
             if (Object.ReferenceEquals(assertions.Actual, expected))
                 throw new ExpectedAssertionException<TActual, TExpected>(assertions.Actual, expected,
-                    $"Expected '{assertions.Actual.ToFriendlyString()}' to be not same as '{expected.ToFriendlyString()}' but it is.");
+                    $"Same instance.");
 
             return assertions;
         }

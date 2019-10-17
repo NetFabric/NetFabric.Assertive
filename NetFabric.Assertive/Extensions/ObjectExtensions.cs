@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace NetFabric.Assertive
 {
-    [DebuggerNonUserCode]
+    //[DebuggerNonUserCode]
     static class ObjectExtensions
     {
         public static string ToFriendlyString(this object @object)
@@ -12,13 +12,36 @@ namespace NetFabric.Assertive
             {
                 null => "<null>",
 
+                string @string => $"\"{@string}\"",
+
+                Exception exception => exception.GetType().ToString(),
+
                 Type type => type.ToString(),
 
                 IEnumerable enumerable => enumerable.ToFriendlyString(),
 
-                _ => @object.GetType().IsEnumerable(out var info) ?  
-                    new EnumerableWrapper<object>(@object, info).ToFriendlyString() :
-                    @object.ToString(),
+                _ => DefaultToFriendlyString(@object),
             };
-     }
+
+        static string DefaultToFriendlyString(object @object)
+        {
+            var type = @object.GetType();
+
+            if (type.IsEnumerable(out var info))
+            {
+                var wrapperType = typeof(EnumerableWrapper<>).MakeGenericType(type);
+                var wrapper = (IEnumerable)Activator.CreateInstance(wrapperType, @object, info);
+                return wrapper.ToFriendlyString();
+            }
+
+            if (type.IsAsyncEnumerable(out info))
+            {
+                var wrapperType = typeof(AsyncEnumerableWrapper<>).MakeGenericType(type);
+                var wrapper = (IEnumerable)Activator.CreateInstance(wrapperType, @object, info);
+                return wrapper.ToFriendlyString();
+            }
+
+            return @object.ToString();
+        }
+    }
 }

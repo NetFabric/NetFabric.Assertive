@@ -48,7 +48,7 @@ namespace NetFabric.Assertive
         public static TAssertions BeAssignableTo<TAssertions, TActual, TType>(this TAssertions assertions)
             where TAssertions : AssertionsBase<TActual>
         {
-            if (!typeof(TType).IsAssignableFrom(typeof(TActual)))
+            if (!typeof(TActual).IsAssignableTo(typeof(TType)))
                 throw new ActualAssertionException<TActual>(assertions.Actual, $"Expected '{assertions.Actual.ToFriendlyString()}' to be assignable to '{typeof(TType)}' but it's not.");
 
             return assertions;
@@ -57,7 +57,7 @@ namespace NetFabric.Assertive
         public static TAssertions BeNotAssignableTo<TAssertions, TActual, TType>(this TAssertions assertions)
             where TAssertions : AssertionsBase<TActual>
         {
-            if (typeof(TType).IsAssignableFrom(typeof(TActual)))
+            if (typeof(TActual).IsAssignableTo(typeof(TType)))
                 throw new ActualAssertionException<TActual>(assertions.Actual, $"Expected '{assertions.Actual.ToFriendlyString()}' to be not assignable to '{typeof(TType)}' but it is.");
 
             return assertions;

@@ -30,7 +30,7 @@ namespace NetFabric.Assertive.UnitTests
             var exception = Assert.Throws<EqualToAssertionException<object, object>>(action);
             Assert.Equal(actual, exception.Actual);
             Assert.Null(exception.Expected);
-            Assert.Equal("Expected '<null>' to be equivalent to 'System.Object' but it's not.", exception.Message);
+            Assert.Equal($"Expected to be equal but it's not.{Environment.NewLine}Expected: <null>{Environment.NewLine}Actual: System.Object", exception.Message);
         }
     }
 }

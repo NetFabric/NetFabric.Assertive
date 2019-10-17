@@ -20,10 +20,17 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
         }
 
+
+        public static TheoryData<object, object, string> Enumerable_NotEqualData =>
+            new TheoryData<object, object, string>
+            {
+                { null, 0, $"Expected to be equal but it's not.{Environment.NewLine}Expected: 0{Environment.NewLine}Actual: <null>" },
+                { 0, null, $"Expected to be equal but it's not.{Environment.NewLine}Expected: <null>{Environment.NewLine}Actual: 0" },
+                { 0, 1, $"Expected to be equal but it's not.{Environment.NewLine}Expected: 1{Environment.NewLine}Actual: 0" },
+            };
+
         [Theory]
-        [InlineData(null, 0, "Expected '0' to be equivalent to '<null>' but it's not.")]
-        [InlineData(0, null, "Expected '<null>' to be equivalent to '0' but it's not.")]
-        [InlineData(0, 1, "Expected '1' to be equivalent to '0' but it's not.")]
+        [MemberData(nameof(Enumerable_NotEqualData))]
         public void BeEqualTo_With_NotEqual_Should_Throw(object actual, object expected, string message)
         {
             // Arrange

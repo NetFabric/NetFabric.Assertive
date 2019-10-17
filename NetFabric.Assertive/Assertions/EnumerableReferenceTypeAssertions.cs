@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace NetFabric.Assertive
 {
-    [DebuggerNonUserCode]
+    //[DebuggerNonUserCode]
     public class EnumerableReferenceTypeAssertions<TActual, TActualItem> 
         : EnumerableAssertionsBase<TActual>
         where TActual : class
@@ -21,22 +21,14 @@ namespace NetFabric.Assertive
         public EnumerableReferenceTypeAssertions<TActual, TActualItem> EvaluatesFalse(Func<TActual, bool> func)
             => this.EvaluatesFalse<EnumerableReferenceTypeAssertions<TActual, TActualItem>, TActual>(func);
 
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> NotShareState()
-        {
-            if (Actual is object)
-                EqualityComparer.AssertNotSharing<TActual, TActualItem>(Actual, EnumerableInfo);
-
-            return this;
-        }
-
         public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEmpty()
             => BeEqualTo(Enumerable.Empty<TActualItem>());
 
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected>(TExpected expected)
+        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected>(TExpected expected, bool deepComparison = true)
             where TExpected : IEnumerable<TActualItem>
-            => BeEqualTo<TExpected, TActualItem>(expected);
+            => BeEqualTo<TExpected, TActualItem>(expected, deepComparison);
 
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected expected)
+        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected expected, bool deepComparison = true)
             where TExpected : IEnumerable<TExpectedItem>
         {
             if (Actual is null)
@@ -49,7 +41,7 @@ namespace NetFabric.Assertive
                 if (expected is null)
                     throw new EqualToAssertionException<TActual, TExpected>(Actual, expected);
 
-                EqualityComparer.AssertEquality<TActual, TActualItem, TExpected, TExpectedItem>(Actual, EnumerableInfo, expected);
+                AssertEquality<TActualItem, TExpected, TExpectedItem>(expected, deepComparison);
             }
 
             return this;

@@ -14,12 +14,12 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new MissingGetEnumeratorEnumerable<int>();
 
             // Act
-            void action() => actual.Must().BeEnumerable<int>();
+            void action() => actual.Must().BeEnumerableOf<int>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingGetEnumeratorEnumerable<int>>>(action);
             Assert.Equal(actual, exception.Actual);
-            Assert.Equal("Expected 'NetFabric.Assertive.UnitTests.ReferenceTypeAssertionsTests+MissingGetEnumeratorEnumerable`1[System.Int32]' to be an enumerable but it's missing a valid 'GetEnumerator' method.", exception.Message);
+            Assert.Equal($"Expected to be an enumerable but it's missing a valid 'GetEnumerator' method.{Environment.NewLine}Actual: NetFabric.Assertive.UnitTests.ReferenceTypeAssertionsTests+MissingGetEnumeratorEnumerable`1[System.Int32]", exception.Message);
         }
 
         [Fact]
@@ -29,12 +29,12 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new MissingCurrentEnumerable<int>();
 
             // Act
-            void action() => actual.Must().BeEnumerable<int>();
+            void action() => actual.Must().BeEnumerableOf<int>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingCurrentEnumerable<int>>>(action);
             Assert.Equal(actual, exception.Actual);
-            Assert.Equal("Expected 'NetFabric.Assertive.UnitTests.ReferenceTypeAssertionsTests+MissingCurrentEnumerable`1[System.Int32]' to be an enumerator but it's missing a valid 'Current' property.", exception.Message);
+            Assert.Equal($"Expected to be an enumerator but it's missing a valid 'Current' property.{Environment.NewLine}Actual: NetFabric.Assertive.UnitTests.ReferenceTypeAssertionsTests+MissingCurrentEnumerable`1[System.Int32]", exception.Message);
         }
 
         [Fact]
@@ -44,12 +44,12 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new EmptyEnumerable<int>();
 
             // Act
-            void action() => actual.Must().BeEnumerable<string>();
+            void action() => actual.Must().BeEnumerableOf<string>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<EmptyEnumerable<int>>>(action);
             Assert.Equal(actual, exception.Actual);
-            Assert.Equal("Expected 'NetFabric.Assertive.UnitTests.ReferenceTypeAssertionsTests+EmptyEnumerable`1[System.Int32]' to be an enumerable of 'System.String' but found an enumerable of 'System.Int32'.", exception.Message);
+            Assert.Equal($"Expected to be an enumerable of 'System.String' but found an enumerable of 'System.Int32'.{Environment.NewLine}Actual: {{}}", exception.Message);
         }
 
         [Fact]
@@ -59,12 +59,12 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new MissingMoveNextEnumerable<int>();
 
             // Act
-            void action() => actual.Must().BeEnumerable<int>();
+            void action() => actual.Must().BeEnumerableOf<int>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingMoveNextEnumerable<int>>>(action);
             Assert.Equal(actual, exception.Actual);
-            Assert.Equal("Expected 'NetFabric.Assertive.UnitTests.ReferenceTypeAssertionsTests+MissingMoveNextEnumerable`1[System.Int32]' to be an enumerator but it's missing a valid 'MoveNext' method.", exception.Message);
+            Assert.Equal($"Expected to be an enumerator but it's missing a valid 'MoveNext' method.{Environment.NewLine}Actual: NetFabric.Assertive.UnitTests.ReferenceTypeAssertionsTests+MissingMoveNextEnumerable`1[System.Int32]", exception.Message);
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new EmptyEnumerable<int>();
 
             // Act
-            actual.Must().BeEnumerable<int>();
+            actual.Must().BeEnumerableOf<int>();
 
             // Assert
         }
@@ -86,7 +86,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new EmptyEnumerableExplicitInterfaces<int>();
 
             // Act
-            actual.Must().BeEnumerable<int>();
+            actual.Must().BeEnumerableOf<int>();
 
             // Assert
         }
@@ -98,7 +98,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new ByRefEnumerable<int>(new int[] { });
 
             // Act
-            actual.Must().BeEnumerable<int>();
+            actual.Must().BeEnumerableOf<int>();
 
             // Assert
         }
@@ -110,7 +110,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new int[] { 0, 1, 2, 3 };
 
             // Act
-            actual.Must().BeEnumerable<int>();
+            actual.Must().BeEnumerableOf<int>();
 
             // Assert
         }

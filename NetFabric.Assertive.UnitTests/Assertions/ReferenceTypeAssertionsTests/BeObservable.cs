@@ -13,7 +13,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = Observable.Range(0, 0);
 
             // Act
-            actual.Must().BeObservable<int>();
+            actual.Must().BeObservableOf<int>();
 
             // Assert
         }

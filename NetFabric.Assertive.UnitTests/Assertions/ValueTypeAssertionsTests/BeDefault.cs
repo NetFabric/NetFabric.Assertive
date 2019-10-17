@@ -17,8 +17,14 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
         }
 
+        public static TheoryData<int, string> NotDefaultData =>
+            new TheoryData<int, string>
+            {
+                { 1, $"Expected to be equal but it's not.{Environment.NewLine}Expected: 0{Environment.NewLine}Actual: 1" },
+            };
+
         [Theory]
-        [InlineData(1, "Expected '0' to be equivalent to '1' but it's not.")]
+        [MemberData(nameof(NotDefaultData))]
         public void BeDefault_With_NotDefault_Should_Throw(int actual, string message)
         {
             // Arrange

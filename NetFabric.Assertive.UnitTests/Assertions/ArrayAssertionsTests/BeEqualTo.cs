@@ -29,11 +29,11 @@ namespace NetFabric.Assertive.UnitTests
         public static TheoryData<int[], int[], string> NotEqualNullData =>
             new TheoryData<int[], int[], string>
             {
-                { null, new int[] { }, "Expected '' to be equivalent to '<null>' but it's not." },
-                { new int[] { }, null, "Expected '<null>' to be equivalent to '' but it's not." },
-                { new int[] { }, new int[] { 1 }, "Expected '1' but found '' with less items." },
-                { new int[] { 1 }, new int[] { }, "Expected '' but found '1' with more items." },
-                { new int[] { 1, 2, 3 }, new int[] { 1, 5, 3 }, "Expected '1, 5, 3' but found '1, 2, 3' that differs at index 1." },
+                { null, new int[] { }, $"Expected to be equal but it's not.{Environment.NewLine}Expected: {{}}{Environment.NewLine}Actual: <null>" },
+                { new int[] { }, null, $"Expected to be equal but it's not.{Environment.NewLine}Expected: <null>{Environment.NewLine}Actual: {{}}" },
+                { new int[] { }, new int[] { 1 }, $"Actual array has less items.{Environment.NewLine}Expected: {{1}}{Environment.NewLine}Actual: {{}}" },
+                { new int[] { 1 }, new int[] { }, $"Actual array has more items.{Environment.NewLine}Expected: {{}}{Environment.NewLine}Actual: {{1}}" },
+                { new int[] { 1, 2, 3 }, new int[] { 1, 5, 3 }, $"Arrays differ at index 1.{Environment.NewLine}Expected: {{1, 5, 3}}{Environment.NewLine}Actual: {{1, 2, 3}}" },
             };
 
         [Theory]

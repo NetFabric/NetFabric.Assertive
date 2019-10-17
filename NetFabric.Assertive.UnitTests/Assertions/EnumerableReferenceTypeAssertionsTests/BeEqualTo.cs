@@ -9,8 +9,8 @@ namespace NetFabric.Assertive.UnitTests
         public static TheoryData<RangeEnumerable, int[], string> NotEqualNullData =>
             new TheoryData<RangeEnumerable, int[], string>
             {
-                { null, new int[] { }, "Expected '' to be equivalent to '<null>' but it's not." },
-                { new RangeEnumerable(0), null, "Expected '<null>' to be equivalent to '' but it's not." },
+                { null, new int[] { }, $"Expected to be equal but it's not.{Environment.NewLine}Expected: {{}}{Environment.NewLine}Actual: <null>" },
+                { new RangeEnumerable(0), null, $"Expected to be equal but it's not.{Environment.NewLine}Expected: <null>{Environment.NewLine}Actual: {{}}" },
             };
 
         [Theory]
@@ -20,7 +20,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            void action() => actual.Must().BeEnumerable<int>().BeEqualTo(expected);
+            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
             var exception = Assert.Throws<EqualToAssertionException<RangeEnumerable, int[]>>(action);

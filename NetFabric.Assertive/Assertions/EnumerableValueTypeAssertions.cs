@@ -21,27 +21,20 @@ namespace NetFabric.Assertive
         public new EnumerableValueTypeAssertions<TActual, TActualItem> EvaluatesFalse(Func<TActual, bool> func)
             => this.EvaluatesFalse<EnumerableValueTypeAssertions<TActual, TActualItem>, TActual>(func);
 
-        public EnumerableValueTypeAssertions<TActual, TActualItem> NotShareState()
-        {
-            EqualityComparer.AssertNotSharing<TActual, TActualItem>(Actual, EnumerableInfo);
-
-            return this;
-        }
-
         public EnumerableValueTypeAssertions<TActual, TActualItem> BeEmpty()
             => BeEqualTo(Enumerable.Empty<TActualItem>());
 
-        public EnumerableValueTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected>(TExpected expected)
+        public EnumerableValueTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected>(TExpected expected, bool deepComparison = true)
             where TExpected : IEnumerable<TActualItem>
-            => BeEqualTo<TExpected, TActualItem>(expected);
+            => BeEqualTo<TExpected, TActualItem>(expected, deepComparison);
 
-        public EnumerableValueTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected expected)
+        public EnumerableValueTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected expected, bool deepComparison = true)
             where TExpected : IEnumerable<TExpectedItem>
         {
             if (expected is null)
                 throw new ArgumentNullException(nameof(expected), $"{typeof(TActual)} is a value type so it can't be expected to be <null>.");
 
-            EqualityComparer.AssertEquality<TActual, TActualItem, TExpected, TExpectedItem>(Actual, EnumerableInfo, expected);
+            AssertEquality<TActualItem, TExpected, TExpectedItem>(expected, deepComparison);
 
             return this;
         }

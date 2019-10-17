@@ -14,7 +14,7 @@ namespace NetFabric.Assertive
         {
         }
 
-        public new ReferenceTypeAssertions<TActual> EvaluatesTrue(Func<TActual, bool> func)
+        public ReferenceTypeAssertions<TActual> EvaluatesTrue(Func<TActual, bool> func)
             => this.EvaluatesTrue<ReferenceTypeAssertions<TActual>, TActual>(func);
 
         public new ReferenceTypeAssertions<TActual> EvaluatesFalse(Func<TActual, bool> func)
@@ -56,27 +56,24 @@ namespace NetFabric.Assertive
         public new ReferenceTypeAssertions<TActual> BeNotEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
             => this.BeNotEqualTo<ReferenceTypeAssertions<TActual>, TActual, TExpected>(expected, comparer);
 
-        public EnumerableReferenceTypeAssertions<TActual, KeyValuePair<TActualKey, TActualItem>> BeDictionary<TActualKey, TActualItem>()
-            => BeEnumerable<KeyValuePair<TActualKey, TActualItem>>();
-
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEnumerable<TActualItem>()
+        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEnumerableOf<TActualItem>()
         {
             TypeExtensions.AssertIsEnumerable<TActual, TActualItem>(Actual, out var enumerableInfo);
 
             return new EnumerableReferenceTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
         }
 
-        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeAsyncEnumerable<TActualItem>()
+        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeAsyncEnumerableOf<TActualItem>()
         {
             TypeExtensions.AssertIsAsyncEnumerable<TActual, TActualItem>(Actual, out var enumerableInfo);
 
             return new AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
         }
 
-        public ObservableReferenceTypeAssertions<TActual, TActualItem> BeObservable<TActualItem>()
+        public ObservableReferenceTypeAssertions<TActual, TActualItem> BeObservableOf<TActualItem>()
         {
             var actualType = typeof(TActual);
-            if (!typeof(IObservable<>).MakeGenericType(typeof(TActualItem)).IsAssignableFrom(actualType))
+            if (!actualType.IsAssignableTo(typeof(IObservable<>).MakeGenericType(typeof(TActualItem))))
                 throw new ActualAssertionException<TActual>(Actual, $"Expected '{actualType}' to be an observable but doesn't implement 'IObservable <{typeof(TActualItem)}>'.");
 
             return new ObservableReferenceTypeAssertions<TActual, TActualItem>(Actual);

@@ -23,7 +23,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            actual.Must().BeEnumerable<int>().BeEqualTo(expected);
+            actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
         }
@@ -31,9 +31,9 @@ namespace NetFabric.Assertive.UnitTests
         public static TheoryData<RangeEnumerable, int[], string> Enumerable_NotEqualData =>
             new TheoryData<RangeEnumerable, int[], string> 
             {
-                { new RangeEnumerable(0), new int[] { 0 }, "Expected '0' but found '' with less items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
-                { new RangeEnumerable(1), new int[] { }, "Expected '' but found '0' with more items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
-                { new RangeEnumerable(3), new int[] { 0, 5, 2 }, "Expected '0, 5, 2' but found '0, 1, 2' that differs at index 1 when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'." },
+                { new RangeEnumerable(0), new int[] { 0 }, $"Actual has less items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'.{Environment.NewLine}Expected: {{0}}{Environment.NewLine}Actual: {{}}" },
+                { new RangeEnumerable(1), new int[] { }, $"Actual has more items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'.{Environment.NewLine}Expected: {{}}{Environment.NewLine}Actual: {{0}}" },
+                { new RangeEnumerable(3), new int[] { 0, 5, 2 }, $"Actual differs at index 1 when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'.{Environment.NewLine}Expected: {{0, 5, 2}}{Environment.NewLine}Actual: {{0, 1, 2}}" },
             };
 
         [Theory]
@@ -43,11 +43,11 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            void action() => actual.Must().BeEnumerable<int>().BeEqualTo(expected);
+            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
-            var exception = Assert.Throws<EqualToAssertionException<RangeEnumerable, int[]>>(action);
-            Assert.Same(actual, exception.Actual);
+            var exception = Assert.Throws<EnumerableAssertionException<RangeEnumerable, int[]>>(action);
+            Assert.Same(actual, exception.Actual.Actual);
             Assert.Same(expected, exception.Expected);
             Assert.Equal(message, exception.Message);
         }
@@ -55,8 +55,8 @@ namespace NetFabric.Assertive.UnitTests
         public static TheoryData<RangeEnumerable, int[], string> Enumerable_NotEqualNullData =>
             new TheoryData<RangeEnumerable, int[], string>
             {
-                { null, new int[] { }, "Expected '' to be equivalent to '<null>' but it's not." },
-                { new RangeEnumerable(0), null, "Expected '<null>' to be equivalent to '' but it's not." },
+                { null, new int[] { }, $"Expected to be equal but it's not.{Environment.NewLine}Expected: {{}}{Environment.NewLine}Actual: <null>" },
+                { new RangeEnumerable(0), null, $"Expected to be equal but it's not.{Environment.NewLine}Expected: <null>{Environment.NewLine}Actual: {{}}" },
             };
 
         [Theory]
@@ -66,7 +66,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            void action() => actual.Must().BeEnumerable<int>().BeEqualTo(expected);
+            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
             var exception = Assert.Throws<EqualToAssertionException<RangeEnumerable, int[]>>(action);

@@ -1,42 +1,46 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace NetFabric.Assertive
 {
-    sealed class ReadOnlyListWrapper<T> : IEnumerable<T>
+    [DebuggerNonUserCode]
+    public sealed class ReadOnlyListWrapper<TActualItem> 
+        : IEnumerable<TActualItem>
     {
-        readonly IReadOnlyList<T> source;
-
-        internal ReadOnlyListWrapper(IReadOnlyList<T> source)
+        internal ReadOnlyListWrapper(IReadOnlyList<TActualItem> actual)
         {
-            this.source = source;
+            Actual = actual;
         }
 
-        public IEnumerator<T> GetEnumerator() => new Enumerator(this);
+        public IReadOnlyList<TActualItem> Actual { get; }
+
+        public IEnumerator<TActualItem> GetEnumerator() => new Enumerator(this);
         IEnumerator IEnumerable.GetEnumerator() => new Enumerator(this);
 
-        public sealed class Enumerator : IEnumerator<T>
+        public sealed class Enumerator 
+            : IEnumerator<TActualItem>
         {
-            readonly IReadOnlyList<T> source;
+            readonly IReadOnlyList<TActualItem> actual;
             int index;
-            T current;
+            TActualItem current;
 
-            public Enumerator(ReadOnlyListWrapper<T> enumerable)
+            public Enumerator(ReadOnlyListWrapper<TActualItem> enumerable)
             {
-                source = enumerable.source;
+                actual = enumerable.Actual;
                 index = -1;
                 current = default;
             }
 
-            public T Current => current;
+            public TActualItem Current => current;
             object IEnumerator.Current => current;
 
             public bool MoveNext()
             {
                 try
                 {
-                    current = source[++index];
+                    current = actual[++index];
                 }
                 catch
                 {

@@ -27,7 +27,7 @@ namespace NetFabric.Assertive.UnitTests
         public static TheoryData<object, object, string> BeSameAs_NotSameData =>
             new TheoryData<object, object, string>
             {
-                { new object(), new object(), "Expected 'System.Object' to be same as 'System.Object' but it's not." },
+                { new object(), new object(), $"Not the same instance.{Environment.NewLine}Expected: System.Object{Environment.NewLine}Actual: System.Object" },
             };
 
         [Theory]

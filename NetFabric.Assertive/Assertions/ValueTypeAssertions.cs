@@ -50,27 +50,24 @@ namespace NetFabric.Assertive
         public new ValueTypeAssertions<TActual> BeNotEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
             => this.BeNotEqualTo<ValueTypeAssertions<TActual>, TActual, TExpected>(expected, comparer);
 
-        public EnumerableValueTypeAssertions<TActual, KeyValuePair<TActualKey, TActualItem>> BeDictionary<TActualKey, TActualItem>()
-            => BeEnumerable<KeyValuePair<TActualKey, TActualItem>>();
-
-        public EnumerableValueTypeAssertions<TActual, TActualItem> BeEnumerable<TActualItem>()
+        public EnumerableValueTypeAssertions<TActual, TActualItem> BeEnumerableOf<TActualItem>()
         {
             TypeExtensions.AssertIsEnumerable<TActual, TActualItem>(Actual, out var enumerableInfo);
 
             return new EnumerableValueTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
         }
 
-        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> BeAsyncEnumerable<TActualItem>()
+        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> BeAsyncEnumerableOf<TActualItem>()
         {
             TypeExtensions.AssertIsAsyncEnumerable<TActual, TActualItem>(Actual, out var enumerableInfo);
 
             return new AsyncEnumerableValueTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
         }
 
-        public ObservableValueTypeAssertions<TActual, TActualItem> BeObservable<TActualItem>()
+        public ObservableValueTypeAssertions<TActual, TActualItem> BeObservableOf<TActualItem>()
         {
             var actualType = typeof(TActual);
-            if (!typeof(IObservable<>).MakeGenericType(typeof(TActualItem)).IsAssignableFrom(actualType))
+            if (!actualType.IsAssignableTo(typeof(IObservable<>).MakeGenericType(typeof(TActualItem))))
                 throw new ActualAssertionException<TActual>(Actual, $"Expected '{actualType}' to be an observable but doesn't implement 'IObservable <{typeof(TActualItem)}>'.");
 
             return new ObservableValueTypeAssertions<TActual, TActualItem>(Actual);

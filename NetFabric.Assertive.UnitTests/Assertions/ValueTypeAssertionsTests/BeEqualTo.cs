@@ -19,8 +19,14 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
         }
 
+        public static TheoryData<int, int, string> NotEqualtData =>
+            new TheoryData<int, int, string>
+            {
+                { 0, 1, $"Expected to be equal but it's not.{Environment.NewLine}Expected: 1{Environment.NewLine}Actual: 0" },
+            };
+
         [Theory]
-        [InlineData(0, 1, "Expected '1' to be equivalent to '0' but it's not.")]
+        [MemberData(nameof(NotEqualtData))]
         public void BeEqualTo_With_NotEqual_Should_Throw(int actual, int expected, string message)
         {
             // Arrange
