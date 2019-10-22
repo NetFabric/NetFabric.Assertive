@@ -60,7 +60,7 @@ namespace NetFabric.Assertive
             {
                 foreach (var @interface in typeof(TActual).GetInterfaces())
                 {
-                    if (@interface.IsEnumerable(out var interfaceEnumerableInfo))
+                    if (@interface.IsAsyncEnumerable(out var interfaceEnumerableInfo))
                     {
                         var wrappedInterface = new AsyncEnumerableWrapper<TActual>(Actual, interfaceEnumerableInfo);
                         switch (wrappedInterface.Compare(expected, out var interfaceIndex))
