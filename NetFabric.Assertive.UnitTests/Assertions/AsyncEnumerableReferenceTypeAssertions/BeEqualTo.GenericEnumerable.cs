@@ -47,7 +47,7 @@ namespace NetFabric.Assertive.UnitTests
             void action() => actual.Must().BeAsyncEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
-            var exception = Assert.Throws<AsyncEnumerableAssertionException<RangeGenericAsyncEnumerable, int[]>>(action);
+            var exception = Assert.Throws<AsyncEnumerableAssertionException<RangeGenericAsyncEnumerable, int, int[]>>(action);
             Assert.Same(actual, exception.Actual.Actual);
             Assert.Same(expected, exception.Expected);
             Assert.Equal(message, exception.Message);

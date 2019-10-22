@@ -2,15 +2,15 @@ using System;
 
 namespace NetFabric.Assertive
 {
-    public class AsyncEnumerableAssertionException<TActual, TExpected>
-        : EqualToAssertionException<AsyncEnumerableWrapper<TActual>, TExpected>
+    public class AsyncEnumerableAssertionException<TActual, TActualItem, TExpected>
+        : EqualToAssertionException<AsyncEnumerableWrapper<TActual, TActualItem>, TExpected>
     {
-        public AsyncEnumerableAssertionException(AsyncEnumerableWrapper<TActual> actual, TExpected expected)
+        public AsyncEnumerableAssertionException(AsyncEnumerableWrapper<TActual, TActualItem> actual, TExpected expected)
             : this(actual, expected, $"Expected collections to have same count value.")
         {
         }
 
-        public AsyncEnumerableAssertionException(AsyncEnumerableWrapper<TActual> actual, TExpected expected, string message)
+        public AsyncEnumerableAssertionException(AsyncEnumerableWrapper<TActual, TActualItem> actual, TExpected expected, string message)
             : base(actual, expected, message)
         {
         }

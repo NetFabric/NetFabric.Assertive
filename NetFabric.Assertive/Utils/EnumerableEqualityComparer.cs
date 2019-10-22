@@ -45,7 +45,7 @@ namespace NetFabric.Assertive
             }
         }
 
-        public static EqualityResult Compare<TActualItem, TExpectedItem>(this IEnumerable<TActualItem> actual, IEnumerable<TExpectedItem> expected, out int index)
+        public static EqualityResult Compare<TActualItem, TExpectedItem>(this IEnumerable<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer, out int index)
         {
             using var actualEnumerator = actual.GetEnumerator();
             using var expectedEnumerator = expected.GetEnumerator();
@@ -65,13 +65,13 @@ namespace NetFabric.Assertive
                     if (isExpectedCompleted)
                         return EqualityResult.MoreItems;
 
-                    if (!actualEnumerator.Current.Equals(expectedEnumerator.Current))
+                    if (!comparer(actualEnumerator.Current, expectedEnumerator.Current))
                         return EqualityResult.NotEqualAtIndex;
                 }
             }
         }
 
-        public static EqualityResult Compare<TActualItem, TExpectedItem>(this IReadOnlyList<TActualItem> actual, IEnumerable<TExpectedItem> expected, out int index)
+        public static EqualityResult Compare<TActualItem, TExpectedItem>(this IReadOnlyList<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer, out int index)
         {
             using var expectedEnumerator = expected.GetEnumerator();
             checked
@@ -100,7 +100,7 @@ namespace NetFabric.Assertive
                     if (isExpectedCompleted)
                         return EqualityResult.MoreItems;
 
-                    if (!actualItem.Equals(expectedEnumerator.Current))
+                    if (!comparer(actualItem, expectedEnumerator.Current))
                         return EqualityResult.NotEqualAtIndex;
                 }
             }
