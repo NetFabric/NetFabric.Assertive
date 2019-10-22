@@ -22,10 +22,7 @@ namespace NetFabric.Assertive
         }
 
         public static bool Any(this IEnumerable enumerable)
-        {
-            var enumerator = enumerable.GetEnumerator();
-            return enumerator.MoveNext();
-        }
+            => enumerable.GetEnumerator().MoveNext();
 
         public static string ToFriendlyString(this IEnumerable enumerable)
         {

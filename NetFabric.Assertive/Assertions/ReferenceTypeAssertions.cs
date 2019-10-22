@@ -58,14 +58,14 @@ namespace NetFabric.Assertive
 
         public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEnumerableOf<TActualItem>()
         {
-            TypeExtensions.AssertIsEnumerable<TActual, TActualItem>(Actual, out var enumerableInfo);
+            AssertIsEnumerable<TActualItem>(out var enumerableInfo);
 
             return new EnumerableReferenceTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
         }
 
         public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeAsyncEnumerableOf<TActualItem>()
         {
-            TypeExtensions.AssertIsAsyncEnumerable<TActual, TActualItem>(Actual, out var enumerableInfo);
+            AssertIsAsyncEnumerable<TActualItem>(out var enumerableInfo);
 
             return new AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
         }
