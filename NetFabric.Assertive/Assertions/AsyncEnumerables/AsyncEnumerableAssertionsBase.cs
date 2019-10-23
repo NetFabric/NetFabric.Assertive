@@ -60,23 +60,23 @@ namespace NetFabric.Assertive
         {
             foreach (var @interface in typeof(TActual).GetInterfaces())
             {
-                if (@interface.IsAsyncEnumerable(out var interfaceEnumerableInfo))
+                if (@interface.IsAsyncEnumerable(out var enumerableInfo))
                 {
-                    var wrappedInterface = new AsyncEnumerableWrapper<TActual, TActualItem>(Actual, interfaceEnumerableInfo);
-                    switch (wrappedInterface.Compare(expected, comparer, out var interfaceIndex))
+                    var wrapped = new AsyncEnumerableWrapper<TActual, TActualItem>(Actual, enumerableInfo);
+                    switch (wrapped.Compare(expected, comparer, out var index))
                     {
                         case EqualityResult.NotEqualAtIndex:
                             {
                                 throw new AsyncEnumerableAssertionException<TActual, TActualItem, TExpected>(
-                                    wrappedInterface,
+                                    wrapped,
                                     expected,
-                                    $"Actual differs at index {interfaceIndex} when using '{@interface}.GetEnumerator()'.");
+                                    $"Actual differs at index {index} when using '{@interface}.GetEnumerator()'.");
                             }
 
                         case EqualityResult.LessItem:
                             {
                                 throw new AsyncEnumerableAssertionException<TActual, TActualItem, TExpected>(
-                                    wrappedInterface,
+                                    wrapped,
                                     expected,
                                     $"Actual has less items when using '{@interface}.GetEnumerator()'.");
                             }
@@ -84,7 +84,7 @@ namespace NetFabric.Assertive
                         case EqualityResult.MoreItems:
                             {
                                 throw new AsyncEnumerableAssertionException<TActual, TActualItem, TExpected>(
-                                    wrappedInterface,
+                                    wrapped,
                                     expected,
                                     $"Actual has more items when using '{@interface}.GetEnumerator()'.");
                             }

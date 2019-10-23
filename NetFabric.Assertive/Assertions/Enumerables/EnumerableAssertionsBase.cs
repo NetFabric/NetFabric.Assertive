@@ -54,52 +54,52 @@ namespace NetFabric.Assertive
         {
             foreach (var @interface in typeof(TActual).GetInterfaces())
             {
-                if (@interface.IsEnumerable(out var interfaceEnumerableInfo))
+                if (@interface.IsEnumerable(out var enumerableInfo))
                 {
-                    var wrappedInterface = new EnumerableWrapper<TActual, TActualItem>(Actual, interfaceEnumerableInfo);
-                    switch (wrappedInterface.Compare(expected, comparer, out var interfaceIndex))
+                    var wrapped = new EnumerableWrapper<TActual, TActualItem>(Actual, enumerableInfo);
+                    switch (wrapped.Compare(expected, comparer, out var index))
                     {
                         case EqualityResult.NotEqualAtIndex:
                             throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
-                                wrappedInterface,
+                                wrapped,
                                 expected,
-                                $"Actual differs at index {interfaceIndex} when using '{@interface}.GetEnumerator()'.");
+                                $"Actual differs at index {index} when using '{@interface}.GetEnumerator()'.");
 
                         case EqualityResult.LessItem:
                             throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
-                                wrappedInterface,
+                                wrapped,
                                 expected,
                                 $"Actual has less items when using '{@interface}.GetEnumerator()'.");
 
                         case EqualityResult.MoreItems:
                             throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
-                                wrappedInterface,
+                                wrapped,
                                 expected,
                                 $"Actual has more items when using '{@interface}.GetEnumerator()'.");
                     }
 
-                    var interfaceItemType = interfaceEnumerableInfo.ItemType;
-                    if (interfaceItemType.IsByRef)
-                        interfaceItemType = interfaceItemType.GetElementType();
+                    var itemType = enumerableInfo.ItemType;
+                    if (itemType.IsByRef)
+                        itemType = itemType.GetElementType();
 
-                    if (@interface.IsAssignableTo(typeof(IReadOnlyCollection<>).MakeGenericType(interfaceItemType)))
+                    if (@interface.IsAssignableTo(typeof(IReadOnlyCollection<>).MakeGenericType(itemType)))
                     {
                         var actualCount = ((IReadOnlyCollection<TActualItem>)Actual).Count;
-                        var expectedCount = wrappedInterface.Count();
+                        var expectedCount = wrapped.Count();
                         if (actualCount != expectedCount)
                             throw new CountAssertionException(actualCount, expectedCount);
                     }
 
-                    if (@interface.IsAssignableTo(typeof(IReadOnlyList<>).MakeGenericType(interfaceItemType)))
+                    if (@interface.IsAssignableTo(typeof(IReadOnlyList<>).MakeGenericType(itemType)))
                     {
                         var readOnlyListActual = (IReadOnlyList<TActualItem>)Actual;
-                        switch (readOnlyListActual.Compare(expected, comparer, out interfaceIndex))
+                        switch (readOnlyListActual.Compare(expected, comparer, out index))
                         {
                             case EqualityResult.NotEqualAtIndex:
                                 throw new ReadOnlyListAssertionException<TActualItem, TExpected>(
                                     new ReadOnlyListWrapper<TActualItem>(readOnlyListActual),
                                     expected,
-                                    $"Actual differs at index {interfaceIndex} when using the indexer.");
+                                    $"Actual differs at index {index} when using the indexer.");
 
                             case EqualityResult.LessItem:
                                 throw new ReadOnlyListAssertionException<TActualItem, TExpected>(

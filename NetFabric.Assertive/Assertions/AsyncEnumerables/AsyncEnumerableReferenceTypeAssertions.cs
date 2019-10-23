@@ -25,6 +25,9 @@ namespace NetFabric.Assertive
         public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer, bool deepComparison = true)
             where TExpected : IEnumerable<TExpectedItem>
         {
+            if (comparer is null)
+                throw new ArgumentNullException(nameof(comparer));
+
             if (Actual is null)
             {
                 if (expected is object)
