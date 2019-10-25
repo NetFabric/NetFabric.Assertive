@@ -63,6 +63,12 @@ namespace NetFabric.Assertive
                 if (@interface.IsAsyncEnumerable(out var enumerableInfo))
                 {
                     var wrapped = new AsyncEnumerableWrapper<TActual, TActualItem>(Actual, enumerableInfo);
+
+#if !NETSTANDARD2_1 // 'Current' may return by-ref but reflection only supports its invocation on netstandard 2.1
+                    if (enumerableInfo.ItemType.IsByRef)
+                        continue;
+#endif
+
                     switch (wrapped.Compare(expected, comparer, out var index))
                     {
                         case EqualityResult.NotEqualAtIndex:
