@@ -46,9 +46,9 @@ namespace NetFabric.Assertive
 
         public static EnumerableInfo GetAsyncEnumerableInfo(this Type type)
         {
-            var getEnumerator = type.GetPublicOrExplicitMethod("GetAsyncEnumerator");
-            if (getEnumerator is null)
-                getEnumerator = type.GetPublicOrExplicitMethod("GetAsyncEnumerator", typeof(CancellationToken));
+            var getEnumerator = 
+                type.GetPublicOrExplicitMethod("GetAsyncEnumerator") ??
+                type.GetPublicOrExplicitMethod("GetAsyncEnumerator", typeof(CancellationToken));
             if (getEnumerator is null)
                 return default;
 
@@ -57,7 +57,8 @@ namespace NetFabric.Assertive
                 getEnumerator,
                 enumeratorType.GetPublicOrExplicitProperty("Current"),
                 enumeratorType.GetPublicOrExplicitMethod("MoveNextAsync"),
-                enumeratorType.GetPublicOrExplicitMethod("DisposeAsync"));
+                enumeratorType.GetPublicOrExplicitMethod("DisposeAsync") ??
+                    enumeratorType.GetPublicOrExplicitMethod("Dispose"));
         }
 
         static PropertyInfo GetPublicOrExplicitProperty(this Type type, string name)

@@ -62,8 +62,19 @@ namespace NetFabric.Assertive
 
             public void Dispose()
             {
-                if (info.Dispose is object) 
-                    ((ValueTask)info.Dispose.Invoke(enumerator, Array.Empty<object>())).GetAwaiter().GetResult();
+                if (info.Dispose is object)
+                {
+                    switch (info.Dispose.Name)
+                    {
+                        case "Dispose":
+                            info.Dispose.Invoke(enumerator, Array.Empty<object>());
+                            break;
+
+                        case "DisposeAsync":
+                            ((ValueTask)info.Dispose.Invoke(enumerator, Array.Empty<object>())).GetAwaiter().GetResult();
+                            break;
+                    }
+                }
             }
         }
     }
