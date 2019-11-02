@@ -8,7 +8,7 @@ namespace NetFabric.Assertive
     [DebuggerNonUserCode]
     static class AsyncEnumerableEqualityComparer
     {
-        public static async Task<(EqualityResult Result, int Index)> CompareAsync<TActualItem, TExpectedItem>(this IAsyncEnumerable<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> equalityComparison)
+        public static async Task<(EqualityResult Result, int Index)> CompareAsync<TActualItem, TExpectedItem>(this IAsyncEnumerable<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer)
         {
             await using var actualEnumerator = actual.GetAsyncEnumerator();
             using var expectedEnumerator = expected.GetEnumerator();
@@ -28,7 +28,7 @@ namespace NetFabric.Assertive
                     if (isExpectedCompleted)
                         return (EqualityResult.MoreItems, index);
 
-                    if (!equalityComparison(actualEnumerator.Current, expectedEnumerator.Current))
+                    if (!comparer(actualEnumerator.Current, expectedEnumerator.Current))
                         return (EqualityResult.NotEqualAtIndex, index);
                 }
             }

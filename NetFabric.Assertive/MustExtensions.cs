@@ -22,6 +22,10 @@ namespace NetFabric.Assertive
         [Pure]
         public static FunctionAssertions<TActual> Must<TActual>(this Func<TActual> actual)
             => new FunctionAssertions<TActual>(actual);
+
+        [Pure]
+        public static ObservableAssertions<TActualItem> Must<TActualItem>(this IObservable<TActualItem> actual)
+            => new ObservableAssertions<TActualItem>(actual);
     }
 
     [DebuggerNonUserCode]

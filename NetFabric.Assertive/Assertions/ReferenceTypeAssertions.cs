@@ -69,14 +69,5 @@ namespace NetFabric.Assertive
 
             return new AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
         }
-
-        public ObservableReferenceTypeAssertions<TActual, TActualItem> BeObservableOf<TActualItem>()
-        {
-            var actualType = typeof(TActual);
-            if (!actualType.IsAssignableTo(typeof(IObservable<>).MakeGenericType(typeof(TActualItem))))
-                throw new ActualAssertionException<TActual>(Actual, $"Expected '{actualType}' to be an observable but doesn't implement 'IObservable <{typeof(TActualItem)}>'.");
-
-            return new ObservableReferenceTypeAssertions<TActual, TActualItem>(Actual);
-        }
     }
 }
