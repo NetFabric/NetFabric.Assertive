@@ -26,5 +26,10 @@
     <Compile Remove="Platforms\netcoreapp3.0\**" />
     <EmbeddedResource Remove="Platforms\netcoreapp3.0\**" />
     <None Remove="Platforms\netcoreapp3.0\**" />
-  </ItemGroup>  
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="dotnet-reportgenerator-cli" Version="4.2.2" />
+  </ItemGroup>
+  
 </Project>
