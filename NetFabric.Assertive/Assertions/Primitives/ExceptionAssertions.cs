@@ -14,10 +14,18 @@ namespace NetFabric.Assertive
         {
         }
 
-        public new ExceptionAssertions<TException> EvaluatesTrue(Func<TException, bool> func)
-            => this.EvaluatesTrue<ExceptionAssertions<TException>, TException>(func);
+        public new ExceptionAssertions<TException> EvaluateTrue(Func<TException, bool> func)
+            => this.EvaluateTrue<ExceptionAssertions<TException>, TException>(func);
 
+        public new ExceptionAssertions<TException> EvaluateFalse(Func<TException, bool> func)
+            => this.EvaluateFalse<ExceptionAssertions<TException>, TException>(func);
+
+        [Obsolete("Use EvaluateTrue instead.")]
+        public new ExceptionAssertions<TException> EvaluatesTrue(Func<TException, bool> func)
+            => this.EvaluateTrue(func);
+
+        [Obsolete("Use EvaluatesFalse instead.")]
         public new ExceptionAssertions<TException> EvaluatesFalse(Func<TException, bool> func)
-            => this.EvaluatesFalse<ExceptionAssertions<TException>, TException>(func);
+            => this.EvaluateFalse(func);
     }
 }

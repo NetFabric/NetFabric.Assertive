@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace NetFabric.Assertive
@@ -14,11 +13,19 @@ namespace NetFabric.Assertive
         {
         }
 
-        public ReferenceTypeAssertions<TActual> EvaluatesTrue(Func<TActual, bool> func)
-            => this.EvaluatesTrue<ReferenceTypeAssertions<TActual>, TActual>(func);
+        public ReferenceTypeAssertions<TActual> EvaluateTrue(Func<TActual, bool> func)
+            => this.EvaluateTrue<ReferenceTypeAssertions<TActual>, TActual>(func);
 
-        public new ReferenceTypeAssertions<TActual> EvaluatesFalse(Func<TActual, bool> func)
-            => this.EvaluatesFalse<ReferenceTypeAssertions<TActual>, TActual>(func);
+        public ReferenceTypeAssertions<TActual> EvaluateFalse(Func<TActual, bool> func)
+            => this.EvaluateFalse<ReferenceTypeAssertions<TActual>, TActual>(func);
+
+        [Obsolete("Use EvaluateTrue instead.")]
+        public ReferenceTypeAssertions<TActual> EvaluatesTrue(Func<TActual, bool> func)
+            => this.EvaluateTrue(func);
+
+        [Obsolete("Use EvaluateFalse instead.")]
+        public ReferenceTypeAssertions<TActual> EvaluatesFalse(Func<TActual, bool> func)
+            => this.EvaluateFalse(func);
 
         public ReferenceTypeAssertions<TActual> BeOfType<TType>()
             => this.BeOfType<ReferenceTypeAssertions<TActual>, TActual, TType>();
@@ -44,16 +51,16 @@ namespace NetFabric.Assertive
         public ReferenceTypeAssertions<TActual> BeNotSameAs<TExpected>(TExpected expected)
             => this.BeNotSameAs<ReferenceTypeAssertions<TActual>, TActual, TExpected>(expected);
 
-        public new ReferenceTypeAssertions<TActual> BeEqualTo(TActual expected)
+        public ReferenceTypeAssertions<TActual> BeEqualTo(TActual expected)
             => this.BeEqualTo<ReferenceTypeAssertions<TActual>, TActual>(expected);
 
-        public new ReferenceTypeAssertions<TActual> BeEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
+        public ReferenceTypeAssertions<TActual> BeEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
             => this.BeEqualTo<ReferenceTypeAssertions<TActual>, TActual, TExpected>(expected, comparer);
 
-        public new ReferenceTypeAssertions<TActual> BeNotEqualTo(TActual expected)
+        public ReferenceTypeAssertions<TActual> BeNotEqualTo(TActual expected)
             => this.BeNotEqualTo<ReferenceTypeAssertions<TActual>, TActual>(expected);
 
-        public new ReferenceTypeAssertions<TActual> BeNotEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
+        public ReferenceTypeAssertions<TActual> BeNotEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
             => this.BeNotEqualTo<ReferenceTypeAssertions<TActual>, TActual, TExpected>(expected, comparer);
 
         public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEnumerableOf<TActualItem>()

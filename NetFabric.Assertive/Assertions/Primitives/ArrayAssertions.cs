@@ -13,11 +13,19 @@ namespace NetFabric.Assertive
         {
         }
 
-        public ArrayAssertions<TActual> EvaluatesTrue(Func<TActual[], bool> func)
-            => this.EvaluatesTrue<ArrayAssertions<TActual>, TActual[]>(func);
+        public new ArrayAssertions<TActual> EvaluateTrue(Func<TActual[], bool> func)
+            => this.EvaluateTrue<ArrayAssertions<TActual>, TActual[]>(func);
 
-        public ArrayAssertions<TActual> EvaluatesFalse(Func<TActual[], bool> func)
-            => this.EvaluatesFalse<ArrayAssertions<TActual>, TActual[]>(func);
+        public new ArrayAssertions<TActual> EvaluateFalse(Func<TActual[], bool> func)
+            => this.EvaluateFalse<ArrayAssertions<TActual>, TActual[]>(func);
+
+        [Obsolete("Use EvaluateTrue instead.")]
+        public new ArrayAssertions<TActual> EvaluatesTrue(Func<TActual[], bool> func)
+            => this.EvaluateTrue(func);
+
+        [Obsolete("Use EvaluateFalse instead.")]
+        public new ArrayAssertions<TActual> EvaluatesFalse(Func<TActual[], bool> func)
+            => this.EvaluateFalse(func);
 
         public ArrayAssertions<TActual> BeArrayOf<TType>()
             => this.BeOfType<ArrayAssertions<TActual>, TActual[], TType[]>();

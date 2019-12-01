@@ -1,3 +1,4 @@
+using NetFabric.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -25,7 +26,6 @@ namespace NetFabric.Assertive
                 return;
 #endif
 
-            var getEnumeratorDeclaringType = EnumerableInfo.GetEnumerator.DeclaringType;
             var wrapped = new EnumerableWrapper<TActual, TActualItem>(Actual, EnumerableInfo);
             switch (wrapped.Compare(expected, comparer, out var index))
             {
@@ -33,19 +33,19 @@ namespace NetFabric.Assertive
                     throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
                         wrapped,
                         expected,
-                        $"Actual differs at index {index} when using '{getEnumeratorDeclaringType}.GetEnumerator()'.");
+                        $"Actual differs at index {index} when using '{EnumerableInfo.EnumerableType}.GetEnumerator()'.");
 
                 case EqualityResult.LessItem:
                     throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
                         wrapped,
                         expected,
-                        $"Actual has less items when using '{getEnumeratorDeclaringType}.GetEnumerator()'.");
+                        $"Actual has less items when using '{EnumerableInfo.EnumerableType}.GetEnumerator()'.");
 
                 case EqualityResult.MoreItems:
                     throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
                         wrapped,
                         expected,
-                        $"Actual has more items when using '{getEnumeratorDeclaringType}.GetEnumerator()'.");
+                        $"Actual has more items when using '{EnumerableInfo.EnumerableType}.GetEnumerator()'.");
             }
         }
 

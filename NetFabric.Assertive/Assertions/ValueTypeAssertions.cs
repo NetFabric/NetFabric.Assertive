@@ -14,11 +14,19 @@ namespace NetFabric.Assertive
         {
         }
 
-        public new ValueTypeAssertions<TActual> EvaluatesTrue(Func<TActual, bool> func)
-            => this.EvaluatesTrue<ValueTypeAssertions<TActual>, TActual>(func);
+        public ValueTypeAssertions<TActual> EvaluateTrue(Func<TActual, bool> func)
+            => this.EvaluateTrue<ValueTypeAssertions<TActual>, TActual>(func);
 
-        public new ValueTypeAssertions<TActual> EvaluatesFalse(Func<TActual, bool> func)
-            => this.EvaluatesFalse<ValueTypeAssertions<TActual>, TActual>(func);
+        public ValueTypeAssertions<TActual> EvaluateFalse(Func<TActual, bool> func)
+            => this.EvaluateFalse<ValueTypeAssertions<TActual>, TActual>(func);
+
+        [Obsolete("Use EvaluateTrue instead.")]
+        public ValueTypeAssertions<TActual> EvaluatesTrue(Func<TActual, bool> func)
+            => this.EvaluateTrue(func);
+
+        [Obsolete("Use EvaluateFalse instead.")]
+        public ValueTypeAssertions<TActual> EvaluatesFalse(Func<TActual, bool> func)
+            => this.EvaluateFalse(func);
 
         public ValueTypeAssertions<TActual> BeOfType<TType>()
             => this.BeOfType<ValueTypeAssertions<TActual>, TActual, TType>();
@@ -38,16 +46,16 @@ namespace NetFabric.Assertive
         public ValueTypeAssertions<TActual> BeNotDefault()
             => BeNotEqualTo(default);
 
-        public new ValueTypeAssertions<TActual> BeEqualTo(TActual expected)
+        public ValueTypeAssertions<TActual> BeEqualTo(TActual expected)
             => this.BeEqualTo<ValueTypeAssertions<TActual>, TActual>(expected);
 
-        public new ValueTypeAssertions<TActual> BeEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
+        public ValueTypeAssertions<TActual> BeEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
             => this.BeEqualTo<ValueTypeAssertions<TActual>, TActual, TExpected>(expected, comparer);
 
-        public new ValueTypeAssertions<TActual> BeNotEqualTo(TActual expected)
+        public ValueTypeAssertions<TActual> BeNotEqualTo(TActual expected)
             => this.BeNotEqualTo<ValueTypeAssertions<TActual>, TActual>(expected);
 
-        public new ValueTypeAssertions<TActual> BeNotEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
+        public ValueTypeAssertions<TActual> BeNotEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
             => this.BeNotEqualTo<ValueTypeAssertions<TActual>, TActual, TExpected>(expected, comparer);
 
         public EnumerableValueTypeAssertions<TActual, TActualItem> BeEnumerableOf<TActualItem>()

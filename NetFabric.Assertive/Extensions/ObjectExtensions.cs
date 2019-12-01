@@ -1,3 +1,4 @@
+using NetFabric.Reflection;
 using System;
 using System.Collections;
 using System.Diagnostics;
@@ -27,17 +28,17 @@ namespace NetFabric.Assertive
         {
             var type = @object.GetType();
 
-            if (type.IsEnumerable(out var info))
+            if (type.IsEnumerable(out var enumerableInfo))
             {
                 var wrapperType = typeof(EnumerableWrapper<>).MakeGenericType(type);
-                var wrapper = (IEnumerable)Activator.CreateInstance(wrapperType, @object, info);
+                var wrapper = (IEnumerable)Activator.CreateInstance(wrapperType, @object, enumerableInfo);
                 return wrapper.ToFriendlyString();
             }
 
-            if (type.IsAsyncEnumerable(out info))
+            if (type.IsAsyncEnumerable(out enumerableInfo))
             {
                 var wrapperType = typeof(AsyncEnumerableWrapper<>).MakeGenericType(type);
-                var wrapper = (IEnumerable)Activator.CreateInstance(wrapperType, @object, info);
+                var wrapper = (IEnumerable)Activator.CreateInstance(wrapperType, @object, enumerableInfo);
                 return wrapper.ToFriendlyString();
             }
 

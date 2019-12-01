@@ -1,3 +1,4 @@
+using NetFabric.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,11 +16,19 @@ namespace NetFabric.Assertive
         {
         }
 
-        public new EnumerableValueTypeAssertions<TActual, TActualItem> EvaluatesTrue(Func<TActual, bool> func)
-            => this.EvaluatesTrue<EnumerableValueTypeAssertions<TActual, TActualItem>, TActual>(func);
+        public EnumerableValueTypeAssertions<TActual, TActualItem> EvaluateTrue(Func<TActual, bool> func)
+            => this.EvaluateTrue<EnumerableValueTypeAssertions<TActual, TActualItem>, TActual>(func);
 
-        public new EnumerableValueTypeAssertions<TActual, TActualItem> EvaluatesFalse(Func<TActual, bool> func)
-            => this.EvaluatesFalse<EnumerableValueTypeAssertions<TActual, TActualItem>, TActual>(func);
+        public EnumerableValueTypeAssertions<TActual, TActualItem> EvaluateFalse(Func<TActual, bool> func)
+            => this.EvaluateFalse<EnumerableValueTypeAssertions<TActual, TActualItem>, TActual>(func);
+
+        [Obsolete("Use EvaluateTrue instead.")]
+        public EnumerableValueTypeAssertions<TActual, TActualItem> EvaluatesTrue(Func<TActual, bool> func)
+            => this.EvaluateTrue(func);
+
+        [Obsolete("Use EvaluateFalse instead.")]
+        public EnumerableValueTypeAssertions<TActual, TActualItem> EvaluatesFalse(Func<TActual, bool> func)
+            => this.EvaluateFalse(func);
 
         public EnumerableValueTypeAssertions<TActual, TActualItem> BeEmpty(bool deepComparison = true)
             => BeEqualTo(Enumerable.Empty<TActualItem>(), deepComparison);

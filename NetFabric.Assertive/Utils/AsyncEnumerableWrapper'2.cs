@@ -1,3 +1,4 @@
+using NetFabric.Reflection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,17 +12,14 @@ namespace NetFabric.Assertive
     public sealed class AsyncEnumerableWrapper<TActual, TActualItem> 
         : IEnumerable<TActualItem>
     {
-        readonly EnumerableInfo info;
-
         public AsyncEnumerableWrapper(TActual actual, EnumerableInfo info)
         {
             Actual = actual;
-            this.info = info;
+            Info = info;
         }
 
         public TActual Actual { get; }
-        public Type DeclaringType 
-            => info.GetEnumerator.DeclaringType;
+        public EnumerableInfo Info { get; }
 
         public IEnumerator<TActualItem> GetEnumerator() 
             => new Enumerator(this);
@@ -38,7 +36,7 @@ namespace NetFabric.Assertive
 
             public Enumerator(AsyncEnumerableWrapper<TActual, TActualItem> enumerable)
             {
-                info = enumerable.info;
+                info = enumerable.Info;
                 enumerator = info.GetEnumerator.GetParameters().Length switch
                 {
                     0 => info.GetEnumerator.Invoke(enumerable.Actual, Array.Empty<object>()),

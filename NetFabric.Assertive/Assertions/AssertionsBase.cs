@@ -1,3 +1,4 @@
+using NetFabric.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,7 +20,7 @@ namespace NetFabric.Assertive
             var actualType = typeof(TActual);
             if (actualType == typeof(TActualItem[])) // convert TActualItem[] to IList<TActualItem>
                 actualType = typeof(IList<>).MakeGenericType(typeof(TActualItem));
-            enumerableInfo = actualType.GetEnumerableInfo();
+            actualType.IsEnumerable(out enumerableInfo);
 
             if (enumerableInfo.GetEnumerator is null)
                 throw new ActualAssertionException<TActual>(Actual, $"Expected to be an enumerable but it's missing a valid 'GetEnumerator' method.");
@@ -44,7 +45,7 @@ namespace NetFabric.Assertive
         protected void AssertIsAsyncEnumerable<TActualItem>(out EnumerableInfo enumerableInfo)
         {
             var actualType = typeof(TActual);
-            enumerableInfo = actualType.GetAsyncEnumerableInfo();
+            actualType.IsAsyncEnumerable(out enumerableInfo);
 
             if (enumerableInfo.GetEnumerator is null)
                 throw new ActualAssertionException<TActual>(Actual, $"Expected to be an async enumerable but it's missing a valid 'GetAsyncEnumerator' method.");

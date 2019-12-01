@@ -7,7 +7,7 @@ namespace NetFabric.Assertive
     [DebuggerNonUserCode]
     static class AssertionsBaseExtensions
     {
-        public static TAssertions EvaluatesTrue<TAssertions, TActual>(this TAssertions assertions, Func<TActual, bool> func)
+        public static TAssertions EvaluateTrue<TAssertions, TActual>(this TAssertions assertions, Func<TActual, bool> func)
             where TAssertions : AssertionsBase<TActual>
         {
             if (!func(assertions.Actual))
@@ -17,7 +17,7 @@ namespace NetFabric.Assertive
             return assertions;
         }
 
-        public static TAssertions EvaluatesFalse<TAssertions, TActual>(this TAssertions assertions, Func<TActual, bool> func)
+        public static TAssertions EvaluateFalse<TAssertions, TActual>(this TAssertions assertions, Func<TActual, bool> func)
             where TAssertions : AssertionsBase<TActual>
         {
             if (func(assertions.Actual))
@@ -26,6 +26,16 @@ namespace NetFabric.Assertive
 
             return assertions;
         }
+
+        [Obsolete("Use EvaluateTrue instead.")]
+        public static TAssertions EvaluatesTrue<TAssertions, TActual>(this TAssertions assertions, Func<TActual, bool> func)
+            where TAssertions : AssertionsBase<TActual>
+            => EvaluateTrue(assertions, func);
+
+        [Obsolete("Use EvaluateFalse instead.")]
+        public static TAssertions EvaluatesFalse<TAssertions, TActual>(this TAssertions assertions, Func<TActual, bool> func)
+            where TAssertions : AssertionsBase<TActual>
+            => EvaluateFalse(assertions, func);
 
         public static TAssertions BeOfType<TAssertions, TActual, TType>(this TAssertions assertions)
             where TAssertions : AssertionsBase<TActual>
