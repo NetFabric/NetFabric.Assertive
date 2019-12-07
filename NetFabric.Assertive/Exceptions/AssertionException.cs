@@ -9,5 +9,10 @@ namespace NetFabric.Assertive
             : base(message)
         {
         }
+
+        public AssertionException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
     }
 }

@@ -4,6 +4,35 @@ using System.Collections.Generic;
 
 namespace NetFabric.Assertive.UnitTests
 {
+    public class ExceptionOnGetEnumeratorEnumerable<T>
+    {
+        public ExceptionOnGetEnumeratorEnumerable<T> GetEnumerator() => throw new Exception();
+        public T Current => default;
+        public bool MoveNext() => false;
+    }
+
+    public class ExceptionOnCurrentEnumerable<T>
+    {
+        public ExceptionOnCurrentEnumerable<T> GetEnumerator() => this;
+        public T Current => throw new Exception();
+        public bool MoveNext() => true;
+    }
+
+    public class ExceptionOnMoveNextEnumerable<T>
+    {
+        public ExceptionOnMoveNextEnumerable<T> GetEnumerator() => this;
+        public T Current => default;
+        public bool MoveNext() => throw new Exception();
+    }
+
+    public class ExceptionOnDisposeEnumerable<T> : IDisposable
+    {
+        public ExceptionOnDisposeEnumerable<T> GetEnumerator() => this;
+        public T Current => default;
+        public bool MoveNext() => false;
+        public void Dispose() => throw new Exception();
+    }
+
     public class RangeEnumerable
     {
         readonly int count;

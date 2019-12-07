@@ -24,7 +24,7 @@ namespace NetFabric.Assertive
                     builder.Append(separator);
                     builder.Append(' ');
                 }
-                builder.Append(enumerator.Current.ToFriendlyString());
+                builder.Append(ObjectExtensions.ToFriendlyString(enumerator.Current));
                 first = false;
             }
             builder.Append('}');

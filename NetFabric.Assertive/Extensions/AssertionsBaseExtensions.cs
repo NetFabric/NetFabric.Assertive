@@ -41,7 +41,7 @@ namespace NetFabric.Assertive
             where TAssertions : AssertionsBase<TActual>
         {
             if (typeof(TActual) != typeof(TType))
-                throw new ActualAssertionException<TActual>(assertions.Actual, $"Expected '{assertions.Actual.ToFriendlyString()}' to be of type '{typeof(TType)}' but it's not.");
+                throw new ActualAssertionException<TActual>(assertions.Actual, $"Expected '{ObjectExtensions.ToFriendlyString(assertions.Actual)}' to be of type '{typeof(TType)}' but it's not.");
 
             return assertions;
         }
@@ -50,7 +50,7 @@ namespace NetFabric.Assertive
             where TAssertions : AssertionsBase<TActual>
         {
             if (typeof(TActual) == typeof(TType))
-                throw new ActualAssertionException<TActual>(assertions.Actual, $"Expected '{assertions.Actual.ToFriendlyString()}' not to be of type '{typeof(TType)}' but it is.");
+                throw new ActualAssertionException<TActual>(assertions.Actual, $"Expected '{ObjectExtensions.ToFriendlyString(assertions.Actual)}' not to be of type '{typeof(TType)}' but it is.");
 
             return assertions;
         }
@@ -59,7 +59,7 @@ namespace NetFabric.Assertive
             where TAssertions : AssertionsBase<TActual>
         {
             if (!typeof(TActual).IsAssignableTo(typeof(TType)))
-                throw new ActualAssertionException<TActual>(assertions.Actual, $"Expected '{assertions.Actual.ToFriendlyString()}' to be assignable to '{typeof(TType)}' but it's not.");
+                throw new ActualAssertionException<TActual>(assertions.Actual, $"Expected '{ObjectExtensions.ToFriendlyString(assertions.Actual)}' to be assignable to '{typeof(TType)}' but it's not.");
 
             return assertions;
         }
@@ -68,7 +68,7 @@ namespace NetFabric.Assertive
             where TAssertions : AssertionsBase<TActual>
         {
             if (typeof(TActual).IsAssignableTo(typeof(TType)))
-                throw new ActualAssertionException<TActual>(assertions.Actual, $"Expected '{assertions.Actual.ToFriendlyString()}' to be not assignable to '{typeof(TType)}' but it is.");
+                throw new ActualAssertionException<TActual>(assertions.Actual, $"Expected '{ObjectExtensions.ToFriendlyString(assertions.Actual)}' to be not assignable to '{typeof(TType)}' but it is.");
 
             return assertions;
         }

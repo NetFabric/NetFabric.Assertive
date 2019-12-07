@@ -6,7 +6,7 @@ namespace NetFabric.Assertive
         : AssertionException
     {
         public ActualAssertionException(TActual actual, string message)
-            : base($"{message}{Environment.NewLine}Actual: {actual.ToFriendlyString()}")
+            : base($"{message}{Environment.NewLine}Actual: {ObjectExtensions.ToFriendlyString(actual)}")
         {
             Actual = actual;
         }

@@ -7,7 +7,7 @@ namespace NetFabric.Assertive
     {
         public ExpectedAssertionException(TActual actual, TExpected expected, string message)
             : base(actual, 
-                  $"{message}{Environment.NewLine}Expected: {expected.ToFriendlyString()}")
+                  $"{message}{Environment.NewLine}Expected: {ObjectExtensions.ToFriendlyString(expected)}")
         {
             Expected = expected;
         }

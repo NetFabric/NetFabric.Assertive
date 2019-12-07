@@ -1,8 +1,5 @@
-using System;
 using System.Collections;
 using System.Diagnostics;
-using System.Globalization;
-using System.Text;
 
 namespace NetFabric.Assertive
 {
@@ -23,26 +20,5 @@ namespace NetFabric.Assertive
 
         public static bool Any(this IEnumerable enumerable)
             => enumerable.GetEnumerator().MoveNext();
-
-        public static string ToFriendlyString(this IEnumerable enumerable)
-        {
-            var builder = new StringBuilder();
-            builder.Append('{');
-            var enumerator = enumerable.GetEnumerator();
-            var first = true;
-            var separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator;
-            while(enumerator.MoveNext())
-            {   
-                if (!first)
-                {
-                    builder.Append(separator);
-                    builder.Append(' ');
-                }
-                builder.Append(enumerator.Current.ToFriendlyString());
-                first = false;
-            }
-            builder.Append('}');
-            return builder.ToString();
-        }
     }
 }

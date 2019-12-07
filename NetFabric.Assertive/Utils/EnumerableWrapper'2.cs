@@ -27,28 +27,30 @@ namespace NetFabric.Assertive
         public sealed class Enumerator 
             : IEnumerator<TActualItem>
         {
+            readonly TActual actual;
             readonly EnumerableInfo info;
             readonly object enumerator;
 
             public Enumerator(EnumerableWrapper<TActual, TActualItem> enumerable)
             {
+                actual = enumerable.Actual;
                 info = enumerable.Info;
-                enumerator = info.GetEnumerator.Invoke(enumerable.Actual, Array.Empty<object>());
+                enumerator = info.InvokeGetEnumerator(actual);
             }
 
-            public TActualItem Current 
-                => (TActualItem)info.Current.GetValue(enumerator);
+            public TActualItem Current
+                => (TActualItem)info.InvokeCurrent(enumerator);
             object IEnumerator.Current
-                => info.Current.GetValue(enumerator);
+                => info.InvokeCurrent(enumerator);
 
-            public bool MoveNext() 
-                => (bool)info.MoveNext.Invoke(enumerator, Array.Empty<object>());
+            public bool MoveNext()
+                => info.InvokeMoveNext(enumerator);
 
             public void Reset() 
                 => throw new NotSupportedException();
 
-            public void Dispose() 
-                => info.Dispose?.Invoke(enumerator, Array.Empty<object>());
+            public void Dispose()
+                => info.InvokeDispose(enumerator);
         }
     }
 }

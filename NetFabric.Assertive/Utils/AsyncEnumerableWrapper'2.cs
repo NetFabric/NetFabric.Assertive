@@ -29,51 +29,37 @@ namespace NetFabric.Assertive
         public sealed class Enumerator 
             : IEnumerator<TActualItem>
         {
-            static readonly object[] CancellationToken = new object[] { default(CancellationToken) };
-
+            readonly TActual actual;
             readonly EnumerableInfo info;
             readonly object enumerator;
 
             public Enumerator(AsyncEnumerableWrapper<TActual, TActualItem> enumerable)
             {
+                actual = enumerable.Actual;
                 info = enumerable.Info;
                 enumerator = info.GetEnumerator.GetParameters().Length switch
                 {
-                    0 => info.GetEnumerator.Invoke(enumerable.Actual, Array.Empty<object>()),
+                    0 => info.InvokeGetAsyncEnumerator(actual),
 
-                    1 => info.GetEnumerator.Invoke(enumerable.Actual, CancellationToken),
+                    1 => info.InvokeGetAsyncEnumerator(actual, default),
 
                     _ => throw new Exception("Unexpected number of parameters for 'GetAsyncEnumerator'."),
                 };
             }
 
-            public TActualItem Current 
-                => (TActualItem)info.Current.GetValue(enumerator);
+            public TActualItem Current
+                => (TActualItem)info.InvokeCurrent(enumerator);
             object IEnumerator.Current
-                => info.Current.GetValue(enumerator);
+                => info.InvokeCurrent(enumerator);
 
             public bool MoveNext()
-                => ((ValueTask<bool>)info.MoveNext.Invoke(enumerator, Array.Empty<object>())).GetAwaiter().GetResult();
+                => info.InvokeMoveNextAsync(enumerator);
 
             public void Reset()
                 => throw new NotSupportedException();
 
             public void Dispose()
-            {
-                if (info.Dispose is object)
-                {
-                    switch (info.Dispose.Name)
-                    {
-                        case "Dispose":
-                            info.Dispose.Invoke(enumerator, Array.Empty<object>());
-                            break;
-
-                        case "DisposeAsync":
-                            ((ValueTask)info.Dispose.Invoke(enumerator, Array.Empty<object>())).GetAwaiter().GetResult();
-                            break;
-                    }
-                }
-            }
+                => info.InvokeDispose(enumerator);
         }
     }
 }
