@@ -30,7 +30,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            void action() => actual.Must().BeDefault();
+            Action action = () => actual.Must().BeDefault();
 
             // Assert
             var exception = Assert.Throws<EqualToAssertionException<int, int>>(action);

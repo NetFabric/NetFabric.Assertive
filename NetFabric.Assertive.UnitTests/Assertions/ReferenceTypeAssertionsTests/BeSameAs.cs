@@ -37,7 +37,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            void action() => actual.Must().BeSameAs(expected);
+            Action action = () => actual.Must().BeSameAs(expected);
 
             // Assert
             var exception = Assert.Throws<ExpectedAssertionException<object, object>>(action);

@@ -24,7 +24,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = (int?)0;
 
             // Act
-            void action() => actual.Must().NotHaveValue();
+            Action action = () => actual.Must().NotHaveValue();
 
             // Assert
             var exception = Assert.Throws<EqualToAssertionException<int?, int?>>(action);

@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NetFabric.Assertive\NetFabric.Assertive.csproj" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'!='netcoreapp3.0'">

@@ -24,12 +24,12 @@ namespace NetFabric.Assertive
 
             if (enumerableInfo.GetEnumerator is null)
                 throw new ActualAssertionException<TActual>(Actual, $"Expected to be an enumerable but it's missing a valid 'GetEnumerator' method.");
-            if (enumerableInfo.Current is null)
+            if (enumerableInfo.EnumeratorInfo.Current is null)
                 throw new ActualAssertionException<TActual>(Actual, $"Expected to be an enumerator but it's missing a valid 'Current' property.");
-            if (enumerableInfo.MoveNext is null)
+            if (enumerableInfo.EnumeratorInfo.MoveNext is null)
                 throw new ActualAssertionException<TActual>(Actual, $"Expected to be an enumerator but it's missing a valid 'MoveNext' method.");
 
-            var actualItemType = enumerableInfo.ItemType;
+            var actualItemType = enumerableInfo.EnumeratorInfo.Current.PropertyType;
             if (actualItemType.IsByRef)
             {
                 if (!actualItemType.IsAssignableTo(typeof(TActualItem).MakeByRefType()))
@@ -42,19 +42,19 @@ namespace NetFabric.Assertive
             }
         }
 
-        protected void AssertIsAsyncEnumerable<TActualItem>(out EnumerableInfo enumerableInfo)
+        protected void AssertIsAsyncEnumerable<TActualItem>(out AsyncEnumerableInfo enumerableInfo)
         {
             var actualType = typeof(TActual);
             actualType.IsAsyncEnumerable(out enumerableInfo);
 
-            if (enumerableInfo.GetEnumerator is null)
+            if (enumerableInfo.GetAsyncEnumerator is null)
                 throw new ActualAssertionException<TActual>(Actual, $"Expected to be an async enumerable but it's missing a valid 'GetAsyncEnumerator' method.");
-            if (enumerableInfo.Current is null)
+            if (enumerableInfo.EnumeratorInfo.Current is null)
                 throw new ActualAssertionException<TActual>(Actual, $"Expected to be an async enumerator but it's missing a valid 'Current' property.");
-            if (enumerableInfo.MoveNext is null)
+            if (enumerableInfo.EnumeratorInfo.MoveNextAsync is null)
                 throw new ActualAssertionException<TActual>(Actual, $"Expected to be an async enumerator but it's missing a valid 'MoveNextAsync' method.");
 
-            var actualItemType = enumerableInfo.ItemType;
+            var actualItemType = enumerableInfo.EnumeratorInfo.Current.PropertyType;
             if (actualItemType.IsByRef)
             {
                 if (!actualItemType.IsAssignableTo(typeof(TActualItem).MakeByRefType()))

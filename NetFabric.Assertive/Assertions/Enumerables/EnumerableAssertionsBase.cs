@@ -22,7 +22,7 @@ namespace NetFabric.Assertive
             where TExpected : IEnumerable<TExpectedItem>
         {
 #if !NETSTANDARD2_1 // 'Current' may return by-ref but reflection only supports its invocation on netstandard 2.1
-            if (EnumerableInfo.ItemType.IsByRef)
+            if (EnumerableInfo.EnumeratorInfo.Current.PropertyType.IsByRef)
                 return;
 #endif
 
@@ -33,19 +33,19 @@ namespace NetFabric.Assertive
                     throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
                         wrapped,
                         expected,
-                        $"Actual differs at index {index} when using '{EnumerableInfo.EnumerableType}.GetEnumerator()'.");
+                        $"Actual differs at index {index} when using '{EnumerableInfo.GetEnumerator.DeclaringType}.GetEnumerator()'.");
 
                 case EqualityResult.LessItem:
                     throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
                         wrapped,
                         expected,
-                        $"Actual has less items when using '{EnumerableInfo.EnumerableType}.GetEnumerator()'.");
+                        $"Actual has less items when using '{EnumerableInfo.GetEnumerator.DeclaringType}.GetEnumerator()'.");
 
                 case EqualityResult.MoreItems:
                     throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
                         wrapped,
                         expected,
-                        $"Actual has more items when using '{EnumerableInfo.EnumerableType}.GetEnumerator()'.");
+                        $"Actual has more items when using '{EnumerableInfo.GetEnumerator.DeclaringType}.GetEnumerator()'.");
             }
         }
 
@@ -59,7 +59,7 @@ namespace NetFabric.Assertive
                     var wrapped = new EnumerableWrapper<TActual, TActualItem>(Actual, enumerableInfo);
 
 #if !NETSTANDARD2_1 // 'Current' may return by-ref but reflection only supports its invocation on netstandard 2.1
-                    if (enumerableInfo.ItemType.IsByRef)
+                    if (enumerableInfo.EnumeratorInfo.Current.PropertyType.IsByRef)
                         continue;
 #endif
 
@@ -84,7 +84,7 @@ namespace NetFabric.Assertive
                                 $"Actual has more items when using '{@interface}.GetEnumerator()'.");
                     }
 
-                    var itemType = enumerableInfo.ItemType;
+                    var itemType = enumerableInfo.EnumeratorInfo.Current.PropertyType;
                     if (itemType.IsByRef)
                         itemType = itemType.GetElementType();
 

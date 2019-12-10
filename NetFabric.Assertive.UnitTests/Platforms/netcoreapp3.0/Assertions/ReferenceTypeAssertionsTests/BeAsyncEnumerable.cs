@@ -15,7 +15,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new MissingGetAsyncEnumeratorAsyncEnumerable<int>();
 
             // Act
-            void action() => actual.Must().BeAsyncEnumerableOf<int>();
+            Action action = () => actual.Must().BeAsyncEnumerableOf<int>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingGetAsyncEnumeratorAsyncEnumerable<int>>>(action);
@@ -30,7 +30,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new MissingCurrentAsyncEnumerable<int>();
 
             // Act
-            void action() => actual.Must().BeAsyncEnumerableOf<int>();
+            Action action = () => actual.Must().BeAsyncEnumerableOf<int>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingCurrentAsyncEnumerable<int>>>(action);
@@ -45,7 +45,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new EmptyAsyncEnumerable<int>();
 
             // Act
-            void action() => actual.Must().BeAsyncEnumerableOf<string>();
+            Action action = () => actual.Must().BeAsyncEnumerableOf<string>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<EmptyAsyncEnumerable<int>>>(action);
@@ -60,7 +60,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new MissingMoveNextAsyncAsyncEnumerable<int>();
 
             // Act
-            void action() => actual.Must().BeAsyncEnumerableOf<int>();
+            Action action = () => actual.Must().BeAsyncEnumerableOf<int>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingMoveNextAsyncAsyncEnumerable<int>>>(action);

@@ -24,7 +24,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new object();
 
             // Act
-            void action() => actual.Must().BeNull();
+            Action action = () => actual.Must().BeNull();
 
             // Assert
             var exception = Assert.Throws<EqualToAssertionException<object, object>>(action);
