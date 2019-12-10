@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace NetFabric.Assertive
 {
@@ -67,6 +68,32 @@ namespace NetFabric.Assertive
 
                     if (!comparer(actualEnumerator.Current, expectedEnumerator.Current))
                         return EqualityResult.NotEqualAtIndex;
+                }
+            }
+        }
+
+        public static async ValueTask<(EqualityResult, int)> Compare<TActualItem, TExpectedItem>(this IAsyncEnumerable<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer)
+        {
+            await using var actualEnumerator = actual.GetAsyncEnumerator();
+            using var expectedEnumerator = expected.GetEnumerator();
+            checked
+            {
+                for (var index = 0; true; index++)
+                {
+                    var isActualCompleted = !await actualEnumerator.MoveNextAsync();
+                    var isExpectedCompleted = !expectedEnumerator.MoveNext();
+
+                    if (isActualCompleted && isExpectedCompleted)
+                        return (EqualityResult.Equal, index);
+
+                    if (isActualCompleted)
+                        return (EqualityResult.LessItem, index);
+
+                    if (isExpectedCompleted)
+                        return (EqualityResult.MoreItems, index);
+
+                    if (!comparer(actualEnumerator.Current, expectedEnumerator.Current))
+                        return (EqualityResult.NotEqualAtIndex, index);
                 }
             }
         }

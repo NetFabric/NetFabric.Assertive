@@ -20,7 +20,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            void action() => actual.Must()
+            Action action = () => actual.Must()
                 .BeAsyncEnumerableOf<int>()
                 .BeEqualTo(expected);
 

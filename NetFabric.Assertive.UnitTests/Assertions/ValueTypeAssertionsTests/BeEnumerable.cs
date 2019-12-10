@@ -14,7 +14,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new MissingGetEnumeratorEnumerable<int>();
 
             // Act
-            void action() => actual.Must().BeEnumerableOf<int>();
+            Action action = () => actual.Must().BeEnumerableOf<int>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingGetEnumeratorEnumerable<int>>>(action);
@@ -29,7 +29,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new MissingCurrentEnumerable<int>();
 
             // Act
-            void action() => actual.Must().BeEnumerableOf<int>();
+            Action action = () => actual.Must().BeEnumerableOf<int>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingCurrentEnumerable<int>>>(action);
@@ -44,7 +44,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new EmptyEnumerable<int>();
 
             // Act
-            void action() => actual.Must().BeEnumerableOf<string>();
+            Action action = () => actual.Must().BeEnumerableOf<string>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<EmptyEnumerable<int>>>(action);
@@ -59,7 +59,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new MissingMoveNextEnumerable<int>();
 
             // Act
-            void action() => actual.Must().BeEnumerableOf<int>();
+            Action action = () => actual.Must().BeEnumerableOf<int>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingMoveNextEnumerable<int>>>(action);
