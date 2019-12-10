@@ -1,4 +1,5 @@
 using System;
+using NetFabric.Reflection;
 using Xunit;
 
 namespace NetFabric.Assertive.UnitTests
@@ -13,10 +14,10 @@ namespace NetFabric.Assertive.UnitTests
             var expected = new int[0];
 
             // Act
-            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            Action action = () => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
-            var exception = Assert.Throws<AssertionException>(action);
+            var exception = Assert.Throws<EnumerationException>(action);
             Assert.Equal("Unhandled exception in ExceptionOnGetEnumeratorEnumerable`1.GetEnumerator().", exception.Message);
             Assert.NotNull(exception.InnerException);
         }
@@ -29,10 +30,10 @@ namespace NetFabric.Assertive.UnitTests
             var expected = new int[0];
 
             // Act
-            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            Action action = () => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
-            var exception = Assert.Throws<AssertionException>(action);
+            var exception = Assert.Throws<EnumerationException>(action);
             Assert.Equal("Unhandled exception in ExceptionOnCurrentEnumerable`1.Current.", exception.Message);
             Assert.NotNull(exception.InnerException);
         }
@@ -45,10 +46,10 @@ namespace NetFabric.Assertive.UnitTests
             var expected = new int[0];
 
             // Act
-            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            Action action = () => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
-            var exception = Assert.Throws<AssertionException>(action);
+            var exception = Assert.Throws<EnumerationException>(action);
             Assert.Equal("Unhandled exception in ExceptionOnMoveNextEnumerable`1.MoveNext().", exception.Message);
             Assert.NotNull(exception.InnerException);
         }
@@ -61,10 +62,10 @@ namespace NetFabric.Assertive.UnitTests
             var expected = new int[0];
 
             // Act
-            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            Action action = () => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
-            var exception = Assert.Throws<AssertionException>(action);
+            var exception = Assert.Throws<EnumerationException>(action);
             Assert.Equal("Unhandled exception in IDisposable.Dispose().", exception.Message);
             Assert.NotNull(exception.InnerException);
         }
@@ -106,11 +107,11 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            Action action = () => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
             var exception = Assert.Throws<EnumerableAssertionException<RangeEnumerable, int, int[]>>(action);
-            Assert.Same(actual, exception.Actual.Actual);
+            Assert.Same(actual, exception.Actual.Instance);
             Assert.Same(expected, exception.Expected);
             Assert.Equal(message, exception.Message);
         }
@@ -129,7 +130,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            Action action = () => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
             var exception = Assert.Throws<EqualToAssertionException<RangeEnumerable, int[]>>(action);

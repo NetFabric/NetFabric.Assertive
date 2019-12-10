@@ -25,6 +25,32 @@ namespace NetFabric.Assertive
             }
             catch (TException expected)
             {
+                if (expected.GetType() != typeof(TException))
+                    throw new AssertionException($"The exception type is not the expected.");
+
+                actualException = expected;
+            }
+            catch (Exception notExpected)
+            {
+                throw new AssertionException($"The exception type is not the expected.");
+            }
+
+            if (actualException is null)
+                throw new AssertionException($"No exception was thrown.");
+
+            return new ExceptionAssertions<TException>(actualException);
+        }
+
+        public ExceptionAssertions<TException> ThrowAny<TException>() 
+            where TException : Exception
+        {
+            var actualException = (TException)null; 
+            try
+            {
+                Invoke();
+            }
+            catch (TException expected)
+            {
                 actualException = expected;
             }
             catch (Exception notExpected)

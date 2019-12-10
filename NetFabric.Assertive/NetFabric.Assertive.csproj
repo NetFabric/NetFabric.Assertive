@@ -5,7 +5,7 @@
     <PackageId>NetFabric.Assertive</PackageId>
     <Title>NetFabric.Assertive</Title>
     <Description>A fluent assertions library that performs full coverage on any enumerable type.</Description>
-    <Version>1.5.0</Version>
+    <Version>1.6.0</Version>
     <PackageIcon>Icon.png</PackageIcon>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>netfabric, enumeration, test, testing, unittest, assertion, TDD, fluent, netcore, netstandard</PackageTags>
@@ -19,7 +19,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NetFabric.Reflection" Version="1.1.0" />
+    <PackageReference Include="NetFabric.Reflection" Version="2.0.0" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net461'">
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
 </Project>
