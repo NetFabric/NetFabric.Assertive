@@ -53,11 +53,12 @@ namespace NetFabric.Assertive
         {
             var builder = new StringBuilder();
             builder.Append('{');
-            await using (var enumerator = enumerable.GetAsyncEnumerator())
+            var enumerator = enumerable.GetAsyncEnumerator();
+            await using (enumerator.ConfigureAwait(false))
             {
                 var first = true;
                 var separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator;
-                while (await enumerator.MoveNextAsync())
+                while (await enumerator.MoveNextAsync().ConfigureAwait(false))
                 {
                     if (!first)
                     {

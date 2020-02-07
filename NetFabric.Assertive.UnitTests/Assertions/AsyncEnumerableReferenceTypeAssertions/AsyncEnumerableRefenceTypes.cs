@@ -32,7 +32,7 @@ namespace NetFabric.Assertive.UnitTests
                 => current;
 
             public ValueTask<bool> MoveNextAsync() 
-                => new ValueTask<bool>(Task.FromResult<bool>(++current < count));
+                => new ValueTask<bool>(++current < count);
         }
     }
 
@@ -67,7 +67,7 @@ namespace NetFabric.Assertive.UnitTests
             public ValueTask<bool> MoveNextAsync()
             {
                 token.ThrowIfCancellationRequested();
-                return new ValueTask<bool>(Task.FromResult<bool>(++current < count));
+                return new ValueTask<bool>(++current < count);
             }
         }
     }
@@ -106,11 +106,11 @@ namespace NetFabric.Assertive.UnitTests
             public ValueTask<bool> MoveNextAsync()
             {
                 token.ThrowIfCancellationRequested();
-                return new ValueTask<bool>(Task.FromResult<bool>(++current < count));
+                return new ValueTask<bool>(++current < count);
             }
 
             public ValueTask DisposeAsync()
-                => new ValueTask(Task.CompletedTask);
+                => new ValueTask();
         }
     }
 }

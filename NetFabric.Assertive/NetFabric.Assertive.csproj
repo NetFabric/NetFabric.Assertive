@@ -5,19 +5,19 @@
     <PackageId>NetFabric.Assertive</PackageId>
     <Title>NetFabric.Assertive</Title>
     <Description>A fluent assertions library that performs full coverage on any enumerable type.</Description>
-    <Version>1.7.0</Version>
+    <Version>1.7.1</Version>
     <PackageIcon>Icon.png</PackageIcon>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>netfabric, enumeration, test, testing, unittest, assertion, TDD, fluent, netcore, netstandard</PackageTags>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <DefineConstants>CONTRACTS_FULL</DefineConstants>
+    <DefineConstants>$(DefineConstants);CONTRACTS_FULL</DefineConstants>
     <PackageReleaseNotes>
       Added support for Span and Memory.
     </PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp2.1' Or '$(TargetFramework)'=='netstandard2.1'">
-    <DefineConstants>NETCORE</DefineConstants>
+    <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'!='netcoreapp2.1' And '$(TargetFramework)'!='netstandard2.1'">

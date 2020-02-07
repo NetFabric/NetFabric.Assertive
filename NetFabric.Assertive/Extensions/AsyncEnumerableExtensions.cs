@@ -15,17 +15,20 @@ namespace NetFabric.Assertive
             var builder = new StringBuilder();
             builder.Append('{');
             var enumerator = enumerable.GetAsyncEnumerator();
-            var first = true;
-            var separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator;
-            while(await enumerator.MoveNextAsync())
-            {   
-                if (!first)
-                {
-                    builder.Append(separator);
-                    builder.Append(' ');
+            await using (enumerator.ConfigureAwait(false))
+            {
+                var first = true;
+                var separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator;
+                while (await enumerator.MoveNextAsync().ConfigureAwait(false))
+                {   
+                    if (!first)
+                    {
+                        builder.Append(separator);
+                        builder.Append(' ');
+                    }
+                    builder.Append(ObjectExtensions.ToFriendlyString(enumerator.Current));
+                    first = false;
                 }
-                builder.Append(ObjectExtensions.ToFriendlyString(enumerator.Current));
-                first = false;
             }
             builder.Append('}');
             return builder.ToString();
