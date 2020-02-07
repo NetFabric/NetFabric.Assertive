@@ -20,7 +20,7 @@ namespace NetFabric.Assertive
         public IEnumerator<TActualItem> GetEnumerator() => new Enumerator(this);
         IEnumerator IEnumerable.GetEnumerator() => new Enumerator(this);
 
-        public sealed class Enumerator 
+        sealed class Enumerator 
             : IEnumerator<TActualItem>
         {
             readonly TActual actual;

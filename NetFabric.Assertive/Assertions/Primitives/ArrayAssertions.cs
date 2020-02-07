@@ -5,84 +5,85 @@ using System.Diagnostics;
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public class ArrayAssertions<TActual>
-        : ReferenceTypeAssertions<TActual[]>
+    public partial class ArrayAssertions<TActualItem>
+        : ReferenceTypeAssertions<TActualItem[]>
     {
-        internal ArrayAssertions(TActual[] actual)
+        internal ArrayAssertions(TActualItem[] actual)
             : base(actual)
         {
         }
 
-        public new ArrayAssertions<TActual> EvaluateTrue(Func<TActual[], bool> func)
-            => this.EvaluateTrue<ArrayAssertions<TActual>, TActual[]>(func);
+        public new ArrayAssertions<TActualItem> EvaluateTrue(Func<TActualItem[], bool> func)
+            => this.EvaluateTrue<ArrayAssertions<TActualItem>, TActualItem[]>(func);
 
-        public new ArrayAssertions<TActual> EvaluateFalse(Func<TActual[], bool> func)
-            => this.EvaluateFalse<ArrayAssertions<TActual>, TActual[]>(func);
+        public new ArrayAssertions<TActualItem> EvaluateFalse(Func<TActualItem[], bool> func)
+            => this.EvaluateFalse<ArrayAssertions<TActualItem>, TActualItem[]>(func);
 
         [Obsolete("Use EvaluateTrue instead.")]
-        public new ArrayAssertions<TActual> EvaluatesTrue(Func<TActual[], bool> func)
+        public new ArrayAssertions<TActualItem> EvaluatesTrue(Func<TActualItem[], bool> func)
             => this.EvaluateTrue(func);
 
         [Obsolete("Use EvaluateFalse instead.")]
-        public new ArrayAssertions<TActual> EvaluatesFalse(Func<TActual[], bool> func)
+        public new ArrayAssertions<TActualItem> EvaluatesFalse(Func<TActualItem[], bool> func)
             => this.EvaluateFalse(func);
 
-        public ArrayAssertions<TActual> BeArrayOf<TType>()
-            => this.BeOfType<ArrayAssertions<TActual>, TActual[], TType[]>();
+        public ArrayAssertions<TActualItem> BeArrayOf<TType>()
+            => this.BeOfType<ArrayAssertions<TActualItem>, TActualItem[], TType[]>();
 
-        public ArrayAssertions<TActual> NotBeArrayOf<TType>()
-            => this.NotBeOfType<ArrayAssertions<TActual>, TActual[], TType[]>();
+        public ArrayAssertions<TActualItem> NotBeArrayOf<TType>()
+            => this.NotBeOfType<ArrayAssertions<TActualItem>, TActualItem[], TType[]>();
 
-        public ArrayAssertions<TActual> BeAssignableTo<TType>()
-            => this.BeAssignableTo<ArrayAssertions<TActual>, TActual[], TType>();
+        public ArrayAssertions<TActualItem> BeAssignableTo<TType>()
+            => this.BeAssignableTo<ArrayAssertions<TActualItem>, TActualItem[], TType>();
 
-        public ArrayAssertions<TActual> BeNotAssignableTo<TType>()
-            => this.BeNotAssignableTo<ArrayAssertions<TActual>, TActual[], TType>();
+        public ArrayAssertions<TActualItem> BeNotAssignableTo<TType>()
+            => this.BeNotAssignableTo<ArrayAssertions<TActualItem>, TActualItem[], TType>();
 
-        public ArrayAssertions<TActual> BeNull()
-            => this.BeNull<ArrayAssertions<TActual>, TActual[]>();
+        public ArrayAssertions<TActualItem> BeNull()
+            => this.BeNull<ArrayAssertions<TActualItem>, TActualItem[]>();
 
-        public ArrayAssertions<TActual> BeNotNull()
-            => this.BeNotNull<ArrayAssertions<TActual>, TActual[]>();
+        public ArrayAssertions<TActualItem> BeNotNull()
+            => this.BeNotNull<ArrayAssertions<TActualItem>, TActualItem[]>();
 
-        public ArrayAssertions<TActual> BeSameAs<TExpected>(TExpected[] expected)
-            => this.BeSameAs<ArrayAssertions<TActual>, TActual[], TExpected[]>(expected);
+        public ArrayAssertions<TActualItem> BeSameAs<TExpected>(TExpected[] expected)
+            => this.BeSameAs<ArrayAssertions<TActualItem>, TActualItem[], TExpected[]>(expected);
 
-        public ArrayAssertions<TActual> BeNotSameAs<TExpected>(TExpected[] expected)
-            => this.BeNotSameAs<ArrayAssertions<TActual>, TActual[], TExpected[]>(expected);
+        public ArrayAssertions<TActualItem> BeNotSameAs<TExpected>(TExpected[] expected)
+            => this.BeNotSameAs<ArrayAssertions<TActualItem>, TActualItem[], TExpected[]>(expected);
 
-        public new ArrayAssertions<TActual> BeEqualTo(TActual[] expected)
-            => BeEqualTo<TActual[], TActual>(expected, (actual, expected) => EqualityComparer<TActual>.Default.Equals(actual, expected));
+        public new ArrayAssertions<TActualItem> BeEqualTo<TExpected>(TExpected expected)
+            where TExpected : IEnumerable<TActualItem>
+            => BeEqualTo<TExpected, TActualItem>(expected, (actual, expected) => EqualityComparer<TActualItem>.Default.Equals(actual, expected));
 
-        public ArrayAssertions<TActual> BeEqualTo<TExpected, TExpectedItem>(TExpected expected, Func<TActual, TExpectedItem, bool> comparer)
+        public ArrayAssertions<TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer)
             where TExpected : IEnumerable<TExpectedItem>
         {
             if (Actual is null)
             {
                 if (expected is object)
-                    throw new EqualToAssertionException<TActual[], TExpected>(Actual, expected);
+                    throw new EqualToAssertionException<TActualItem[], TExpected>(Actual, expected);
             }
             else
             {
                 if (expected is null)
-                    throw new EqualToAssertionException<TActual[], TExpected>(Actual, expected);
+                    throw new EqualToAssertionException<TActualItem[], TExpected>(Actual, expected);
 
                 switch (Actual.Compare(expected, comparer, out var index))
                 {
                     case EqualityResult.NotEqualAtIndex:
-                        throw new EqualToAssertionException<TActual[], TExpected>(
+                        throw new EqualToAssertionException<TActualItem[], TExpected>(
                             Actual,
                             expected,
                             $"Arrays differ at index {index}.");
 
                     case EqualityResult.LessItem:
-                        throw new EqualToAssertionException<TActual[], TExpected>(
+                        throw new EqualToAssertionException<TActualItem[], TExpected>(
                             Actual,
                             expected,
                             $"Actual array has less items.");
 
                     case EqualityResult.MoreItems:
-                        throw new EqualToAssertionException<TActual[], TExpected>(
+                        throw new EqualToAssertionException<TActualItem[], TExpected>(
                             Actual,
                             expected,
                             $"Actual array has more items.");
