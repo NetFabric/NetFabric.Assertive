@@ -17,6 +17,11 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)'=='net461' Or '$(TargetFramework)'=='netstandard2.0'">
+    <Compile Remove="**\SpanAssertionsTests\*.cs" />
+    <Compile Remove="**\MemoryAssertionsTests\*.cs" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\NetFabric.Assertive\NetFabric.Assertive.csproj" />
   </ItemGroup>

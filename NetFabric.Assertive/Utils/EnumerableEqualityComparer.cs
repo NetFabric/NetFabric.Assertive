@@ -133,7 +133,11 @@ namespace NetFabric.Assertive
             }
         }
 
+#if NETCORE
+        public static EqualityResult Compare<TActualItem, TExpectedItem>(this ReadOnlySpan<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer, out int index)
+#else
         public static EqualityResult Compare<TActualItem, TExpectedItem>(this TActualItem[] actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer, out int index)
+#endif
         {
             using var expectedEnumerator = expected.GetEnumerator();
             checked
