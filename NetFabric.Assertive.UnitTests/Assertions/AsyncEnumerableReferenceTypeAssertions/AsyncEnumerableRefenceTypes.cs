@@ -110,7 +110,7 @@ namespace NetFabric.Assertive.UnitTests
             }
 
             public ValueTask DisposeAsync()
-                => new ValueTask();
+                => default;
         }
     }
 }

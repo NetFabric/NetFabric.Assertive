@@ -143,7 +143,7 @@ namespace NetFabric.Assertive.UnitTests
                 => new ValueTask<bool>(false);
 
             ValueTask IAsyncDisposable.DisposeAsync() 
-                => new ValueTask();
+                => default;
         }
 
         class ByRefAsyncEnumerable<T>
