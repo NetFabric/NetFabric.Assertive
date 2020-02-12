@@ -1,16 +1,20 @@
 using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace NetFabric.Assertive.UnitTests
 {
-    public partial class DelegateAssertionsTests
+    public partial class AsyncDelegateAssertionsTests
     {
         [Fact]
-        public void Throw_With_Equal_Should_NotAssert()
+        public void Task_Throw_With_Equal_Should_NotAssert()
         {
             // Arrange
-            Action actual = () => throw new ArgumentException();
+            Func<Task> actual = async () => 
+                {
+                    throw new ArgumentException();
+                    await Task.FromResult<bool>(true); 
+                };
 
             // Act
             Action action = () => actual.Must().Throw<ArgumentException>();
@@ -27,10 +31,14 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         [Fact]
-        public void Throw_With_Derived_Should_Assert()
+        public void Task_Throw_With_Derived_Should_Assert()
         {
             // Arrange
-            Action actual = () => throw new ArgumentNullException();
+            Func<ValueTask> actual = async () => 
+                {
+                    throw new ArgumentNullException();
+                    await Task.FromResult<bool>(true); 
+                };
 
             // Act
             Action action = () => actual.Must().Throw<ArgumentException>();
@@ -42,10 +50,10 @@ namespace NetFabric.Assertive.UnitTests
 
 
         [Fact]
-        public void Throw_With_NoThrow_Should_Assert()
+        public void Task_Throw_With_NoThrow_Should_Assert()
         {
             // Arrange
-            Action actual = () => {};
+            Func<Task> actual = () => Task.FromResult<bool>(true);
 
             // Act
             Action action = () => actual.Must().Throw<ArgumentException>();

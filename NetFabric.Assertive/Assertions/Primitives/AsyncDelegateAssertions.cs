@@ -1,19 +1,20 @@
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public abstract class DelegateAssertions<TActual>
+    public abstract class AsyncDelegateAssertions<TActual>
         : AssertionsBase<Delegate>
         where TActual : Delegate
     {
-        internal DelegateAssertions(TActual actual) 
+        internal AsyncDelegateAssertions(TActual actual) 
             : base(actual)
         {
         }
 
-        protected abstract void Invoke();
+        protected abstract ValueTask InvokeAsync();
 
         public ExceptionAssertions<TException> Throw<TException>() 
             where TException : Exception
@@ -21,7 +22,7 @@ namespace NetFabric.Assertive
             var actualException = (TException)null; 
             try
             {
-                Invoke();
+                InvokeAsync().GetAwaiter().GetResult();
             }
             catch (TException expected)
             {
@@ -47,7 +48,7 @@ namespace NetFabric.Assertive
             var actualException = (TException)null; 
             try
             {
-                Invoke();
+                InvokeAsync().GetAwaiter().GetResult();
             }
             catch (TException expected)
             {

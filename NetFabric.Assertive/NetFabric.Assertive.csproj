@@ -5,14 +5,14 @@
     <PackageId>NetFabric.Assertive</PackageId>
     <Title>NetFabric.Assertive</Title>
     <Description>A fluent assertions library that performs full coverage on any enumerable type.</Description>
-    <Version>1.7.1</Version>
+    <Version>1.8.0</Version>
     <PackageIcon>Icon.png</PackageIcon>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>netfabric, enumeration, test, testing, unittest, assertion, TDD, fluent, netcore, netstandard</PackageTags>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <DefineConstants>$(DefineConstants);CONTRACTS_FULL</DefineConstants>
     <PackageReleaseNotes>
-      Added support for Span and Memory.
+      Added support for async delegates.
     </PackageReleaseNotes>
   </PropertyGroup>
 

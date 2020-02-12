@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.Threading.Tasks;
 
 namespace NetFabric.Assertive
 {
@@ -42,6 +43,14 @@ namespace NetFabric.Assertive
         [Pure]
         public static FunctionAssertions<TActual> Must<TActual>(this Func<TActual> actual)
             => new FunctionAssertions<TActual>(actual);
+
+        [Pure]
+        public static AsyncFunctionAssertions Must(this Func<ValueTask> actual)
+            => new AsyncFunctionAssertions(actual);
+
+        [Pure]
+        public static AsyncFunctionAssertions Must(this Func<Task> actual)
+            => Must(() => new ValueTask(actual()));
     }
 
     [DebuggerNonUserCode]
