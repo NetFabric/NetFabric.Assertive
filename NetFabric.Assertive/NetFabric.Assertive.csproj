@@ -4,7 +4,7 @@
     <TargetFrameworks>net461;netstandard2.0;netcoreapp2.1;netstandard2.1</TargetFrameworks>
     <PackageId>NetFabric.Assertive</PackageId>
     <Title>NetFabric.Assertive</Title>
-    <Description>A fluent assertions library that performs full coverage on any enumerable type.</Description>
+    <Description>A fluent assertions library that performs full coverage on enumerable types.</Description>
     <Version>1.8.0</Version>
     <PackageIcon>Icon.png</PackageIcon>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
