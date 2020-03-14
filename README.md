@@ -1,10 +1,9 @@
-![GitHub last commit (master)](https://img.shields.io/github/last-commit/NetFabric/NetFabric.Assertive/master.svg?style=flat-square&logo=github)
-[![Build](https://img.shields.io/azure-devops/build/aalmada/6b7383ba-f8d9-47d6-b56d-bc77f9377f9a/8/master.svg?style=flat-square&logo=azure-devops)](https://dev.azure.com/aalmada/NetFabric.Assertive/)
-[![Unit Tests](https://img.shields.io/azure-devops/tests/aalmada/6b7383ba-f8d9-47d6-b56d-bc77f9377f9a/8/master.svg?style=flat-square&logo=azure-devops)](https://dev.azure.com/aalmada/NetFabric.Assertive/)
-[![Coverage](https://img.shields.io/azure-devops/coverage/aalmada/6b7383ba-f8d9-47d6-b56d-bc77f9377f9a/8/master.svg?style=flat-square&logo=coveralls)](https://dev.azure.com/aalmada/NetFabric.Assertive/)
+[![GitHub last commit (master)](https://img.shields.io/github/last-commit/NetFabric/NetFabric.Assertive/master.svg?style=flat-square&logo=github)](https://github.com/NetFabric/NetFabric.Assertive/commits/master)
+[![Build (master)](https://img.shields.io/github/workflow/status/NetFabric/NetFabric.Assertive/.NET%20Core/master.svg?style=flat-square&logo=github)](https://github.com/NetFabric/NetFabric.Assertive/actions)
+[![Coverage](https://img.shields.io/coveralls/github/NetFabric/NetFabric.Assertive/master?style=flat-square&logo=coveralls)](https://coveralls.io/github/NetFabric/NetFabric.Assertive)
 [![NuGet Version](https://img.shields.io/nuget/v/NetFabric.Assertive.svg?style=flat-square&logo=nuget)](https://www.nuget.org/packages/NetFabric.Assertive/)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/NetFabric.Assertive.svg?style=flat-square&logo=nuget)](https://www.nuget.org/packages/NetFabric.Assertive/) 
-[![Gitter](https://img.shields.io/gitter/room/netfabric/netfabric.hyperlinq?style=flat-square&logo=gitter)](https://gitter.im/NetFabric/NetFabric.Assertive)
+[![Gitter](https://img.shields.io/gitter/room/netfabric/netfabric.assertive?style=flat-square&logo=gitter)](https://gitter.im/NetFabric/NetFabric.Assertive)
 
 # NetFabric.Assertive
 
