@@ -12,16 +12,16 @@ namespace NetFabric.Assertive
         {
         }
 
-        public new BooleanAssertions BeEqualTo(bool expected)
+        public BooleanAssertions BeEqualTo(bool expected)
             => this.BeEqualTo<BooleanAssertions, bool>(expected);
 
-        public new BooleanAssertions BeEqualTo<TExpected>(TExpected expected, Func<bool, TExpected, bool> comparer)
+        public BooleanAssertions BeEqualTo<TExpected>(TExpected expected, Func<bool, TExpected, bool> comparer)
             => this.BeEqualTo<BooleanAssertions, bool, TExpected>(expected, comparer);
 
-        public new BooleanAssertions BeNotEqualTo(bool expected)
+        public BooleanAssertions BeNotEqualTo(bool expected)
             => this.BeNotEqualTo<BooleanAssertions, bool>(expected);
 
-        public new BooleanAssertions BeNotEqualTo<TExpected>(TExpected expected, Func<bool, TExpected, bool> comparer)
+        public BooleanAssertions BeNotEqualTo<TExpected>(TExpected expected, Func<bool, TExpected, bool> comparer)
             => this.BeNotEqualTo<BooleanAssertions, bool, TExpected>(expected, comparer);
 
         public BooleanAssertions BeTrue()

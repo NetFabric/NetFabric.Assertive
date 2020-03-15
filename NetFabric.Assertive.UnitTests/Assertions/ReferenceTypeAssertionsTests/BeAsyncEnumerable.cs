@@ -135,7 +135,7 @@ namespace NetFabric.Assertive.UnitTests
 
         class EmptyAsyncEnumerableExplicitInterfaces<T> : IAsyncEnumerable<T>, IAsyncEnumerator<T>
         {
-            IAsyncEnumerator<T> IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken token = default) => this;
+            IAsyncEnumerator<T> IAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken token) => this;
 
             T IAsyncEnumerator<T>.Current => default;
 

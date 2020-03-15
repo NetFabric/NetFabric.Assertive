@@ -10,11 +10,13 @@ namespace NetFabric.Assertive.UnitTests
         public void ThrowAny_With_Equal_Should_NotAssert()
         {
             // Arrange
-            Func<Task> actual = async () => 
+#pragma warning disable CS0162 // Unreachable code detected
+            Func<Task> actual = () => 
                 {
                     throw new ArgumentException();
-                    await Task.FromResult<bool>(true); 
+                    return Task.FromResult<bool>(true); 
                 };
+#pragma warning restore CS0162 // Unreachable code detected
 
             // Act
             Action action = () => actual.Must().ThrowAny<ArgumentException>();
@@ -34,11 +36,13 @@ namespace NetFabric.Assertive.UnitTests
         public void ThrowAny_With_Derived_Should_NotAssert()
         {
             // Arrange
-            Func<ValueTask> actual = async () => 
+#pragma warning disable CS0162 // Unreachable code detected
+            Func<ValueTask<bool>> actual = () => 
                 {
                     throw new ArgumentNullException();
-                    await Task.FromResult<bool>(true); 
+                    return new ValueTask<bool>(true); 
                 };
+#pragma warning restore CS0162 // Unreachable code detected
 
             // Act
             Action action = () => actual.Must().ThrowAny<ArgumentException>();
@@ -48,7 +52,7 @@ namespace NetFabric.Assertive.UnitTests
             {
                 action();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Assert.True(false);
             }

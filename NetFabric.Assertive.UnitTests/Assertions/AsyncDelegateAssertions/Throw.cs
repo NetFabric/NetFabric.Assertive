@@ -10,14 +10,16 @@ namespace NetFabric.Assertive.UnitTests
         public void Task_Throw_With_Equal_Should_NotAssert()
         {
             // Arrange
-            Func<Task> actual = async () => 
+#pragma warning disable CS0162 // Unreachable code detected
+            Func<Task> actual = () => 
                 {
                     throw new ArgumentException();
-                    await Task.FromResult<bool>(true); 
+                    return Task.FromResult<bool>(true);
                 };
+#pragma warning restore CS0162 // Unreachable code detected
 
             // Act
-            Action action = () => actual.Must().Throw<ArgumentException>();
+            void action() => actual.Must().Throw<ArgumentException>();
 
             // Assert
             try
@@ -34,14 +36,16 @@ namespace NetFabric.Assertive.UnitTests
         public void Task_Throw_With_Derived_Should_Assert()
         {
             // Arrange
-            Func<ValueTask> actual = async () => 
+#pragma warning disable CS0162 // Unreachable code detected
+            Func<ValueTask<bool>> actual = () => 
                 {
                     throw new ArgumentNullException();
-                    await Task.FromResult<bool>(true); 
+                    return new ValueTask<bool>(true);
                 };
+#pragma warning restore CS0162 // Unreachable code detected
 
             // Act
-            Action action = () => actual.Must().Throw<ArgumentException>();
+            void action() => actual.Must().Throw<ArgumentException>();
 
             // Assert
             var exception = Assert.Throws<AssertionException>(action);
@@ -56,7 +60,7 @@ namespace NetFabric.Assertive.UnitTests
             Func<Task> actual = () => Task.FromResult<bool>(true);
 
             // Act
-            Action action = () => actual.Must().Throw<ArgumentException>();
+            void action() => actual.Must().Throw<ArgumentException>();
 
             // Assert
             var exception = Assert.Throws<AssertionException>(action);

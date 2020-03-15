@@ -33,16 +33,16 @@ namespace NetFabric.Assertive
         public ArrayAssertions<TActualItem> NotBeArrayOf<TType>()
             => this.NotBeOfType<ArrayAssertions<TActualItem>, TActualItem[], TType[]>();
 
-        public ArrayAssertions<TActualItem> BeAssignableTo<TType>()
+        public new ArrayAssertions<TActualItem> BeAssignableTo<TType>()
             => this.BeAssignableTo<ArrayAssertions<TActualItem>, TActualItem[], TType>();
 
-        public ArrayAssertions<TActualItem> BeNotAssignableTo<TType>()
+        public new ArrayAssertions<TActualItem> BeNotAssignableTo<TType>()
             => this.BeNotAssignableTo<ArrayAssertions<TActualItem>, TActualItem[], TType>();
 
-        public ArrayAssertions<TActualItem> BeNull()
+        public new ArrayAssertions<TActualItem> BeNull()
             => this.BeNull<ArrayAssertions<TActualItem>, TActualItem[]>();
 
-        public ArrayAssertions<TActualItem> BeNotNull()
+        public new ArrayAssertions<TActualItem> BeNotNull()
             => this.BeNotNull<ArrayAssertions<TActualItem>, TActualItem[]>();
 
         public ArrayAssertions<TActualItem> BeSameAs<TExpected>(TExpected[] expected)
@@ -51,7 +51,7 @@ namespace NetFabric.Assertive
         public ArrayAssertions<TActualItem> BeNotSameAs<TExpected>(TExpected[] expected)
             => this.BeNotSameAs<ArrayAssertions<TActualItem>, TActualItem[], TExpected[]>(expected);
 
-        public new ArrayAssertions<TActualItem> BeEqualTo<TExpected>(TExpected expected)
+        public ArrayAssertions<TActualItem> BeEqualTo<TExpected>(TExpected expected)
             where TExpected : IEnumerable<TActualItem>
             => BeEqualTo<TExpected, TActualItem>(expected, (actual, expected) => EqualityComparer<TActualItem>.Default.Equals(actual, expected));
 

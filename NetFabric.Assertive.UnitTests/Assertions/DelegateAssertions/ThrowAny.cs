@@ -20,7 +20,7 @@ namespace NetFabric.Assertive.UnitTests
             {
                 action();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Assert.True(false);
             }
@@ -40,7 +40,7 @@ namespace NetFabric.Assertive.UnitTests
             {
                 action();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Assert.True(false);
             }

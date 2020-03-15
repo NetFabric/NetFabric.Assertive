@@ -19,7 +19,7 @@ namespace NetFabric.Assertive
         public new MemoryAssertions<TActualItem> EvaluateFalse(Func<ReadOnlyMemory<TActualItem>, bool> func)
             => this.EvaluateFalse<MemoryAssertions<TActualItem>, ReadOnlyMemory<TActualItem>>(func);
 
-        public new MemoryAssertions<TActualItem> BeEqualTo<TExpected>(TExpected expected)
+        public MemoryAssertions<TActualItem> BeEqualTo<TExpected>(TExpected expected)
             where TExpected : IEnumerable<TActualItem>
             => BeEqualTo<TExpected, TActualItem>(expected, (actual, expected) => EqualityComparer<TActualItem>.Default.Equals(actual, expected));
 
