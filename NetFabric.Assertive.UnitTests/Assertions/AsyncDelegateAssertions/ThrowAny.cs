@@ -11,10 +11,10 @@ namespace NetFabric.Assertive.UnitTests
         {
             // Arrange
 #pragma warning disable CS0162 // Unreachable code detected
-            Func<Task> actual = () => 
+            Func<Task> actual = async () => 
                 {
                     throw new ArgumentException();
-                    return Task.FromResult<bool>(true); 
+                    await Task.FromResult<bool>(true); 
                 };
 #pragma warning restore CS0162 // Unreachable code detected
 
@@ -37,11 +37,11 @@ namespace NetFabric.Assertive.UnitTests
         {
             // Arrange
 #pragma warning disable CS0162 // Unreachable code detected
-            Func<ValueTask<bool>> actual = () => 
-                {
-                    throw new ArgumentNullException();
-                    return new ValueTask<bool>(true); 
-                };
+            Func<Task> actual = async () =>
+            {
+                throw new ArgumentNullException();
+                await Task.FromResult<bool>(true);
+            };
 #pragma warning restore CS0162 // Unreachable code detected
 
             // Act
