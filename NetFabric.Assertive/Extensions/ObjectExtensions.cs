@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace NetFabric.Assertive
 {
-    [DebuggerNonUserCode]
+    //[DebuggerNonUserCode]
     static class ObjectExtensions
     {
-        public static string ToFriendlyString(object @object)
+        public static string ToFriendlyString(object? @object)
             => @object switch
             {
                 null => "<null>",

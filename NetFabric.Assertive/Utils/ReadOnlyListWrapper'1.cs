@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NetFabric.Assertive
 {
@@ -30,11 +31,12 @@ namespace NetFabric.Assertive
             {
                 actual = enumerable.Actual;
                 index = -1;
-                current = default;
+                current = default!;
             }
 
+            [AllowNull]
             public TActualItem Current => current;
-            object IEnumerator.Current => current;
+            object? IEnumerator.Current => current;
 
             public bool MoveNext()
             {

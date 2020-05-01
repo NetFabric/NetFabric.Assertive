@@ -6,15 +6,36 @@ using System.Linq;
 
 namespace NetFabric.Assertive
 {
-    [DebuggerNonUserCode]
-    public class AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> 
-        : AsyncEnumerableAssertionsBase<TActual>
+    //[DebuggerNonUserCode]
+    public class AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>
+        : ReferenceTypeAssertionsBase<TActual>
         where TActual : class
     {
-        internal AsyncEnumerableReferenceTypeAssertions(TActual actual, AsyncEnumerableInfo enumerableInfo) 
-            : base(actual, enumerableInfo)
+        internal AsyncEnumerableReferenceTypeAssertions(TActual Actual, AsyncEnumerableInfo enumerableInfo)
+            : base(Actual)
         {
+            EnumerableInfo = enumerableInfo;
         }
+
+        public AsyncEnumerableInfo EnumerableInfo { get; }
+
+        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeNull()
+            => BeNull<AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>>(this);
+
+        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeNotNull()
+            => BeNotNull<AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>>(this);
+
+        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeSameAs<TOther>(TOther other)
+            => BeSameAs<AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>, TOther>(this, other);
+
+        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeNotSameAs<TOther>(TOther other)
+            => BeNotSameAs<AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>, TOther>(this, other);
+
+        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> EvaluateTrue(Func<TActual, bool> func)
+            => EvaluateTrue<AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>>(this, func);
+
+        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> EvaluateFalse(Func<TActual, bool> func)
+            => EvaluateFalse<AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>>(this, func);
 
         public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeEmpty(bool deepComparison = true)
             => BeEqualTo(Enumerable.Empty<TActualItem>(), deepComparison);
@@ -26,9 +47,6 @@ namespace NetFabric.Assertive
         public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer, bool deepComparison = true)
             where TExpected : IEnumerable<TExpectedItem>
         {
-            if (comparer is null)
-                throw new ArgumentNullException(nameof(comparer));
-
             if (Actual is null)
             {
                 if (expected is object)
@@ -39,10 +57,10 @@ namespace NetFabric.Assertive
                 if (expected is null)
                     throw new EqualToAssertionException<TActual, TExpected>(Actual, expected);
 
-                AssertEquality(expected, comparer);
+                AssertAsyncEnumerableEquality(Actual, EnumerableInfo, expected, comparer);
 
                 if (deepComparison)
-                    AssertDeepEquality(expected, comparer);
+                    AssertDeepAsyncEnumerableEquality(Actual, expected, comparer);
             }
 
             return this;

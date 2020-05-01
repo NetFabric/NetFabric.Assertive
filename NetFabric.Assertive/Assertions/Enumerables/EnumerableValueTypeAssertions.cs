@@ -8,27 +8,22 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class EnumerableValueTypeAssertions<TActual, TActualItem> 
-        : EnumerableAssertionsBase<TActual>
+        : ValueTypeAssertionsBase<TActual>
         where TActual : struct
     {
-        internal EnumerableValueTypeAssertions(TActual actual, EnumerableInfo enumerableInfo) 
-            : base(actual, enumerableInfo)
+        internal EnumerableValueTypeAssertions(TActual Actual, EnumerableInfo enumerableInfo)
+            : base(Actual)
         {
+            EnumerableInfo = enumerableInfo;
         }
 
+        public EnumerableInfo EnumerableInfo { get; }
+
         public EnumerableValueTypeAssertions<TActual, TActualItem> EvaluateTrue(Func<TActual, bool> func)
-            => this.EvaluateTrue<EnumerableValueTypeAssertions<TActual, TActualItem>, TActual>(func);
+            => EvaluateTrue<EnumerableValueTypeAssertions<TActual, TActualItem>>(this, func);
 
         public EnumerableValueTypeAssertions<TActual, TActualItem> EvaluateFalse(Func<TActual, bool> func)
-            => this.EvaluateFalse<EnumerableValueTypeAssertions<TActual, TActualItem>, TActual>(func);
-
-        [Obsolete("Use EvaluateTrue instead.")]
-        public EnumerableValueTypeAssertions<TActual, TActualItem> EvaluatesTrue(Func<TActual, bool> func)
-            => this.EvaluateTrue(func);
-
-        [Obsolete("Use EvaluateFalse instead.")]
-        public EnumerableValueTypeAssertions<TActual, TActualItem> EvaluatesFalse(Func<TActual, bool> func)
-            => this.EvaluateFalse(func);
+            => EvaluateFalse<EnumerableValueTypeAssertions<TActual, TActualItem>>(this, func);
 
         public EnumerableValueTypeAssertions<TActual, TActualItem> BeEmpty(bool deepComparison = true)
             => BeEqualTo(Enumerable.Empty<TActualItem>(), deepComparison);
@@ -41,12 +36,12 @@ namespace NetFabric.Assertive
             where TExpected : IEnumerable<TExpectedItem>
         {
             if (expected is null)
-                throw new ArgumentNullException(nameof(expected), $"{typeof(TActual)} is a value type so it can't be expected to be <null>.");
+                throw new EqualToAssertionException<TActual, TExpected>(Actual, expected);
 
-            AssertEquality(expected, comparer);
+            AssertEnumerableEquality(Actual, EnumerableInfo, expected, comparer);
 
             if (deepComparison)
-                AssertDeepEquality(expected, comparer);
+                AssertDeepEnumerableEquality(Actual, expected, comparer);
 
             return this;
         }

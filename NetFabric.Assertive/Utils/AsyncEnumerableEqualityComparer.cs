@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace NetFabric.Assertive
 {
-    [DebuggerNonUserCode]
+    //[DebuggerNonUserCode]
     static class AsyncEnumerableEqualityComparer
     {
         public static async Task<(EqualityResult Result, int Index)> CompareAsync<TActualItem, TExpectedItem>(this IAsyncEnumerable<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> equalityComparison)

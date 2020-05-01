@@ -29,9 +29,9 @@ namespace NetFabric.Assertive.UnitTests
             new TheoryData<int[], int[], string>
             {
                 { new int[] { }, null, $"Expected to be equal but it's not.{Environment.NewLine}Expected: <null>{Environment.NewLine}Actual: {{}}" },
-                { new int[] { }, new int[] { 1 }, $"Actual memory has less items.{Environment.NewLine}Expected: {{1}}{Environment.NewLine}Actual: {{}}" },
-                { new int[] { 1 }, new int[] { }, $"Actual memory has more items.{Environment.NewLine}Expected: {{}}{Environment.NewLine}Actual: {{1}}" },
-                { new int[] { 1, 2, 3 }, new int[] { 1, 5, 3 }, $"Memories differ at index 1.{Environment.NewLine}Expected: {{1, 5, 3}}{Environment.NewLine}Actual: {{1, 2, 3}}" },
+                { new int[] { }, new int[] { 1 }, $"Actual Memory has less items.{Environment.NewLine}Expected: {{1}}{Environment.NewLine}Actual: {{}}" },
+                { new int[] { 1 }, new int[] { }, $"Actual Memory has more items.{Environment.NewLine}Expected: {{}}{Environment.NewLine}Actual: {{1}}" },
+                { new int[] { 1, 2, 3 }, new int[] { 1, 5, 3 }, $"Memory differ at index 1.{Environment.NewLine}Expected: {{1, 5, 3}}{Environment.NewLine}Actual: {{1, 2, 3}}" },
             };
 
         [Theory]

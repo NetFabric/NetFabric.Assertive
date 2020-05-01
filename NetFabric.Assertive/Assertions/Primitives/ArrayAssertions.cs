@@ -6,50 +6,42 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public partial class ArrayAssertions<TActualItem>
-        : ReferenceTypeAssertions<TActualItem[]>
+        : ReferenceTypeAssertionsBase<TActualItem[]>
     {
         internal ArrayAssertions(TActualItem[] actual)
             : base(actual)
         {
         }
 
-        public new ArrayAssertions<TActualItem> EvaluateTrue(Func<TActualItem[], bool> func)
-            => this.EvaluateTrue<ArrayAssertions<TActualItem>, TActualItem[]>(func);
+        public ArrayAssertions<TActualItem> BeNull()
+            => BeNull<ArrayAssertions<TActualItem>>(this);
 
-        public new ArrayAssertions<TActualItem> EvaluateFalse(Func<TActualItem[], bool> func)
-            => this.EvaluateFalse<ArrayAssertions<TActualItem>, TActualItem[]>(func);
-
-        [Obsolete("Use EvaluateTrue instead.")]
-        public new ArrayAssertions<TActualItem> EvaluatesTrue(Func<TActualItem[], bool> func)
-            => this.EvaluateTrue(func);
-
-        [Obsolete("Use EvaluateFalse instead.")]
-        public new ArrayAssertions<TActualItem> EvaluatesFalse(Func<TActualItem[], bool> func)
-            => this.EvaluateFalse(func);
-
-        public ArrayAssertions<TActualItem> BeArrayOf<TType>()
-            => this.BeOfType<ArrayAssertions<TActualItem>, TActualItem[], TType[]>();
-
-        public ArrayAssertions<TActualItem> NotBeArrayOf<TType>()
-            => this.NotBeOfType<ArrayAssertions<TActualItem>, TActualItem[], TType[]>();
-
-        public new ArrayAssertions<TActualItem> BeAssignableTo<TType>()
-            => this.BeAssignableTo<ArrayAssertions<TActualItem>, TActualItem[], TType>();
-
-        public new ArrayAssertions<TActualItem> BeNotAssignableTo<TType>()
-            => this.BeNotAssignableTo<ArrayAssertions<TActualItem>, TActualItem[], TType>();
-
-        public new ArrayAssertions<TActualItem> BeNull()
-            => this.BeNull<ArrayAssertions<TActualItem>, TActualItem[]>();
-
-        public new ArrayAssertions<TActualItem> BeNotNull()
-            => this.BeNotNull<ArrayAssertions<TActualItem>, TActualItem[]>();
+        public ArrayAssertions<TActualItem> BeNotNull()
+            => BeNotNull<ArrayAssertions<TActualItem>>(this);
 
         public ArrayAssertions<TActualItem> BeSameAs<TExpected>(TExpected[] expected)
-            => this.BeSameAs<ArrayAssertions<TActualItem>, TActualItem[], TExpected[]>(expected);
+            => BeSameAs<ArrayAssertions<TActualItem>, TExpected[]>(this, expected);
 
         public ArrayAssertions<TActualItem> BeNotSameAs<TExpected>(TExpected[] expected)
-            => this.BeNotSameAs<ArrayAssertions<TActualItem>, TActualItem[], TExpected[]>(expected);
+            => BeNotSameAs<ArrayAssertions<TActualItem>, TExpected[]>(this, expected);
+
+        public ArrayAssertions<TActualItem> EvaluateTrue(Func<TActualItem[], bool> func)
+            => EvaluateTrue<ArrayAssertions<TActualItem>>(this, func);
+
+        public ArrayAssertions<TActualItem> EvaluateFalse(Func<TActualItem[], bool> func)
+            => EvaluateFalse<ArrayAssertions<TActualItem>>(this, func);
+
+        public ArrayAssertions<TActualItem> BeArrayOf<TType>()
+            => BeOfType<ArrayAssertions<TActualItem>, TType[]>(this);
+
+        public ArrayAssertions<TActualItem> NotBeArrayOf<TType>()
+            => NotBeOfType<ArrayAssertions<TActualItem>, TType[]>(this);
+
+        public ArrayAssertions<TActualItem> BeAssignableTo<TType>()
+            => BeAssignableTo<ArrayAssertions<TActualItem>, TType>(this);
+
+        public ArrayAssertions<TActualItem> BeNotAssignableTo<TType>()
+            => BeNotAssignableTo<ArrayAssertions<TActualItem>, TType>(this);
 
         public ArrayAssertions<TActualItem> BeEqualTo<TExpected>(TExpected expected)
             where TExpected : IEnumerable<TActualItem>
@@ -91,6 +83,13 @@ namespace NetFabric.Assertive
             }
 
             return this;
+        }
+
+        public EnumerableReferenceTypeAssertions<TActualItem[], TExpectedItem> BeEnumerableOf<TExpectedItem>()
+        {
+            AssertIsEnumerable<TActualItem[], TExpectedItem>(Actual, out var enumerableInfo);
+
+            return new EnumerableReferenceTypeAssertions<TActualItem[], TExpectedItem>(Actual, enumerableInfo);
         }
     }
 }

@@ -1,16 +1,17 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NetFabric.Assertive
 {
     public class EqualToAssertionException<TActual, TExpected>
         : ExpectedAssertionException<TActual, TExpected>
     {
-        public EqualToAssertionException(TActual actual, TExpected expected)
+        public EqualToAssertionException([AllowNull]TActual actual, [AllowNull]TExpected expected)
             : this(actual, expected, $"Expected to be equal but it's not.")
         {
         }
 
-        public EqualToAssertionException(TActual actual, TExpected expected, string message)
+        public EqualToAssertionException([AllowNull]TActual actual, [AllowNull]TExpected expected, string message)
             : base(actual, expected, message)
         {
         }

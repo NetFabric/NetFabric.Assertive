@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class BooleanAssertions
-        : AssertionsBase<bool>
+        : ValueTypeAssertionsBase<bool>
     {
         internal BooleanAssertions(bool actual)
             : base(actual)
@@ -13,16 +14,16 @@ namespace NetFabric.Assertive
         }
 
         public BooleanAssertions BeEqualTo(bool expected)
-            => this.BeEqualTo<BooleanAssertions, bool>(expected);
+            => BeEqualTo(this, expected);
 
         public BooleanAssertions BeEqualTo<TExpected>(TExpected expected, Func<bool, TExpected, bool> comparer)
-            => this.BeEqualTo<BooleanAssertions, bool, TExpected>(expected, comparer);
+            => BeEqualTo(this, expected, comparer);
 
         public BooleanAssertions BeNotEqualTo(bool expected)
-            => this.BeNotEqualTo<BooleanAssertions, bool>(expected);
+            => BeNotEqualTo(this, expected);
 
         public BooleanAssertions BeNotEqualTo<TExpected>(TExpected expected, Func<bool, TExpected, bool> comparer)
-            => this.BeNotEqualTo<BooleanAssertions, bool, TExpected>(expected, comparer);
+            => BeNotEqualTo(this, expected, comparer);
 
         public BooleanAssertions BeTrue()
         {

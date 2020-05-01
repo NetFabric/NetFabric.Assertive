@@ -5,7 +5,7 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class ExceptionAssertions<TException> 
-        : ReferenceTypeAssertions<TException>
+        : ReferenceTypeAssertionsBase<TException>
         where TException
         : Exception
     {
@@ -14,18 +14,10 @@ namespace NetFabric.Assertive
         {
         }
 
-        public new ExceptionAssertions<TException> EvaluateTrue(Func<TException, bool> func)
-            => this.EvaluateTrue<ExceptionAssertions<TException>, TException>(func);
+        public ExceptionAssertions<TException> EvaluateTrue(Func<TException, bool> func)
+            => EvaluateTrue<ExceptionAssertions<TException>>(this, func);
 
-        public new ExceptionAssertions<TException> EvaluateFalse(Func<TException, bool> func)
-            => this.EvaluateFalse<ExceptionAssertions<TException>, TException>(func);
-
-        [Obsolete("Use EvaluateTrue instead.")]
-        public new ExceptionAssertions<TException> EvaluatesTrue(Func<TException, bool> func)
-            => this.EvaluateTrue(func);
-
-        [Obsolete("Use EvaluatesFalse instead.")]
-        public new ExceptionAssertions<TException> EvaluatesFalse(Func<TException, bool> func)
-            => this.EvaluateFalse(func);
+        public ExceptionAssertions<TException> EvaluateFalse(Func<TException, bool> func)
+            => EvaluateFalse<ExceptionAssertions<TException>>(this, func);
     }
 }

@@ -19,20 +19,20 @@ namespace NetFabric.Assertive
 #if NETCORE
 
         [Pure]
-        public static ArrayAssertions<TActual> Must<TActual>(this Span<TActual> actual)
-            => new ArrayAssertions<TActual>(actual.ToArray());
+        public static SpanAssertions<TActual> Must<TActual>(this Span<TActual> actual)
+            => new SpanAssertions<TActual>(actual.ToArray());
 
         [Pure]
-        public static ArrayAssertions<TActual> Must<TActual>(this ReadOnlySpan<TActual> actual)
-            => new ArrayAssertions<TActual>(actual.ToArray());
+        public static ReadOnlySpanAssertions<TActual> Must<TActual>(this ReadOnlySpan<TActual> actual)
+            => new ReadOnlySpanAssertions<TActual>(actual.ToArray());
 
         [Pure]
         public static MemoryAssertions<TActual> Must<TActual>(this Memory<TActual> actual)
             => new MemoryAssertions<TActual>(actual);
 
         [Pure]
-        public static MemoryAssertions<TActual> Must<TActual>(this ReadOnlyMemory<TActual> actual)
-            => new MemoryAssertions<TActual>(actual);
+        public static ReadOnlyMemoryAssertions<TActual> Must<TActual>(this ReadOnlyMemory<TActual> actual)
+            => new ReadOnlyMemoryAssertions<TActual>(actual);
 
 #endif
 
@@ -62,7 +62,7 @@ namespace NetFabric.Assertive
             => new ValueTypeAssertions<TActual>(actual);
 
         [Pure]
-        public static NullableValueTypeAssertions<TActual> Must<TActual>(this Nullable<TActual> actual)
+        public static NullableValueTypeAssertions<TActual> Must<TActual>(this TActual? actual)
             where TActual : struct
             => new NullableValueTypeAssertions<TActual>(actual);
     }

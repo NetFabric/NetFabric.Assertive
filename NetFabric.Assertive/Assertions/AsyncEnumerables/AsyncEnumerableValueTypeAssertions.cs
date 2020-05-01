@@ -8,13 +8,22 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class AsyncEnumerableValueTypeAssertions<TActual, TActualItem> 
-        : AsyncEnumerableAssertionsBase<TActual>
+        : ValueTypeAssertionsBase<TActual>
         where TActual : struct
     {
-        internal AsyncEnumerableValueTypeAssertions(TActual actual, AsyncEnumerableInfo enumerableInfo) 
-            : base(actual, enumerableInfo)
+        internal AsyncEnumerableValueTypeAssertions(TActual Actual, AsyncEnumerableInfo enumerableInfo)
+            : base(Actual)
         {
+            EnumerableInfo = enumerableInfo;
         }
+
+        public AsyncEnumerableInfo EnumerableInfo { get; }
+
+        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> EvaluateTrue(Func<TActual, bool> func)
+            => EvaluateTrue<AsyncEnumerableValueTypeAssertions<TActual, TActualItem>>(this, func);
+
+        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> EvaluateFalse(Func<TActual, bool> func)
+            => EvaluateFalse<AsyncEnumerableValueTypeAssertions<TActual, TActualItem>>(this, func);
 
         public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> BeEmpty(bool deepComparison = true)
             => BeEqualTo(Enumerable.Empty<TActualItem>(), deepComparison);
@@ -27,16 +36,14 @@ namespace NetFabric.Assertive
             where TExpected : IEnumerable<TExpectedItem>
         {
             if (expected is null)
-                throw new ArgumentNullException(nameof(expected), $"{typeof(TActual)} is a value type so it can't be expected to be <null>.");
+                throw new EqualToAssertionException<TActual, TExpected>(Actual, expected);
 
-
-            AssertEquality(expected, comparer);
+            AssertAsyncEnumerableEquality(Actual, EnumerableInfo, expected, comparer);
 
             if (deepComparison)
-                AssertDeepEquality(expected, comparer);
+                AssertDeepAsyncEnumerableEquality(Actual, expected, comparer);
 
             return this;
         }
-
     }
 }

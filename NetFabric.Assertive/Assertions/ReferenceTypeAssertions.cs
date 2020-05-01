@@ -1,89 +1,73 @@
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NetFabric.Assertive
 {
-    [DebuggerNonUserCode]
+    //[DebuggerNonUserCode]
     public class ReferenceTypeAssertions<TActual> 
-        : AssertionsBase<TActual>
+        : ReferenceTypeAssertionsBase<TActual>
         where TActual : class
     {
-        internal ReferenceTypeAssertions(TActual actual) 
+        internal ReferenceTypeAssertions([AllowNull]TActual actual) 
             : base(actual)
         {
         }
 
-        public ReferenceTypeAssertions<TActual> EvaluateTrue(Func<TActual, bool> func)
-            => this.EvaluateTrue<ReferenceTypeAssertions<TActual>, TActual>(func);
-
-        public ReferenceTypeAssertions<TActual> EvaluateFalse(Func<TActual, bool> func)
-            => this.EvaluateFalse<ReferenceTypeAssertions<TActual>, TActual>(func);
-
-        [Obsolete("Use EvaluateTrue instead.")]
-        public ReferenceTypeAssertions<TActual> EvaluatesTrue(Func<TActual, bool> func)
-            => this.EvaluateTrue(func);
-
-        [Obsolete("Use EvaluateFalse instead.")]
-        public ReferenceTypeAssertions<TActual> EvaluatesFalse(Func<TActual, bool> func)
-            => this.EvaluateFalse(func);
-
-        public ReferenceTypeAssertions<TActual> BeOfType<TType>()
-            => this.BeOfType<ReferenceTypeAssertions<TActual>, TActual, TType>();
-
-        public ReferenceTypeAssertions<TActual> NotBeOfType<TType>()
-            => this.NotBeOfType<ReferenceTypeAssertions<TActual>, TActual, TType>();
-
-        public ReferenceTypeAssertions<TActual> BeAssignableTo<TType>()
-            => this.BeAssignableTo<ReferenceTypeAssertions<TActual>, TActual, TType>();
-
-        public ReferenceTypeAssertions<TActual> BeNotAssignableTo<TType>()
-            => this.BeNotAssignableTo<ReferenceTypeAssertions<TActual>, TActual, TType>();
-
         public ReferenceTypeAssertions<TActual> BeNull()
-            => this.BeNull<ReferenceTypeAssertions<TActual>, TActual>();
+            => BeNull<ReferenceTypeAssertions<TActual>>(this);
 
         public ReferenceTypeAssertions<TActual> BeNotNull()
-            => this.BeNotNull<ReferenceTypeAssertions<TActual>, TActual>();
+            => BeNotNull<ReferenceTypeAssertions<TActual>>(this);
 
-        public ReferenceTypeAssertions<TActual> BeSameAs<TExpected>(TExpected expected)
-            => this.BeSameAs<ReferenceTypeAssertions<TActual>, TActual, TExpected>(expected);
+        public ReferenceTypeAssertions<TActual> BeSameAs<TOther>(TOther other)
+            => BeSameAs<ReferenceTypeAssertions<TActual>, TOther>(this, other);
 
-        public ReferenceTypeAssertions<TActual> BeNotSameAs<TExpected>(TExpected expected)
-            => this.BeNotSameAs<ReferenceTypeAssertions<TActual>, TActual, TExpected>(expected);
+        public ReferenceTypeAssertions<TActual> BeNotSameAs<TOther>(TOther other)
+            => BeNotSameAs<ReferenceTypeAssertions<TActual>, TOther>(this, other);
+
+        public ReferenceTypeAssertions<TActual> EvaluateTrue(Func<TActual, bool> func)
+            => EvaluateTrue<ReferenceTypeAssertions<TActual>>(this, func);
+
+        public ReferenceTypeAssertions<TActual> EvaluateFalse(Func<TActual, bool> func)
+            => EvaluateFalse<ReferenceTypeAssertions<TActual>>(this, func);
+
+        public ReferenceTypeAssertions<TActual> BeOfType<TType>()
+            => BeOfType<ReferenceTypeAssertions<TActual>, TType>(this);
+
+        public ReferenceTypeAssertions<TActual> NotBeOfType<TType>()
+            => NotBeOfType<ReferenceTypeAssertions<TActual>, TType>(this);
+
+        public ReferenceTypeAssertions<TActual> BeAssignableTo<TType>()
+            => BeAssignableTo<ReferenceTypeAssertions<TActual>, TType>(this);
+
+        public ReferenceTypeAssertions<TActual> BeNotAssignableTo<TType>()
+            => BeNotAssignableTo<ReferenceTypeAssertions<TActual>, TType>(this);
 
         public ReferenceTypeAssertions<TActual> BeEqualTo(TActual expected)
-            => this.BeEqualTo<ReferenceTypeAssertions<TActual>, TActual>(expected);
+            => BeEqualTo<ReferenceTypeAssertions<TActual>>(this, expected);
 
         public ReferenceTypeAssertions<TActual> BeEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
-            => this.BeEqualTo<ReferenceTypeAssertions<TActual>, TActual, TExpected>(expected, comparer);
+            => BeEqualTo<ReferenceTypeAssertions<TActual>, TExpected>(this, expected, comparer);
 
         public ReferenceTypeAssertions<TActual> BeNotEqualTo(TActual expected)
-            => this.BeNotEqualTo<ReferenceTypeAssertions<TActual>, TActual>(expected);
+            => BeNotEqualTo<ReferenceTypeAssertions<TActual>>(this, expected);
 
         public ReferenceTypeAssertions<TActual> BeNotEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
-            => this.BeNotEqualTo<ReferenceTypeAssertions<TActual>, TActual, TExpected>(expected, comparer);
+            => BeNotEqualTo<ReferenceTypeAssertions<TActual>, TExpected>(this, expected, comparer);
 
         public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEnumerableOf<TActualItem>()
         {
-            AssertIsEnumerable<TActualItem>(out var enumerableInfo);
+            AssertIsEnumerable<TActual, TActualItem>(Actual, out var enumerableInfo);
 
             return new EnumerableReferenceTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
         }
 
         public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeAsyncEnumerableOf<TActualItem>()
         {
-            AssertIsAsyncEnumerable<TActualItem>(out var enumerableInfo);
+            AssertIsAsyncEnumerable<TActual, TActualItem>(Actual, out var enumerableInfo);
 
             return new AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
-        }
-
-        public ObservableReferenceTypeAssertions<TActual, TActualItem> BeObservableOf<TActualItem>()
-        {
-            var actualType = typeof(TActual);
-            if (!actualType.IsAssignableTo(typeof(IObservable<>).MakeGenericType(typeof(TActualItem))))
-                throw new ActualAssertionException<TActual>(Actual, $"Expected '{actualType}' to be an observable but doesn't implement 'IObservable <{typeof(TActualItem)}>'.");
-
-            return new ObservableReferenceTypeAssertions<TActual, TActualItem>(Actual);
         }
     }
 }
