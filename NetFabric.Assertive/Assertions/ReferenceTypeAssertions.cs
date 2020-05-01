@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace NetFabric.Assertive
 {
-    //[DebuggerNonUserCode]
+    [DebuggerNonUserCode]
     public class ReferenceTypeAssertions<TActual> 
         : ReferenceTypeAssertionsBase<TActual>
         where TActual : class

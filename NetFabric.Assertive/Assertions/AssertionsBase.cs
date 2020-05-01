@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace NetFabric.Assertive
 {
-    //[DebuggerNonUserCode]
+    [DebuggerNonUserCode]
     public abstract class AssertionsBase
     {
         protected static void AssertIsEnumerable<TActual, TActualItem>(TActual actual, out EnumerableInfo enumerableInfo)

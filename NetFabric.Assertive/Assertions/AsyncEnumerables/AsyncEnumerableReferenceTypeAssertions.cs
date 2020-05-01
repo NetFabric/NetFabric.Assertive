@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace NetFabric.Assertive
 {
-    //[DebuggerNonUserCode]
+    [DebuggerNonUserCode]
     public class AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>
         : ReferenceTypeAssertionsBase<TActual>
         where TActual : class
