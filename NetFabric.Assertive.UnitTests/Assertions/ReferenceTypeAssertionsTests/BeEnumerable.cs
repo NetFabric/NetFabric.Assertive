@@ -14,7 +14,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new MissingGetEnumeratorEnumerable<int>();
 
             // Act
-            Action action = () => actual.Must().BeEnumerableOf<int>();
+            void action() => actual.Must().BeEnumerableOf<int>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingGetEnumeratorEnumerable<int>>>(action);
@@ -29,7 +29,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new MissingCurrentEnumerable<int>();
 
             // Act
-            Action action = () => actual.Must().BeEnumerableOf<int>();
+            void action() => actual.Must().BeEnumerableOf<int>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingCurrentEnumerable<int>>>(action);
@@ -44,7 +44,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new EmptyEnumerable<int>();
 
             // Act
-            Action action = () => actual.Must().BeEnumerableOf<string>();
+            void action() => actual.Must().BeEnumerableOf<string>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<EmptyEnumerable<int>>>(action);
@@ -59,7 +59,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new MissingMoveNextEnumerable<int>();
 
             // Act
-            Action action = () => actual.Must().BeEnumerableOf<int>();
+            void action() => actual.Must().BeEnumerableOf<int>();
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingMoveNextEnumerable<int>>>(action);
@@ -74,7 +74,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new EmptyEnumerable<int>();
 
             // Act
-            actual.Must().BeEnumerableOf<int>();
+            _ = actual.Must().BeEnumerableOf<int>();
 
             // Assert
         }
@@ -86,7 +86,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new EmptyEnumerableExplicitInterfaces<int>();
 
             // Act
-            actual.Must().BeEnumerableOf<int>();
+            _ = actual.Must().BeEnumerableOf<int>();
 
             // Assert
         }
@@ -98,7 +98,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new ByRefEnumerable<int>(new int[] { });
 
             // Act
-            actual.Must().BeEnumerableOf<int>();
+            _ = actual.Must().BeEnumerableOf<int>();
 
             // Assert
         }
@@ -110,7 +110,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new int[] { 0, 1, 2, 3 };
 
             // Act
-            actual.Must().BeEnumerableOf<int>();
+            _ = actual.Must().BeEnumerableOf<int>();
 
             // Assert
         }
@@ -159,10 +159,7 @@ namespace NetFabric.Assertive.UnitTests
         {
             readonly T[] source;
 
-            public ByRefEnumerable(T[] source)
-            {
-                this.source = source;
-            }
+            public ByRefEnumerable(T[] source) => this.source = source;
 
             public Enumerator GetEnumerator() => new Enumerator(this);
 

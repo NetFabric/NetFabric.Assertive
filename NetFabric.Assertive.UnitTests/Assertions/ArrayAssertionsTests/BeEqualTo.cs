@@ -21,7 +21,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            value.Must().BeEqualTo(value);
+            _ = value.Must().BeEqualTo(value);
 
             // Assert
         }
@@ -43,7 +43,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            Action action = () => actual.Must().BeEqualTo(expected);
+            void action() => actual.Must().BeEqualTo(expected);
 
             // Assert
             var exception = Assert.Throws<EqualToAssertionException<int[], int[]>>(action);

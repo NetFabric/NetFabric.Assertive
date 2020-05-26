@@ -12,7 +12,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = (object)null;
 
             // Act
-            actual.Must().BeNull();
+            _ = actual.Must().BeNull();
 
             // Assert
         }
@@ -24,7 +24,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = new object();
 
             // Act
-            Action action = () => actual.Must().BeNull();
+            void action() => actual.Must().BeNull();
 
             // Assert
             var exception = Assert.Throws<EqualToAssertionException<object, object>>(action);

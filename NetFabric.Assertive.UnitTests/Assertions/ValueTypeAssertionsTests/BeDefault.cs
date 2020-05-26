@@ -12,7 +12,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            value.Must().BeDefault();
+            _ = value.Must().BeDefault();
 
             // Assert
         }
@@ -30,7 +30,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            Action action = () => actual.Must().BeDefault();
+            void action() => actual.Must().BeDefault();
 
             // Assert
             var exception = Assert.Throws<EqualToAssertionException<int, int>>(action);

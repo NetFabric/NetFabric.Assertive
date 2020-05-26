@@ -8,10 +8,8 @@ namespace NetFabric.Assertive
         : DelegateAssertions<Func<TActual>>
     {
         internal FunctionAssertions(Func<TActual> actual)
-            : base(actual)
-        {
-            Actual = actual;
-        }
+            : base(actual) 
+            => Actual = actual;
 
         public new Func<TActual> Actual { get; }
 

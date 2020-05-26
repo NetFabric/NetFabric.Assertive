@@ -9,10 +9,7 @@ namespace NetFabric.Assertive.UnitTests
     {
         readonly int count;
 
-        public RangeAsyncEnumerable(int enumerableCount)
-        {
-            count = enumerableCount;
-        }
+        public RangeAsyncEnumerable(int enumerableCount) => count = enumerableCount;
 
         public Enumerator GetAsyncEnumerator() 
             => new Enumerator(count);
@@ -20,19 +17,17 @@ namespace NetFabric.Assertive.UnitTests
         public struct Enumerator
         {
             readonly int count;
-            int current;
 
             internal Enumerator(int count)
             {
                 this.count = count;
-                current = -1;
+                Current = -1;
             }
 
-            public readonly int Current 
-                => current;
+            public int Current { get; private set; } 
 
             public ValueTask<bool> MoveNextAsync() 
-                => new ValueTask<bool>(++current < count);
+                => new ValueTask<bool>(++Current < count);
         }
     }
 
@@ -40,10 +35,8 @@ namespace NetFabric.Assertive.UnitTests
     {
         readonly int count;
 
-        public CancellableRangeAsyncEnumerable(int enumerableCount)
-        {
-            count = enumerableCount;
-        }
+        public CancellableRangeAsyncEnumerable(int enumerableCount) 
+            => count = enumerableCount;
 
         public Enumerator GetAsyncEnumerator(CancellationToken token = default) 
             => new Enumerator(count, token);
@@ -52,22 +45,20 @@ namespace NetFabric.Assertive.UnitTests
         {
             readonly int count;
             readonly CancellationToken token;
-            int current;
 
             internal Enumerator(int count, CancellationToken token)
             {
                 this.count = count;
                 this.token = token;
-                current = -1;
+                Current = -1;
             }
 
-            public readonly int Current
-                => current;
+            public int Current { get; private set; }
 
             public ValueTask<bool> MoveNextAsync()
             {
                 token.ThrowIfCancellationRequested();
-                return new ValueTask<bool>(++current < count);
+                return new ValueTask<bool>(++Current < count);
             }
         }
     }
@@ -79,10 +70,8 @@ namespace NetFabric.Assertive.UnitTests
         readonly int count;
 
         public RangeGenericAsyncEnumerable(int enumerableCount, int genericEnumerableCount)
-            : base(enumerableCount)
-        {
-            count = genericEnumerableCount;
-        }
+            : base(enumerableCount) 
+            => count = genericEnumerableCount;
 
         IAsyncEnumerator<int> IAsyncEnumerable<int>.GetAsyncEnumerator(CancellationToken token) 
             => new Enumerator(count, token);
@@ -92,21 +81,20 @@ namespace NetFabric.Assertive.UnitTests
         {
             readonly int count;
             readonly CancellationToken token;
-            int current;
 
             internal Enumerator(int count, CancellationToken token)
             {
                 this.count = count;
                 this.token = token;
-                current = -1;
+                Current = -1;
             }
 
-            public int Current => current;
+            public int Current { get; private set; }
 
             public ValueTask<bool> MoveNextAsync()
             {
                 token.ThrowIfCancellationRequested();
-                return new ValueTask<bool>(++current < count);
+                return new ValueTask<bool>(++Current < count);
             }
 
             public ValueTask DisposeAsync()

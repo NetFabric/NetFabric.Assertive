@@ -30,47 +30,59 @@ namespace NetFabric.Assertive
 
         public static string ToFriendlyString(IEnumerable enumerable)
         {
-            var builder = new StringBuilder();
-            builder.Append('{');
-            var enumerator = enumerable.GetEnumerator();
-            var first = true;
-            var separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator;
-            while (enumerator.MoveNext())
+            var builder = StringBuilderPool.Get();
+            try
             {
-                if (!first)
+                _ = builder.Append('{');
+                var enumerator = enumerable.GetEnumerator();
+                var first = true;
+                var separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator;
+                while (enumerator.MoveNext())
                 {
-                    builder.Append(separator);
-                    builder.Append(' ');
+                    if (!first)
+                    {
+                        _ = builder.Append(separator).Append(' ');
+                    }
+                    _ = builder.Append(ToFriendlyString(enumerator.Current));
+                    first = false;
                 }
-                builder.Append(ToFriendlyString(enumerator.Current));
-                first = false;
+                _ = builder.Append('}');
+                return builder.ToString();
             }
-            builder.Append('}');
-            return builder.ToString();
+            finally
+            {
+                StringBuilderPool.Return(builder);
+            }
         }
 
         public static async ValueTask<string> ToFriendlyStringAsync<T>(IAsyncEnumerable<T> enumerable)
         {
-            var builder = new StringBuilder();
-            builder.Append('{');
-            var enumerator = enumerable.GetAsyncEnumerator();
-            await using (enumerator.ConfigureAwait(false))
+            var builder = StringBuilderPool.Get();
+            try
             {
-                var first = true;
-                var separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator;
-                while (await enumerator.MoveNextAsync().ConfigureAwait(false))
+                _ = builder.Append('{');
+                var enumerator = enumerable.GetAsyncEnumerator();
+                await using (enumerator.ConfigureAwait(false))
                 {
-                    if (!first)
+                    var first = true;
+                    var separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator;
+                    while (await enumerator.MoveNextAsync().ConfigureAwait(false))
                     {
-                        builder.Append(separator);
-                        builder.Append(' ');
+                        if (!first)
+                        {
+                            _ = builder.Append(separator).Append(' ');
+                        }
+                        _ = builder.Append(ToFriendlyString(enumerator.Current));
+                        first = false;
                     }
-                    builder.Append(ToFriendlyString(enumerator.Current));
-                    first = false;
                 }
+                _ = builder.Append('}');
+                return builder.ToString();
             }
-            builder.Append('}');
-            return builder.ToString();
+            finally
+            {
+                StringBuilderPool.Return(builder);
+            }
         }
 
         static string DefaultToFriendlyString(object @object)

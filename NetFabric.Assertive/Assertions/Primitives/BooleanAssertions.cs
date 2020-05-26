@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 namespace NetFabric.Assertive
 {
@@ -25,20 +24,14 @@ namespace NetFabric.Assertive
         public BooleanAssertions BeNotEqualTo<TExpected>(TExpected expected, Func<bool, TExpected, bool> comparer)
             => BeNotEqualTo(this, expected, comparer);
 
-        public BooleanAssertions BeTrue()
-        {
-            if (!Actual)
-                throw new EqualToAssertionException<bool, bool>(Actual, true);
+        public BooleanAssertions BeTrue() 
+            => Actual 
+                ? this 
+                : throw new EqualToAssertionException<bool, bool>(Actual, true);
 
-            return this;
-        }
-
-        public BooleanAssertions BeFalse()
-        {
-            if (Actual)
-                throw new EqualToAssertionException<bool, bool>(Actual, false);
-
-            return this;
-        }
+        public BooleanAssertions BeFalse() 
+            => Actual 
+                ? throw new EqualToAssertionException<bool, bool>(Actual, false) 
+                : this;
     }
 }

@@ -10,10 +10,8 @@ namespace NetFabric.Assertive
     public sealed class ReadOnlyListWrapper<TActualItem> 
         : IEnumerable<TActualItem>
     {
-        internal ReadOnlyListWrapper(IReadOnlyList<TActualItem> actual)
-        {
-            Actual = actual;
-        }
+        internal ReadOnlyListWrapper(IReadOnlyList<TActualItem> actual) 
+            => Actual = actual;
 
         public IReadOnlyList<TActualItem> Actual { get; }
 
@@ -25,24 +23,23 @@ namespace NetFabric.Assertive
         {
             readonly IReadOnlyList<TActualItem> actual;
             int index;
-            TActualItem current;
 
             public Enumerator(ReadOnlyListWrapper<TActualItem> enumerable)
             {
                 actual = enumerable.Actual;
                 index = -1;
-                current = default!;
+                Current = default!;
             }
 
             [AllowNull]
-            public TActualItem Current => current;
-            object? IEnumerator.Current => current;
+            public TActualItem Current { get; private set; }
+            object? IEnumerator.Current => Current;
 
             public bool MoveNext()
             {
                 try
                 {
-                    current = actual[++index];
+                    Current = actual[++index];
                 }
                 catch
                 {

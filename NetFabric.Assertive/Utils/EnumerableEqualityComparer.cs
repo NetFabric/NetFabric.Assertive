@@ -130,7 +130,7 @@ namespace NetFabric.Assertive
                     if (isExpectedCompleted)
                         return EqualityResult.MoreItems;
 
-                    if (!comparer(actualItem, expectedEnumerator.Current))
+                    if (!comparer(actualItem!, expectedEnumerator.Current))
                         return EqualityResult.NotEqualAtIndex;
                 }
             }

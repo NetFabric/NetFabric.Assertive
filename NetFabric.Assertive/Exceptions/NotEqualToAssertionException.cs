@@ -11,12 +11,10 @@ namespace NetFabric.Assertive
         {
         }
 
-        public NotEqualToAssertionException([AllowNull]TActual actual, [AllowNull]TNotExpected notExpected, string message)
-            : base(actual, 
-                  $"{message}{Environment.NewLine}Not Expected: {ObjectExtensions.ToFriendlyString(notExpected)}")
-        {
-            NotExpected = notExpected;
-        }
+        public NotEqualToAssertionException([AllowNull] TActual actual, [AllowNull] TNotExpected notExpected, string message)
+            : base(actual,
+                  $"{message}{Environment.NewLine}Not Expected: {ObjectExtensions.ToFriendlyString(notExpected)}") 
+            => NotExpected = notExpected;
 
         [AllowNull]
         public TNotExpected NotExpected { get; }

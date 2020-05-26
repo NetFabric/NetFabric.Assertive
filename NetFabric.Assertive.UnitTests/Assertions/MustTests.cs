@@ -15,7 +15,7 @@ namespace NetFabric.Assertive.UnitTests
             var result = actual.Must();
 
             // Assert
-            Assert.IsType<BooleanAssertions>(result);
+            _ = Assert.IsType<BooleanAssertions>(result);
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace NetFabric.Assertive.UnitTests
             var result = action.Must();
 
             // Assert
-            Assert.IsType<ActionAssertions>(result);
+            _ = Assert.IsType<ActionAssertions>(result);
         }
     }
 }

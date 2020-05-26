@@ -37,27 +37,23 @@ namespace NetFabric.Assertive.UnitTests
     {
         readonly int count;
 
-        public RangeEnumerable(int enumerableCount)
-        {
-            count = enumerableCount;
-        }
+        public RangeEnumerable(int enumerableCount) => count = enumerableCount;
 
         public Enumerator GetEnumerator() => new Enumerator(count);
 
         public struct Enumerator
         {
             readonly int count;
-            int current;
 
             internal Enumerator(int count)
             {
                 this.count = count;
-                current = -1;
+                Current = -1;
             }
 
-            public readonly int Current => current;
+            public int Current { get; private set; }
 
-            public bool MoveNext() => ++current < count;
+            public bool MoveNext() => ++Current < count;
         }
     }
 
@@ -66,10 +62,8 @@ namespace NetFabric.Assertive.UnitTests
         readonly int count;
 
         public RangeNonGenericEnumerable(int enumerableCount, int nonGenericEnumerableCount)
-            : base(enumerableCount)
-        {
-            count = nonGenericEnumerableCount;
-        }
+            : base(enumerableCount) 
+            => count = nonGenericEnumerableCount;
 
         IEnumerator IEnumerable.GetEnumerator() => new Enumerator(count);
 
@@ -99,30 +93,26 @@ namespace NetFabric.Assertive.UnitTests
         readonly int count;
 
         public RangeGenericEnumerable(int enumerableCount, int nonGenericEnumerableCount, int genericEnumerableCount)
-            : base(enumerableCount, nonGenericEnumerableCount)
-        {
-            count = genericEnumerableCount;
-        }
+            : base(enumerableCount, nonGenericEnumerableCount) => count = genericEnumerableCount;
 
         IEnumerator<int> IEnumerable<int>.GetEnumerator() => new Enumerator(count);
 
         new class Enumerator : IEnumerator<int>
         {
             readonly int count;
-            int current;
 
             internal Enumerator(int count)
             {
                 this.count = count;
-                current = -1;
+                Current = -1;
             }
 
-            public int Current => current;
-            object IEnumerator.Current => current;
+            public int Current { get; private set; }
+            object IEnumerator.Current => Current;
 
-            public bool MoveNext() => ++current < count;
+            public bool MoveNext() => ++Current < count;
 
-            public void Reset() => current = -1;
+            public void Reset() => Current = -1;
 
             public void Dispose() {}
         }
@@ -131,10 +121,8 @@ namespace NetFabric.Assertive.UnitTests
     public class RangeReadOnlyCollection : RangeGenericEnumerable, IReadOnlyCollection<int>
     {
         public RangeReadOnlyCollection(int enumerableCount, int nonGenericEnumerableCount, int genericEnumerableCount, int readOnlyCollectionCount)
-            : base(enumerableCount, nonGenericEnumerableCount, genericEnumerableCount)
-        {
-            Count = readOnlyCollectionCount;
-        }
+            : base(enumerableCount, nonGenericEnumerableCount, genericEnumerableCount) 
+            => Count = readOnlyCollectionCount;
 
         public int Count { get; }
     }
@@ -144,10 +132,8 @@ namespace NetFabric.Assertive.UnitTests
         readonly int count;
 
         public RangeReadOnlyList(int enumerableCount, int nonGenericEnumerableCount, int genericEnumerableCount, int readOnlyCollectionCount, int readOnlyListCount)
-            : base(enumerableCount, nonGenericEnumerableCount, genericEnumerableCount, readOnlyCollectionCount)
-        {
-            count = readOnlyListCount;
-        }
+            : base(enumerableCount, nonGenericEnumerableCount, genericEnumerableCount, readOnlyCollectionCount) 
+            => count = readOnlyListCount;
 
         public int this[int index]
         {

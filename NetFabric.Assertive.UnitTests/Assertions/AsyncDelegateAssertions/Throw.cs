@@ -14,7 +14,7 @@ namespace NetFabric.Assertive.UnitTests
             Func<Task> actual = async () => 
                 {
                     throw new ArgumentException();
-                    await Task.FromResult<bool>(true);
+                    _ = await Task.FromResult<bool>(true);
                 };
 #pragma warning restore CS0162 // Unreachable code detected
 
@@ -40,7 +40,7 @@ namespace NetFabric.Assertive.UnitTests
             Func<Task> actual = async () =>
             {
                 throw new ArgumentNullException();
-                await Task.FromResult<bool>(true);
+                _ = await Task.FromResult<bool>(true);
             };
 #pragma warning restore CS0162 // Unreachable code detected
 

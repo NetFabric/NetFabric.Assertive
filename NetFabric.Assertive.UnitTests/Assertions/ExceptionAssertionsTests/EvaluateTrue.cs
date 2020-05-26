@@ -13,7 +13,7 @@ namespace NetFabric.Assertive.UnitTests
             Action action = () => throw new Exception(message);
 
             // Act
-            action.Must().Throw<Exception>().EvaluateTrue(exception => exception.Message == message);
+            _ = action.Must().Throw<Exception>().EvaluateTrue(exception => exception.Message == message);
 
             // Assert
         }
@@ -25,7 +25,7 @@ namespace NetFabric.Assertive.UnitTests
             Action actual = () => throw new ArgumentNullException("Test");
 
             // Act
-            Action action = () => actual.Must().Throw<ArgumentNullException>().EvaluateTrue(exception => exception.Message == "Something else");
+            void action() => actual.Must().Throw<ArgumentNullException>().EvaluateTrue(exception => exception.Message == "Something else");
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<ArgumentNullException>>(action);

@@ -14,7 +14,7 @@ namespace NetFabric.Assertive.UnitTests
             var expected = new int[0];
 
             // Act
-            Action action = () => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
             var exception = Assert.Throws<EnumerationException>(action);
@@ -30,7 +30,7 @@ namespace NetFabric.Assertive.UnitTests
             var expected = new int[0];
 
             // Act
-            Action action = () => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
             var exception = Assert.Throws<EnumerationException>(action);
@@ -46,7 +46,7 @@ namespace NetFabric.Assertive.UnitTests
             var expected = new int[0];
 
             // Act
-            Action action = () => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
             var exception = Assert.Throws<EnumerationException>(action);
@@ -62,7 +62,7 @@ namespace NetFabric.Assertive.UnitTests
             var expected = new int[0];
 
             // Act
-            Action action = () => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
             var exception = Assert.Throws<EnumerationException>(action);
@@ -87,7 +87,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            _ = actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
         }
@@ -107,7 +107,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            Action action = () => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
             var exception = Assert.Throws<EnumerableAssertionException<RangeEnumerable, int, int[]>>(action);
@@ -130,7 +130,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            Action action = () => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
             var exception = Assert.Throws<EqualToAssertionException<RangeEnumerable, int[]>>(action);
