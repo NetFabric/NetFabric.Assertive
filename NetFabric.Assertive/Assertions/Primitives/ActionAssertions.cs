@@ -8,10 +8,7 @@ namespace NetFabric.Assertive
         : DelegateAssertions<Action>
     {
         internal ActionAssertions(Action actual)
-            : base(actual)
-        {
-            Actual = actual;
-        }
+            : base(actual) => Actual = actual;
 
         public new Action Actual { get; }
 

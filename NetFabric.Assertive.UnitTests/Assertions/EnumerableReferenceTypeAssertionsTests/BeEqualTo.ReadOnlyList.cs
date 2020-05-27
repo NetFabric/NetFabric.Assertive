@@ -22,7 +22,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            _ = actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
         }
@@ -47,7 +47,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            Action action = () => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
             var exception = Assert.Throws<EnumerableAssertionException<RangeReadOnlyList, int, int[]>>(action);
@@ -71,7 +71,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            Action action = () => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
             var exception = Assert.Throws<CountAssertionException>(action);
@@ -95,7 +95,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            Action action = () => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
             var exception = Assert.Throws<ReadOnlyListAssertionException<int, int[]>>(action);

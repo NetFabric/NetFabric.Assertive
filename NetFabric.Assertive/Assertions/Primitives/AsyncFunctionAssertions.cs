@@ -9,10 +9,8 @@ namespace NetFabric.Assertive
         : AsyncDelegateAssertions<Func<ValueTask>>
     {
         internal AsyncFunctionAssertions(Func<ValueTask> actual)
-            : base(actual)
-        {
-            Actual = actual;
-        }
+            : base(actual) 
+            => Actual = actual;
 
         public new Func<ValueTask> Actual { get; }
 

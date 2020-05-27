@@ -12,10 +12,8 @@ namespace NetFabric.Assertive
         where TActual : class
     {
         internal AsyncEnumerableReferenceTypeAssertions(TActual Actual, AsyncEnumerableInfo enumerableInfo)
-            : base(Actual)
-        {
-            EnumerableInfo = enumerableInfo;
-        }
+            : base(Actual) 
+            => EnumerableInfo = enumerableInfo;
 
         public AsyncEnumerableInfo EnumerableInfo { get; }
 

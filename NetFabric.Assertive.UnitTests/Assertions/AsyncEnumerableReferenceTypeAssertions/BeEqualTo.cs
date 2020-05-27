@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Xunit;
 
 namespace NetFabric.Assertive.UnitTests
@@ -20,7 +19,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            Action action = () => actual.Must()
+            void action() => actual.Must()
                 .BeAsyncEnumerableOf<int>()
                 .BeEqualTo(expected);
 

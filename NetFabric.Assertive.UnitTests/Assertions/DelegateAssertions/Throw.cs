@@ -13,7 +13,7 @@ namespace NetFabric.Assertive.UnitTests
             Action actual = () => throw new ArgumentException();
 
             // Act
-            Action action = () => actual.Must().Throw<ArgumentException>();
+            void action() => actual.Must().Throw<ArgumentException>();
 
             // Assert
             try
@@ -33,7 +33,7 @@ namespace NetFabric.Assertive.UnitTests
             Action actual = () => throw new ArgumentNullException();
 
             // Act
-            Action action = () => actual.Must().Throw<ArgumentException>();
+            void action() => actual.Must().Throw<ArgumentException>();
 
             // Assert
             var exception = Assert.Throws<AssertionException>(action);
@@ -48,7 +48,7 @@ namespace NetFabric.Assertive.UnitTests
             Action actual = () => {};
 
             // Act
-            Action action = () => actual.Must().Throw<ArgumentException>();
+            void action() => actual.Must().Throw<ArgumentException>();
 
             // Assert
             var exception = Assert.Throws<AssertionException>(action);

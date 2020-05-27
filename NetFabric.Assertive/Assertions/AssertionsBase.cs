@@ -202,28 +202,22 @@ namespace NetFabric.Assertive
             switch (result)
             {
                 case EqualityResult.NotEqualAtIndex:
-                    {
-                        throw new AsyncEnumerableAssertionException<TActual, TActualItem, TExpected>(
-                            wrapped,
-                            expected,
-                            $"Actual differs at index {index} when using '{getEnumeratorDeclaringType}.GetEnumerator()'.");
-                    }
+                    throw new AsyncEnumerableAssertionException<TActual, TActualItem, TExpected>(
+                        wrapped,
+                        expected,
+                        $"Actual differs at index {index} when using '{getEnumeratorDeclaringType}.GetEnumerator()'.");
 
                 case EqualityResult.LessItem:
-                    {
-                        throw new AsyncEnumerableAssertionException<TActual, TActualItem, TExpected>(
-                            wrapped,
-                            expected,
-                            $"Actual has less items when using '{getEnumeratorDeclaringType}.GetEnumerator()'.");
-                    }
+                    throw new AsyncEnumerableAssertionException<TActual, TActualItem, TExpected>(
+                        wrapped,
+                        expected,
+                        $"Actual has less items when using '{getEnumeratorDeclaringType}.GetEnumerator()'.");
 
                 case EqualityResult.MoreItems:
-                    {
-                        throw new AsyncEnumerableAssertionException<TActual, TActualItem, TExpected>(
-                            wrapped,
-                            expected,
-                            $"Actual has more items when using '{getEnumeratorDeclaringType}.GetEnumerator()'.");
-                    }
+                    throw new AsyncEnumerableAssertionException<TActual, TActualItem, TExpected>(
+                        wrapped,
+                        expected,
+                        $"Actual has more items when using '{getEnumeratorDeclaringType}.GetEnumerator()'.");
             }
         }
 

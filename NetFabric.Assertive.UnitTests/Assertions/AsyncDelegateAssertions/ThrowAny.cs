@@ -14,12 +14,12 @@ namespace NetFabric.Assertive.UnitTests
             Func<Task> actual = async () => 
                 {
                     throw new ArgumentException();
-                    await Task.FromResult<bool>(true); 
+                    _ = await Task.FromResult<bool>(true); 
                 };
 #pragma warning restore CS0162 // Unreachable code detected
 
             // Act
-            Action action = () => actual.Must().ThrowAny<ArgumentException>();
+            void action() => actual.Must().ThrowAny<ArgumentException>();
 
             // Assert
             try
@@ -40,12 +40,12 @@ namespace NetFabric.Assertive.UnitTests
             Func<Task> actual = async () =>
             {
                 throw new ArgumentNullException();
-                await Task.FromResult<bool>(true);
+                _ = await Task.FromResult<bool>(true);
             };
 #pragma warning restore CS0162 // Unreachable code detected
 
             // Act
-            Action action = () => actual.Must().ThrowAny<ArgumentException>();
+            void action() => actual.Must().ThrowAny<ArgumentException>();
 
             // Assert
             try
@@ -66,7 +66,7 @@ namespace NetFabric.Assertive.UnitTests
             Func<Task> actual = () => Task.FromResult<bool>(true);
 
             // Act
-            Action action = () => actual.Must().ThrowAny<ArgumentException>();
+            void action() => actual.Must().ThrowAny<ArgumentException>();
 
             // Assert
             var exception = Assert.Throws<AssertionException>(action);

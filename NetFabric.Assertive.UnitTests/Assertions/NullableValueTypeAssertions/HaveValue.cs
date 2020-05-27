@@ -12,7 +12,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = (int?)0;
 
             // Act
-            actual.Must().HaveValue();
+            _ = actual.Must().HaveValue();
 
             // Assert
         }
@@ -24,7 +24,7 @@ namespace NetFabric.Assertive.UnitTests
             var actual = (int?)null;
 
             // Act
-            Action action = () => actual.Must().HaveValue();
+            void action() => actual.Must().HaveValue();
 
             // Assert
             var exception = Assert.Throws<NotEqualToAssertionException<int?, int?>>(action);

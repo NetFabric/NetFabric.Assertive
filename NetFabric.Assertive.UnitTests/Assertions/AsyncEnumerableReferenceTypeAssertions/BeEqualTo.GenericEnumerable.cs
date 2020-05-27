@@ -22,7 +22,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            actual.Must().BeAsyncEnumerableOf<int>().BeEqualTo(expected);
+            _ = actual.Must().BeAsyncEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
         }
@@ -44,7 +44,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            Action action = () => actual.Must().BeAsyncEnumerableOf<int>().BeEqualTo(expected);
+            void action() => actual.Must().BeAsyncEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
             var exception = Assert.Throws<AsyncEnumerableAssertionException<RangeGenericAsyncEnumerable, int, int[]>>(action);
