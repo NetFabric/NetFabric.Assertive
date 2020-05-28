@@ -7,7 +7,7 @@ namespace NetFabric.Assertive
         : EqualToAssertionException<AsyncEnumerableWrapper<TActual, TActualItem>, TExpected>
     {
         public AsyncEnumerableAssertionException(AsyncEnumerableWrapper<TActual, TActualItem> actual, TExpected expected)
-            : this(actual, expected, $"Expected collections to have same count value.")
+            : this(actual, expected, $"Expected collections to have same items.")
         {
         }
 

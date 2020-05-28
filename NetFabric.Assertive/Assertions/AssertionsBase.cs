@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace NetFabric.Assertive
 {
-    [DebuggerNonUserCode]
+    //[DebuggerNonUserCode]
     public abstract class AssertionsBase
     {
         protected static void AssertIsEnumerable<TActual, TActualItem>(TActual actual, out EnumerableInfo enumerableInfo)
@@ -157,6 +157,31 @@ namespace NetFabric.Assertive
                         var expectedCount = wrapped.Count();
                         if (actualCount != expectedCount)
                             throw new CountAssertionException(actualCount, expectedCount);
+                    }
+
+                    if (@interface.IsAssignableTo(typeof(ICollection<>).MakeGenericType(itemType)))
+                    {
+                        var collectionActual = (ICollection<TActualItem>)actual;
+                        switch (collectionActual.CompareCopyTo(10, expected, comparer, out index))
+                        {
+                            case EqualityResult.NotEqualAtIndex:
+                                throw new CopyToAssertionException<TActualItem, TExpected>(
+                                    new CopyToWrapper<TActualItem>(collectionActual),
+                                    expected,
+                                    $"Actual differs at index {index} when using the CopyTo.");
+
+                            case EqualityResult.LessItem:
+                                throw new CopyToAssertionException<TActualItem, TExpected>(
+                                    new CopyToWrapper<TActualItem>(collectionActual),
+                                    expected,
+                                    $"Actual has less items when using the CopyTo.");
+
+                            case EqualityResult.MoreItems:
+                                throw new CopyToAssertionException<TActualItem, TExpected>(
+                                    new CopyToWrapper<TActualItem>(collectionActual),
+                                    expected,
+                                    $"Actual has more items when using the CopyTo.");
+                        }
                     }
 
                     if (@interface.IsAssignableTo(typeof(IReadOnlyList<>).MakeGenericType(itemType)))

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NetFabric.Assertive.UnitTests
 {
@@ -33,119 +34,188 @@ namespace NetFabric.Assertive.UnitTests
         public void Dispose() => throw new Exception();
     }
 
-    public class RangeEnumerable
+
+#if NETCORE
+    public class TestEnumerableRef
     {
-        readonly int count;
+        readonly Memory<int> items;
 
-        public RangeEnumerable(int enumerableCount) => count = enumerableCount;
+        public TestEnumerableRef(Memory<int> items) => this.items = items;
 
-        public Enumerator GetEnumerator() => new Enumerator(count);
+        public Enumerator GetEnumerator() => new Enumerator(items);
+
+        public ref struct Enumerator
+        {
+            readonly ReadOnlySpan<int> items;
+            int index;
+
+            internal Enumerator(Memory<int> items)
+            {
+                this.items = items.Span;
+                index = -1;
+            }
+
+            public int Current => items[index];
+
+            public bool MoveNext() => ++index < items.Length;
+        }
+    }
+#endif
+
+    public class TestEnumerable
+    {
+        readonly int[] items;
+
+        public TestEnumerable(int[] items) => this.items = items;
+
+        public Enumerator GetEnumerator() => new Enumerator(items);
 
         public struct Enumerator
         {
-            readonly int count;
+            readonly int[] items;
+            int index;
 
-            internal Enumerator(int count)
+            internal Enumerator(int[] items)
             {
-                this.count = count;
-                Current = -1;
+                this.items = items;
+                index = -1;
             }
 
-            public int Current { get; private set; }
+            public int Current => items[index];
 
-            public bool MoveNext() => ++Current < count;
+            public bool MoveNext() => ++index < items.Length;
         }
     }
 
-    public class RangeNonGenericEnumerable : RangeEnumerable, IEnumerable
+    public class TestNonGenericEnumerable : TestEnumerable, IEnumerable
     {
-        readonly int count;
+        readonly int[] items;
 
-        public RangeNonGenericEnumerable(int enumerableCount, int nonGenericEnumerableCount)
-            : base(enumerableCount) 
-            => count = nonGenericEnumerableCount;
+        public TestNonGenericEnumerable(int[] items)
+            : base(items) 
+            => this.items = items;
 
-        IEnumerator IEnumerable.GetEnumerator() => new Enumerator(count);
+        public TestNonGenericEnumerable(int[] enumerableItems, int[] nonGenericEnumerableItems)
+            : base(enumerableItems)
+            => items = nonGenericEnumerableItems;
+
+        IEnumerator IEnumerable.GetEnumerator() => new Enumerator(items);
 
         new class Enumerator : IEnumerator
         {
-            readonly int count;
-            int current;
+            readonly int[] items;
+            int index;
 
-            internal Enumerator(int count)
+            internal Enumerator(int[] items)
             {
-                this.count = count;
-                current = -1;
+                this.items = items;
+                index = -1;
             }
 
-            public object Current => current;
+            public object Current => items[index];
 
-            public bool MoveNext() => ++current < count;
+            public bool MoveNext() => ++index < items.Length;
 
-            public void Reset() => current = -1;
+            public void Reset() => index = -1;
 
             public void Dispose() {}
         }
     }
 
-    public class RangeGenericEnumerable : RangeNonGenericEnumerable, IEnumerable<int>
+    public class TestGenericEnumerable : TestNonGenericEnumerable, IEnumerable<int>
     {
-        readonly int count;
+        readonly int[] items;
 
-        public RangeGenericEnumerable(int enumerableCount, int nonGenericEnumerableCount, int genericEnumerableCount)
-            : base(enumerableCount, nonGenericEnumerableCount) => count = genericEnumerableCount;
+        public TestGenericEnumerable(int[] items)
+            : base(items)
+            => this.items = items;
 
-        IEnumerator<int> IEnumerable<int>.GetEnumerator() => new Enumerator(count);
+        public TestGenericEnumerable(int[] nonGenericEnumerableItems, int[] genericEnumerableItems)
+            : base(nonGenericEnumerableItems) 
+            => items = genericEnumerableItems;
+
+        IEnumerator<int> IEnumerable<int>.GetEnumerator() => new Enumerator(items);
 
         new class Enumerator : IEnumerator<int>
         {
-            readonly int count;
+            readonly int[] items;
+            int index;
 
-            internal Enumerator(int count)
+            internal Enumerator(int[] items)
             {
-                this.count = count;
-                Current = -1;
+                this.items = items;
+                index = -1;
             }
 
-            public int Current { get; private set; }
-            object IEnumerator.Current => Current;
+            public int Current => items[index];
+            object IEnumerator.Current => items[index];
 
-            public bool MoveNext() => ++Current < count;
+            public bool MoveNext() => ++index < items.Length;
 
-            public void Reset() => Current = -1;
+            public void Reset() => index = -1;
 
             public void Dispose() {}
         }
     }
 
-    public class RangeReadOnlyCollection : RangeGenericEnumerable, IReadOnlyCollection<int>
+    public class TestCollection : TestGenericEnumerable, IReadOnlyCollection<int>, ICollection<int>
     {
-        public RangeReadOnlyCollection(int enumerableCount, int nonGenericEnumerableCount, int genericEnumerableCount, int readOnlyCollectionCount)
-            : base(enumerableCount, nonGenericEnumerableCount, genericEnumerableCount) 
-            => Count = readOnlyCollectionCount;
+        readonly int[] items;
+
+        public TestCollection(int[] items)
+            : base(items)
+        {
+            Count = items.Length;
+            this.items = items;
+        }
+
+        public TestCollection(int[] genericEnumerableItems, int collectionCount, int[] collectionItems)
+            : base(genericEnumerableItems)
+        {
+            Count = collectionCount;
+            items = collectionItems;
+        }
 
         public int Count { get; }
+
+        bool ICollection<int>.IsReadOnly => true;
+
+        public bool Contains(int item) => items.Contains(item);
+
+        public void CopyTo(int[] array, int arrayIndex)
+        {
+            for (var index = 0; index < items.Length; index++)
+                array[index + arrayIndex] = items[index];
+        }
+
+        void ICollection<int>.Add(int item) => throw new NotSupportedException();
+        void ICollection<int>.Clear() => throw new NotSupportedException();
+        bool ICollection<int>.Remove(int item) => throw new NotSupportedException();
     }
 
-    public class RangeReadOnlyList : RangeReadOnlyCollection, IReadOnlyList<int>
+    public class TestList : TestCollection, IReadOnlyList<int>, IList<int>
     {
-        readonly int count;
+        readonly int[] items;
 
-        public RangeReadOnlyList(int enumerableCount, int nonGenericEnumerableCount, int genericEnumerableCount, int readOnlyCollectionCount, int readOnlyListCount)
-            : base(enumerableCount, nonGenericEnumerableCount, genericEnumerableCount, readOnlyCollectionCount) 
-            => count = readOnlyListCount;
+        public TestList(int[] items)
+            : base(items) 
+            => this.items = items;
 
-        public int this[int index]
-        {
-            get
-            {
-                if (index < 0 || index >= count)
-                    ThrowIndexOutOfRangeException();
+        public TestList(int[] collectionItems, int[] listItems)
+            : base(collectionItems) 
+            => items = listItems;
 
-                return index;
+        public int this[int index] => items[index];
 
-                static void ThrowIndexOutOfRangeException() => throw new IndexOutOfRangeException();
-            }
+        int IList<int>.this[int index] 
+        { 
+            get => items[index]; 
+            set => throw new NotSupportedException(); 
         }
+
+        public int IndexOf(int item) => ((IList<int>)items).IndexOf(item);
+
+        void IList<int>.Insert(int index, int item) => throw new NotSupportedException();
+        void IList<int>.RemoveAt(int index) => throw new NotSupportedException();
     }
 }
