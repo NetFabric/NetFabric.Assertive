@@ -30,7 +30,6 @@ namespace NetFabric.Assertive.UnitTests
             new TheoryData<int[], int[], string>
             {
                 { TestData.Empty,                     null,                 $"Expected to be equal but it's not.{Environment.NewLine}Expected: <null>{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },
-                { null,                               TestData.Empty,       $"Expected to be equal but it's not.{Environment.NewLine}Expected: {TestData.Empty.ToFriendlyString()}{Environment.NewLine}Actual: <null>" },
                 { TestData.Single,                    TestData.Empty,       $"Actual array has more items.{Environment.NewLine}Expected: {TestData.Empty.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Single.ToFriendlyString()}" },
                 { TestData.Empty,                     TestData.Single,      $"Actual array has less items.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },
                 { TestData.SingleNotEqual,            TestData.Single,      $"Arrays differ at index 0.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.SingleNotEqual.ToFriendlyString()}" },

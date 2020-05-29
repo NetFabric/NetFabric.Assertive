@@ -28,14 +28,14 @@ namespace NetFabric.Assertive.UnitTests
         public static TheoryData<int[], int[], string> NotEqualNullData =>
             new TheoryData<int[], int[], string>
             {
-                { TestData.Empty, null, $"Expected to be equal but it's not.{Environment.NewLine}Expected: <null>{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },
-                { TestData.Empty, TestData.Single, $"Actual Memory has less items.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },
-                { TestData.Single, TestData.Empty, $"Actual Memory has more items.{Environment.NewLine}Expected: {TestData.Empty.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Single.ToFriendlyString()}" },
-                { TestData.Single, TestData.SingleNotEqual, $"Memory differ at index 0.{Environment.NewLine}Expected: {TestData.SingleNotEqual.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Single.ToFriendlyString()}" },
-                { TestData.Single, TestData.Multiple, $"Memory differ at index 0.{Environment.NewLine}Expected: {TestData.Multiple.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Single.ToFriendlyString()}" },
-                { TestData.Multiple, TestData.MultipleNotEqualFirst, $"Memory differ at index 0.{Environment.NewLine}Expected: {TestData.MultipleNotEqualFirst.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Multiple.ToFriendlyString()}" },
-                { TestData.Multiple, TestData.MultipleNotEqualMiddle, $"Memory differ at index 2.{Environment.NewLine}Expected: {TestData.MultipleNotEqualMiddle.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Multiple.ToFriendlyString()}" },
-                { TestData.Multiple, TestData.MultipleNotEqualLast, $"Memory differ at index 4.{Environment.NewLine}Expected: {TestData.MultipleNotEqualLast.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Multiple.ToFriendlyString()}" },
+                { TestData.Empty,                     null,                 $"Expected to be equal but it's not.{Environment.NewLine}Expected: <null>{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },
+                { TestData.Single,                    TestData.Empty,       $"Actual Memory has more items.{Environment.NewLine}Expected: {TestData.Empty.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Single.ToFriendlyString()}" },
+                { TestData.Empty,                     TestData.Single,      $"Actual Memory has less items.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },
+                { TestData.SingleNotEqual,            TestData.Single,      $"Memory differ at index 0.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.SingleNotEqual.ToFriendlyString()}" },
+                { TestData.Multiple,                  TestData.Single,      $"Memory differ at index 0.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Multiple.ToFriendlyString()}" },
+                { TestData.MultipleNotEqualFirst,     TestData.Multiple,    $"Memory differ at index 0.{Environment.NewLine}Expected: {TestData.Multiple.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.MultipleNotEqualFirst.ToFriendlyString()}" },
+                { TestData.MultipleNotEqualMiddle,    TestData.Multiple,    $"Memory differ at index 2.{Environment.NewLine}Expected: {TestData.Multiple.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.MultipleNotEqualMiddle.ToFriendlyString()}" },
+                { TestData.MultipleNotEqualLast,      TestData.Multiple,    $"Memory differ at index 4.{Environment.NewLine}Expected: {TestData.Multiple.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.MultipleNotEqualLast.ToFriendlyString()}" },
             };
 
         [Theory]
