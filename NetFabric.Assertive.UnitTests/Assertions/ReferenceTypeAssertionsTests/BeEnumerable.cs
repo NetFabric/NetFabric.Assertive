@@ -49,7 +49,7 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
             var exception = Assert.Throws<ActualAssertionException<EmptyEnumerable<int>>>(action);
             Assert.Equal(actual, exception.Actual);
-            Assert.Equal($"Expected to be an enumerable of 'System.String' but found an enumerable of 'System.Int32'.{Environment.NewLine}Actual: {{}}", exception.Message);
+            Assert.Equal($"Expected to be an enumerable of 'System.String' but found an enumerable of 'System.Int32'.{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}", exception.Message);
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace NetFabric.Assertive.UnitTests
         public void BeEnumerable_With_ByRefCurrent_Should_NotThrow()
         {
             // Arrange
-            var actual = new ByRefEnumerable<int>(new int[] { });
+            var actual = new ByRefEnumerable<int>(TestData.Empty);
 
             // Act
             _ = actual.Must().BeEnumerableOf<int>();

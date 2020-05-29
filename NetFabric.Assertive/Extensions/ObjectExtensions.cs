@@ -4,15 +4,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    static class ObjectExtensions
+    public static class ObjectExtensions
     {
-        public static string ToFriendlyString(object? @object)
+        static readonly string ListSeparator = CultureInfo.CurrentCulture.TextInfo.ListSeparator;
+
+        public static string ToFriendlyString(this object? @object)
             => @object switch
             {
                 null => "<null>",
@@ -23,28 +24,26 @@ namespace NetFabric.Assertive
 
                 Type type => type.ToString(),
 
-                IEnumerable enumerable => ToFriendlyString(enumerable),
+                IEnumerable enumerable => enumerable.ToFriendlyString(),
 
-                _ => DefaultToFriendlyString(@object),
+                _ => @object.DefaultToFriendlyString(),
             };
 
-        public static string ToFriendlyString(IEnumerable enumerable)
+        public static string ToFriendlyString(this IEnumerable enumerable)
         {
             var builder = StringBuilderPool.Get();
             try
             {
-                _ = builder.Append('{');
+                _ = builder.Append('{').Append(' ');
                 var enumerator = enumerable.GetEnumerator();
-                var first = true;
-                var separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator;
-                while (enumerator.MoveNext())
+                if (enumerator.MoveNext())
                 {
-                    if (!first)
+                    _ = builder.Append(enumerator.Current);
+                    while (enumerator.MoveNext())
                     {
-                        _ = builder.Append(separator).Append(' ');
+                        _ = builder.Append(ListSeparator).Append(' ').Append(ToFriendlyString(enumerator.Current));
                     }
-                    _ = builder.Append(ToFriendlyString(enumerator.Current));
-                    first = false;
+                    _ = builder.Append(' ');
                 }
                 _ = builder.Append('}');
                 return builder.ToString();
@@ -55,25 +54,23 @@ namespace NetFabric.Assertive
             }
         }
 
-        public static async ValueTask<string> ToFriendlyStringAsync<T>(IAsyncEnumerable<T> enumerable)
+        public static async ValueTask<string> ToFriendlyStringAsync<T>(this IAsyncEnumerable<T> enumerable)
         {
             var builder = StringBuilderPool.Get();
             try
             {
-                _ = builder.Append('{');
+                _ = builder.Append('{').Append(' ');
                 var enumerator = enumerable.GetAsyncEnumerator();
                 await using (enumerator.ConfigureAwait(false))
                 {
-                    var first = true;
-                    var separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator;
-                    while (await enumerator.MoveNextAsync().ConfigureAwait(false))
+                    if (await enumerator.MoveNextAsync().ConfigureAwait(false))
                     {
-                        if (!first)
+                        _ = builder.Append(enumerator.Current);
+                        while (await enumerator.MoveNextAsync().ConfigureAwait(false))
                         {
-                            _ = builder.Append(separator).Append(' ');
+                            _ = builder.Append(ListSeparator).Append(' ').Append(ToFriendlyString(enumerator.Current));
                         }
-                        _ = builder.Append(ToFriendlyString(enumerator.Current));
-                        first = false;
+                        _ = builder.Append(' ');
                     }
                 }
                 _ = builder.Append('}');
@@ -85,7 +82,55 @@ namespace NetFabric.Assertive
             }
         }
 
-        static string DefaultToFriendlyString(object @object)
+        public static string ToFriendlyString<T>(this T[] enumerable)
+        {
+            var builder = StringBuilderPool.Get();
+            try
+            {
+                _ = builder.Append('{').Append(' ');
+                if (enumerable.Length != 0)
+                {
+                    _ = builder.Append(enumerable[0]);
+                    for (var index = 1; index < enumerable.Length; index++)
+                    {
+                        _ = builder.Append(ListSeparator).Append(' ').Append(ToFriendlyString(enumerable[index]));
+                    }
+                    _ = builder.Append(' ');
+                }
+                _ = builder.Append('}');
+                return builder.ToString();
+            }
+            finally
+            {
+                StringBuilderPool.Return(builder);
+            }
+        }
+
+        public static string ToFriendlyString<T>(this IReadOnlyList<T> enumerable)
+        {
+            var builder = StringBuilderPool.Get();
+            try
+            {
+                _ = builder.Append('{').Append(' ');
+                if (enumerable.Count != 0)
+                {
+                    _ = builder.Append(enumerable[0]);
+                    for (var index = 1; index < enumerable.Count; index++)
+                    {
+                        _ = builder.Append(ListSeparator).Append(' ').Append(ToFriendlyString(enumerable[index]));
+                    }
+                    _ = builder.Append(' ');
+                }
+                _ = builder.Append('}');
+                return builder.ToString();
+            }
+            finally
+            {
+                StringBuilderPool.Return(builder);
+            }
+        }
+
+        static string DefaultToFriendlyString(this object @object)
         {
             var type = @object.GetType();
 
@@ -93,14 +138,14 @@ namespace NetFabric.Assertive
             {
                 var wrapperType = typeof(EnumerableWrapper<,>).MakeGenericType(type, typeof(object));
                 var wrapper = (IEnumerable)Activator.CreateInstance(wrapperType, @object, enumerableInfo);
-                return ToFriendlyString(wrapper);
+                return wrapper.ToFriendlyString();
             }
 
             if (type.IsAsyncEnumerable(out var asyncEnumerableInfo))
             {
                 var wrapperType = typeof(AsyncEnumerableWrapper<,>).MakeGenericType(type, typeof(object));
                 var wrapper = (IAsyncEnumerable<object>)Activator.CreateInstance(wrapperType, @object, asyncEnumerableInfo);
-                return ToFriendlyStringAsync(wrapper).GetAwaiter().GetResult();
+                return wrapper.ToFriendlyStringAsync().GetAwaiter().GetResult();
             }
 
             return @object.ToString();

@@ -4,7 +4,7 @@
     {
         public static readonly int[] Empty = new int[] { };
 
-        public static readonly int[] Single = new int[] { 3 };
+        public static readonly int[] Single = new int[] { 5 };
         public static readonly int[] SingleNotEqual = new int[] { 10 };
 
         public static readonly int[] Multiple = new int[] { 3, 4, 5, 6, 7 };

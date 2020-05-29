@@ -230,19 +230,19 @@ namespace NetFabric.Assertive
                     throw new AsyncEnumerableAssertionException<TActual, TActualItem, TExpected>(
                         wrapped,
                         expected,
-                        $"Actual differs at index {index} when using '{getEnumeratorDeclaringType}.GetEnumerator()'.");
+                        $"Actual differs at index {index} when using '{getEnumeratorDeclaringType}.GetAsyncEnumerator()'.");
 
                 case EqualityResult.LessItem:
                     throw new AsyncEnumerableAssertionException<TActual, TActualItem, TExpected>(
                         wrapped,
                         expected,
-                        $"Actual has less items when using '{getEnumeratorDeclaringType}.GetEnumerator()'.");
+                        $"Actual has less items when using '{getEnumeratorDeclaringType}.GetAsyncEnumerator()'.");
 
                 case EqualityResult.MoreItems:
                     throw new AsyncEnumerableAssertionException<TActual, TActualItem, TExpected>(
                         wrapped,
                         expected,
-                        $"Actual has more items when using '{getEnumeratorDeclaringType}.GetEnumerator()'.");
+                        $"Actual has more items when using '{getEnumeratorDeclaringType}.GetAsyncEnumerator()'.");
             }
         }
 
@@ -267,7 +267,7 @@ namespace NetFabric.Assertive
                                 throw new AsyncEnumerableAssertionException<TActual, TActualItem, TExpected>(
                                     wrapped,
                                     expected,
-                                    $"Actual differs at index {index} when using '{@interface}.GetEnumerator()'.");
+                                    $"Actual differs at index {index} when using '{@interface}.GetAsyncEnumerator()'.");
                             }
 
                         case EqualityResult.LessItem:
@@ -275,7 +275,7 @@ namespace NetFabric.Assertive
                                 throw new AsyncEnumerableAssertionException<TActual, TActualItem, TExpected>(
                                     wrapped,
                                     expected,
-                                    $"Actual has less items when using '{@interface}.GetEnumerator()'.");
+                                    $"Actual has less items when using '{@interface}.GetAsyncEnumerator()'.");
                             }
 
                         case EqualityResult.MoreItems:
@@ -283,7 +283,7 @@ namespace NetFabric.Assertive
                                 throw new AsyncEnumerableAssertionException<TActual, TActualItem, TExpected>(
                                     wrapped,
                                     expected,
-                                    $"Actual has more items when using '{@interface}.GetEnumerator()'.");
+                                    $"Actual has more items when using '{@interface}.GetAsyncEnumerator()'.");
                             }
                     }
                 }
