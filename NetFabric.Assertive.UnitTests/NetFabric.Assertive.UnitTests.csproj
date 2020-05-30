@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Assertions\EnumerableReferenceTypeAssertionsTests\BeEqualTo.TestCollection.cs" />
     <Compile Remove="Assertions\EnumerableReferenceTypeAssertionsTests\BeEqualTo.TestList.cs" />
   </ItemGroup>
 

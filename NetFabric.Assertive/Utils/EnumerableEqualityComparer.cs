@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetFabric.Assertive
 {
-    //[DebuggerNonUserCode]
+    [DebuggerNonUserCode]
     static partial class EnumerableEqualityComparer
     {
         public static EqualityResult Compare(this IEnumerable actual, IEnumerable expected, out int index)
@@ -224,7 +224,7 @@ namespace NetFabric.Assertive
                     TActualItem item;
                     try
                     {
-                        item = actual.Array[index];
+                        item = actual.Array[index + actual.Offset];
                     }
                     catch
                     {
