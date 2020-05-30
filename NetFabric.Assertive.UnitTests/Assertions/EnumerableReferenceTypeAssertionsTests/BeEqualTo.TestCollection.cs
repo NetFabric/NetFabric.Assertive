@@ -6,7 +6,27 @@ namespace NetFabric.Assertive.UnitTests
 {
     public partial class EnumerableReferenceTypeAssertionsTests
     {
-        public static TheoryData<TestCollection, int[], string> BeEqualTo_Collection_NotEqualData =>
+        public static TheoryData<TestCollection, int[]> TestCollection_EqualData =>
+            new TheoryData<TestCollection, int[]>
+            {
+                { new TestCollection(TestData.Empty), TestData.Empty },
+                { new TestCollection(TestData.Single), TestData.Single },
+                { new TestCollection(TestData.Multiple), TestData.Multiple },
+            };
+
+        [Theory]
+        [MemberData(nameof(TestCollection_EqualData))]
+        public void BeEqualTo_TestCollection_With_Equal_Should_NotThrow(TestCollection actual, int[] expected)
+        {
+            // Arrange
+
+            // Act
+            _ = actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+
+            // Assert
+        }
+
+        public static TheoryData<TestCollection, int[], string> BeEqualTo_TestCollection_NotEqualData =>
             new TheoryData<TestCollection, int[], string> 
             {
                 { new TestCollection(0, 0, 0, 0, 0), new int[] { 0 }, $"Actual has less items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'.{Environment.NewLine}Expected: {{0}}{Environment.NewLine}Actual: {{}}" },
@@ -20,8 +40,8 @@ namespace NetFabric.Assertive.UnitTests
             };
 
         [Theory]
-        [MemberData(nameof(BeEqualTo_Collection_NotEqualData))]
-        public void BeEqualTo_With_NotEqual_Should_Throw(TestCollection actual, int[] expected, string message)
+        [MemberData(nameof(BeEqualTo_TestCollection_NotEqualData))]
+        public void BeEqualTo_TestCollection_With_NotEqual_Should_Throw(TestCollection actual, int[] expected, string message)
         {
             // Arrange
 
@@ -35,7 +55,7 @@ namespace NetFabric.Assertive.UnitTests
             Assert.Equal(message, exception.Message);
         }
 
-        public static TheoryData<TestCollection, int[], string> BeEqualTo_Collection_NotEqualCountData =>
+        public static TheoryData<TestCollection, int[], string> BeEqualTo_TestCollection_NotEqualCountData =>
             new TheoryData<TestCollection, int[], string>
             {
                 { new TestCollection(1, 1, 1, 0, 1), new int[] { 0 }, $"Expected collections to have same count value.{Environment.NewLine}Expected: 1{Environment.NewLine}Actual: 0" },
@@ -43,7 +63,7 @@ namespace NetFabric.Assertive.UnitTests
             };
 
         [Theory]
-        [MemberData(nameof(BeEqualTo_Collection_NotEqualCountData))]
+        [MemberData(nameof(BeEqualTo_TestCollection_NotEqualCountData))]
         public void BeEqualTo_With_NotEqualCount_Should_Throw(TestCollection actual, int[] expected, string message)
         {
             // Arrange
@@ -58,7 +78,7 @@ namespace NetFabric.Assertive.UnitTests
             Assert.Equal(message, exception.Message);
         }
 
-        public static TheoryData<TestCollection, int[], string> BeEqualTo_Collection_CopyToThrowsData =>
+        public static TheoryData<TestCollection, int[], string> BeEqualTo_TestCollection_CopyToThrowsData =>
             new TheoryData<TestCollection, int[], string>
             {
                 { new TestCollection(2, 2, 2, 2, 0), new int[] { 0, 1 }, $"Actual differs at index 0 when using the CopyTo.{Environment.NewLine}Expected: {{0}}{Environment.NewLine}Actual: {{}}" },
@@ -66,7 +86,7 @@ namespace NetFabric.Assertive.UnitTests
             };
 
         [Theory]
-        [MemberData(nameof(BeEqualTo_Collection_CopyToThrowsData))]
+        [MemberData(nameof(BeEqualTo_TestCollection_CopyToThrowsData))]
         public void BeEqualTo_With_CopyToThrows_Should_Throw(TestCollection actual, int[] expected, string message)
         {
             // Arrange
@@ -81,14 +101,14 @@ namespace NetFabric.Assertive.UnitTests
             Assert.Equal(message, exception.Message);
         }
 
-        public static TheoryData<TestCollection, int[], string> BeEqualTo_Collection_NotEqualCopyToData =>
+        public static TheoryData<TestCollection, int[], string> BeEqualTo_TestCollection_NotEqualCopyToData =>
             new TheoryData<TestCollection, int[], string>
             {
                 { new TestCollection(2, 2, 2, 2, 3), new int[] { 0, 1 }, $"Actual has more items when using the CopyTo.{Environment.NewLine}Expected: {{}}{Environment.NewLine}Actual: {{0}}" },
             };
 
         [Theory]
-        [MemberData(nameof(BeEqualTo_Collection_NotEqualCopyToData))]
+        [MemberData(nameof(BeEqualTo_TestCollection_NotEqualCopyToData))]
         public void BeEqualTo_With_NotEqualCopyTo_Should_Throw(TestCollection actual, int[] expected, string message)
         {
             // Arrange

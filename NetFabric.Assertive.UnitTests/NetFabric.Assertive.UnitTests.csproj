@@ -6,9 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Assertions\EnumerableReferenceTypeAssertionsTests\**" />
-    <EmbeddedResource Remove="Assertions\EnumerableReferenceTypeAssertionsTests\**" />
-    <None Remove="Assertions\EnumerableReferenceTypeAssertionsTests\**" />
+    <Compile Remove="Assertions\EnumerableReferenceTypeAssertionsTests\BeEqualTo.TestCollection.cs" />
+    <Compile Remove="Assertions\EnumerableReferenceTypeAssertionsTests\BeEqualTo.TestList.cs" />
   </ItemGroup>
 
   <ItemGroup>

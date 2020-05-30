@@ -6,7 +6,27 @@ namespace NetFabric.Assertive.UnitTests
 {
     public partial class EnumerableReferenceTypeAssertionsTests
     {
-        public static TheoryData<TestList, int[], string> BeEqualTo_List_NotEqualData =>
+        public static TheoryData<TestList, int[]> TestList_EqualData =>
+            new TheoryData<TestList, int[]>
+            {
+                { new TestList(TestData.Empty), TestData.Empty },
+                { new TestList(TestData.Single), TestData.Single },
+                { new TestList(TestData.Multiple), TestData.Multiple },
+            };
+
+        [Theory]
+        [MemberData(nameof(TestList_EqualData))]
+        public void BeEqualTo_TestList_With_Equal_Should_NotThrow(TestList actual, int[] expected)
+        {
+            // Arrange
+
+            // Act
+            _ = actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+
+            // Assert
+        }
+
+        public static TheoryData<TestList, int[], string> BeEqualTo_TestList_NotEqualData =>
             new TheoryData<TestList, int[], string> 
             {
                 { new TestList(0, 0, 0, 0, 0, 0), new int[] { 0 }, $"Actual has less items when using 'NetFabric.Assertive.UnitTests.RangeEnumerable.GetEnumerator()'.{Environment.NewLine}Expected: {{0}}{Environment.NewLine}Actual: {{}}" },
@@ -20,7 +40,7 @@ namespace NetFabric.Assertive.UnitTests
             };
 
         [Theory]
-        [MemberData(nameof(BeEqualTo_List_NotEqualData))]
+        [MemberData(nameof(BeEqualTo_TestList_NotEqualData))]
         public void BeEqualTo_With_NotEqual_Should_Throw(TestList actual, int[] expected, string message)
         {
             // Arrange
@@ -36,7 +56,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
 
-        public static TheoryData<TestCollection, int[], string> BeEqualTo_List_NotEqualCountData =>
+        public static TheoryData<TestCollection, int[], string> BeEqualTo_TestList_NotEqualCountData =>
             new TheoryData<TestCollection, int[], string>
             {
                 { new TestList(1, 1, 1, 0, 0, 0), new int[] { 0 }, $"Expected collections to have same count value.{Environment.NewLine}Expected: 1{Environment.NewLine}Actual: 0" },
@@ -44,7 +64,7 @@ namespace NetFabric.Assertive.UnitTests
             };
 
         [Theory]
-        [MemberData(nameof(BeEqualTo_List_NotEqualCountData))]
+        [MemberData(nameof(BeEqualTo_TestList_NotEqualCountData))]
         public void BeEqualTo_With_NotEqualCount_Should_Throw(TestCollection actual, int[] expected, string message)
         {
             // Arrange
@@ -60,7 +80,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
 
-        public static TheoryData<TestList, int[], string> BeEqualTo_List_NotEqualIndexerData =>
+        public static TheoryData<TestList, int[], string> BeEqualTo_TestList_NotEqualIndexerData =>
             new TheoryData<TestList, int[], string>
             {
                 { new TestList(1, 1, 1, 1, 1, 0), new int[] { 0 }, $"Actual has less items when using the indexer.{Environment.NewLine}Expected: {{0}}{Environment.NewLine}Actual: {{}}" },
@@ -68,7 +88,7 @@ namespace NetFabric.Assertive.UnitTests
             };
 
         [Theory]
-        [MemberData(nameof(BeEqualTo_List_NotEqualIndexerData))]
+        [MemberData(nameof(BeEqualTo_TestList_NotEqualIndexerData))]
         public void BeEqualTo_With_NotEqualIndexer_Should_Throw(TestList actual, int[] expected, string message)
         {
             // Arrange

@@ -5,6 +5,26 @@ namespace NetFabric.Assertive.UnitTests
 {
     public partial class AsyncEnumerableReferenceTypeAssertionsTests
     {
+        public static TheoryData<TestCancellableAsyncEnumerable, int[]> BeEqualTo_AsyncCancellableEnumerable_EqualData =>
+       new TheoryData<TestCancellableAsyncEnumerable, int[]>
+       {
+            { new TestCancellableAsyncEnumerable(TestData.Empty),       TestData.Empty },
+            { new TestCancellableAsyncEnumerable(TestData.Single),      TestData.Single },
+            { new TestCancellableAsyncEnumerable(TestData.Multiple),    TestData.Multiple },
+       };
+
+        [Theory]
+        [MemberData(nameof(BeEqualTo_AsyncCancellableEnumerable_EqualData))]
+        public void BeEqualTo_AsyncCancellableEnumerable_With_Equal_Should_NotThrow(TestCancellableAsyncEnumerable actual, int[] expected)
+        {
+            // Arrange
+
+            // Act
+            _ = actual.Must().BeAsyncEnumerableOf<int>().BeEqualTo(expected);
+
+            // Assert
+        }
+
         public static TheoryData<TestCancellableAsyncEnumerable, int[], string> BeEqualTo_AsyncCancellableEnumerable_NotEqualData =>
             new TheoryData<TestCancellableAsyncEnumerable, int[], string>
             {
