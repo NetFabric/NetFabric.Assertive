@@ -3,26 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public sealed class CopyToWrapper<TActualItem> 
+    public sealed class IndexerWrapper<TActual, TActualItem> 
         : IEnumerable<TActualItem>
     {
-        readonly TActualItem[] array;
-        readonly int arrayIndex;
+        readonly PropertyInfo indexer;
 
-        internal CopyToWrapper(ICollection<TActualItem> actual, int arrayIndex)
+        internal IndexerWrapper(TActual actual, PropertyInfo indexer)
         {
             Actual = actual;
-            this.arrayIndex = arrayIndex;
-
-            array = new TActualItem[actual.Count + arrayIndex];
-            actual.CopyTo(array, arrayIndex);
+            this.indexer = indexer;
         }
 
-        public ICollection<TActualItem> Actual { get; }
+        public TActual Actual { get; }
 
         public IEnumerator<TActualItem> GetEnumerator() => new Enumerator(this);
         IEnumerator IEnumerable.GetEnumerator() => new Enumerator(this);
@@ -30,13 +27,16 @@ namespace NetFabric.Assertive
         sealed class Enumerator 
             : IEnumerator<TActualItem>
         {
-            readonly TActualItem[] array;
+            readonly TActual actual;
+            readonly PropertyInfo indexer;
+            readonly object[] indexArray = new object[1];
             int index;
 
-            public Enumerator(CopyToWrapper<TActualItem> enumerable)
+            public Enumerator(IndexerWrapper<TActual, TActualItem> enumerable)
             {
-                array = enumerable.array;
-                index = enumerable.arrayIndex - 1;
+                actual = enumerable.Actual;
+                indexer = enumerable.indexer;
+                index = -1;
                 Current = default!;
             }
 
@@ -48,7 +48,8 @@ namespace NetFabric.Assertive
             {
                 try
                 {
-                    Current = array[++index];
+                    indexArray[0] = ++index;
+                    Current = (TActualItem)indexer.GetValue(actual, indexArray);
                 }
                 catch
                 {

@@ -71,7 +71,7 @@ namespace NetFabric.Assertive.UnitTests
             void action() => source.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
-            var exception = Assert.Throws<CopyToAssertionException<int, int[]>>(action);
+            var exception = Assert.Throws<EqualToAssertionException<CopyToWrapper<int>, int[]>>(action);
             Assert.Equal(actual, exception.Actual);
             Assert.Same(expected, exception.Expected);
             Assert.Equal(message, exception.Message);
