@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace NetFabric.Assertive
@@ -138,9 +139,6 @@ namespace NetFabric.Assertive
 
 #if NETCORE
         public static EqualityResult Compare<TActualItem, TExpectedItem>(this ReadOnlySpan<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer, out int index)
-#else
-        public static EqualityResult Compare<TActualItem, TExpectedItem>(this TActualItem[] actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer, out int index)
-#endif
         {
             using var expectedEnumerator = expected.GetEnumerator();
             checked
@@ -161,10 +159,59 @@ namespace NetFabric.Assertive
                     if (isExpectedCompleted)
                         return EqualityResult.MoreItems;
 
-                    if (!comparer(actual[index], expectedEnumerator.Current))
+                    TActualItem item;
+                    try
+                    {
+                        item = actual[index];
+                    }
+                    catch
+                    {
+                        return EqualityResult.NotEqualAtIndex;
+                    }
+
+                    if (!comparer(item, expectedEnumerator.Current))
                         return EqualityResult.NotEqualAtIndex;
                 }
             }
         }
+#else
+        public static EqualityResult Compare<TActualItem, TExpectedItem>(this ArraySegment<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer, out int index)
+        {
+            using var expectedEnumerator = expected.GetEnumerator();
+            checked
+            {
+                for (index = 0; true; index++)
+                {
+                    var isActualCompleted = false;
+                    isActualCompleted = index == actual.Count;
+
+                    var isExpectedCompleted = !expectedEnumerator.MoveNext();
+
+                    if (isActualCompleted && isExpectedCompleted)
+                        return EqualityResult.Equal;
+
+                    if (isActualCompleted)
+                        return EqualityResult.LessItem;
+
+                    if (isExpectedCompleted)
+                        return EqualityResult.MoreItems;
+
+                    TActualItem item;
+                    try
+                    {
+                        item = actual.Array[index + actual.Offset];
+                    }
+                    catch
+                    {
+                        return EqualityResult.NotEqualAtIndex;
+                    }
+
+                    if (!comparer(item, expectedEnumerator.Current))
+                        return EqualityResult.NotEqualAtIndex;
+                }
+            }
+        }
+#endif
+
     }
 }

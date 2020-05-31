@@ -6,7 +6,7 @@ namespace NetFabric.Assertive
         : EqualToAssertionException<ReadOnlyListWrapper<TActualItem>, TExpected>
     {
         public ReadOnlyListAssertionException(ReadOnlyListWrapper<TActualItem> actual, TExpected expected)
-            : this(actual, expected, $"Expected collections to have same count value.")
+            : this(actual, expected, $"Expected collections to have same items.")
         {
         }
 

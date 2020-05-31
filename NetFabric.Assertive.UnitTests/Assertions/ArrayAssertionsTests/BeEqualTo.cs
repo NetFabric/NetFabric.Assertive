@@ -9,9 +9,9 @@ namespace NetFabric.Assertive.UnitTests
             new TheoryData<int[]>
             {
                 { null },
-                { new int[] { } },
-                { new int[] { 0 } },
-                { new int[] { 0, 1, 2, 3} },
+                { TestData.Empty },
+                { TestData.Single },
+                { TestData.Multiple },
             };
 
         [Theory]
@@ -29,11 +29,14 @@ namespace NetFabric.Assertive.UnitTests
         public static TheoryData<int[], int[], string> NotEqualNullData =>
             new TheoryData<int[], int[], string>
             {
-                { null, new int[] { }, $"Expected to be equal but it's not.{Environment.NewLine}Expected: {{}}{Environment.NewLine}Actual: <null>" },
-                { new int[] { }, null, $"Expected to be equal but it's not.{Environment.NewLine}Expected: <null>{Environment.NewLine}Actual: {{}}" },
-                { new int[] { }, new int[] { 1 }, $"Actual array has less items.{Environment.NewLine}Expected: {{1}}{Environment.NewLine}Actual: {{}}" },
-                { new int[] { 1 }, new int[] { }, $"Actual array has more items.{Environment.NewLine}Expected: {{}}{Environment.NewLine}Actual: {{1}}" },
-                { new int[] { 1, 2, 3 }, new int[] { 1, 5, 3 }, $"Arrays differ at index 1.{Environment.NewLine}Expected: {{1, 5, 3}}{Environment.NewLine}Actual: {{1, 2, 3}}" },
+                { TestData.Empty,                     null,                 $"Expected to be equal but it's not.{Environment.NewLine}Expected: <null>{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },
+                { TestData.Single,                    TestData.Empty,       $"Actual array has more items.{Environment.NewLine}Expected: {TestData.Empty.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Single.ToFriendlyString()}" },
+                { TestData.Empty,                     TestData.Single,      $"Actual array has less items.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },
+                { TestData.SingleNotEqual,            TestData.Single,      $"Arrays differ at index 0.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.SingleNotEqual.ToFriendlyString()}" },
+                { TestData.Multiple,                  TestData.Single,      $"Arrays differ at index 0.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Multiple.ToFriendlyString()}" },
+                { TestData.MultipleNotEqualFirst,     TestData.Multiple,    $"Arrays differ at index 0.{Environment.NewLine}Expected: {TestData.Multiple.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.MultipleNotEqualFirst.ToFriendlyString()}" },
+                { TestData.MultipleNotEqualMiddle,    TestData.Multiple,    $"Arrays differ at index 2.{Environment.NewLine}Expected: {TestData.Multiple.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.MultipleNotEqualMiddle.ToFriendlyString()}" },
+                { TestData.MultipleNotEqualLast,      TestData.Multiple,    $"Arrays differ at index 4.{Environment.NewLine}Expected: {TestData.Multiple.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.MultipleNotEqualLast.ToFriendlyString()}" },
             };
 
         [Theory]
