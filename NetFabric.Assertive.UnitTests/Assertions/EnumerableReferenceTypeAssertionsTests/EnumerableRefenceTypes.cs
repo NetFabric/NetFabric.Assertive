@@ -160,32 +160,35 @@ namespace NetFabric.Assertive.UnitTests
 
     public class TestCollection : TestGenericEnumerable, IReadOnlyCollection<int>, ICollection<int>
     {
-        readonly int[] items;
+        readonly int[] copyToItems;
+        readonly int[] containsItems;
 
         public TestCollection(int[] items)
             : base(items)
         {
             Count = items.Length;
-            this.items = items;
+            copyToItems = items;
+            containsItems = items;
         }
 
-        public TestCollection(int[] genericEnumerableItems, int collectionCount, int[] collectionItems)
+        public TestCollection(int[] genericEnumerableItems, int count, int[] copyToItems, int[] containsItems)
             : base(genericEnumerableItems)
         {
-            Count = collectionCount;
-            items = collectionItems;
+            Count = count;
+            this.copyToItems = copyToItems;
+            this.containsItems = containsItems;
         }
 
         public int Count { get; }
 
         bool ICollection<int>.IsReadOnly => true;
 
-        public bool Contains(int item) => items.Contains(item);
+        public bool Contains(int item) => containsItems.Contains(item);
 
         public void CopyTo(int[] array, int arrayIndex)
         {
-            for (var index = 0; index < items.Length; index++)
-                array[index + arrayIndex] = items[index];
+            for (var index = 0; index < copyToItems.Length; index++)
+                array[index + arrayIndex] = copyToItems[index];
         }
 
         void ICollection<int>.Add(int item) => throw new NotSupportedException();
@@ -195,25 +198,35 @@ namespace NetFabric.Assertive.UnitTests
 
     public class TestList : TestCollection, IReadOnlyList<int>, IList<int>
     {
-        readonly int[] items;
+        readonly int[] privateIndexerItems;
+        readonly int[] publicIndexerItems;
+        readonly int[] indexOfItems;
 
         public TestList(int[] items)
-            : base(items) 
-            => this.items = items;
+            : base(items)
+        {
+            privateIndexerItems = items;
+            publicIndexerItems = items;
+            indexOfItems = items;
+        }
 
-        public TestList(int[] collectionItems, int[] listItems)
-            : base(collectionItems) 
-            => items = listItems;
+        public TestList(int[] collectionItems, int[] privateIndexerItems, int[] publicIndexerItems, int[] indexOfItems)
+            : base(collectionItems)
+        {
+            this.privateIndexerItems = privateIndexerItems;
+            this.publicIndexerItems = publicIndexerItems;
+            this.indexOfItems = indexOfItems;
+        }
 
-        public int this[int index] => items[index];
+        public int this[int index] => publicIndexerItems[index];
 
         int IList<int>.this[int index] 
         { 
-            get => items[index]; 
+            get => privateIndexerItems[index]; 
             set => throw new NotSupportedException(); 
         }
 
-        public int IndexOf(int item) => ((IList<int>)items).IndexOf(item);
+        public int IndexOf(int item) => ((IList<int>)indexOfItems).IndexOf(item);
 
         void IList<int>.Insert(int index, int item) => throw new NotSupportedException();
         void IList<int>.RemoveAt(int index) => throw new NotSupportedException();
