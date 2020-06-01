@@ -222,7 +222,7 @@ namespace NetFabric.Assertive.UnitTests
 
         int IList<int>.this[int index] 
         { 
-            get => privateIndexerItems[index]; 
+            get => privateIndexerItems [index]; 
             set => throw new NotSupportedException(); 
         }
 

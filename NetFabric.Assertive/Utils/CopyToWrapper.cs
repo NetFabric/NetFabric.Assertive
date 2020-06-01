@@ -50,6 +50,10 @@ namespace NetFabric.Assertive
                 {
                     Current = array[++index];
                 }
+                catch (NotSupportedException)
+                {
+                    throw;
+                }
                 catch
                 {
                     return false;
