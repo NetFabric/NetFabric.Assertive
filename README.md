@@ -137,7 +137,21 @@ One single call to the `BeEnumerableOf<TActualItem>()` assertion validates if al
 
 Enumerators declared as `ref struct` cannot be boxed. This means, they cannot be converted to `object` or implement interfaces. This library uses reflection to be able to handle enumerators that don't implement enumerable interfaces but this requires the conversion to `object`. For this reason, this library cannot handle this type of enumerators but, it can still test all the other functionalities of the enumerable.
 
-In this case, in the call to `BeEnumerableOf<>()`, set the optional parameter `testPubliEnumerator` to `false` and compare the result of the enumerator directly in the unit test.
+In this case, in the call to `BeEnumerableOf<>()`, set the optional parameter `warnRefStructs` to `false`:
+
+``` csharp
+result.Must()
+    .BeEnumerableOf<int>()
+    .BeEqualTo(expected, warnRefStructs: false)
+```
+
+This disables the enumeration using the `ref struct` enumerator but leaves all the other tests enabled. You should still compare the enumeration using an alternative method. If `SequenceEqual` is available, add: 
+
+``` csharp
+result.SequenceEqual(expected).Must().BeTrue();
+```
+
+If not, add:
 
 ``` csharp
 var resultEnumerator = result.GetEnumerator();
@@ -162,7 +176,7 @@ while (true)
 
 Enumerators and indexers can return the items by reference. As mentioned above, this library uses reflection for handling enumerators. Unfortunately, the invocation of methods that return-by-reference was made possible only with `netstandard2.1`.
 
-If your enumerator returns by reference and the unit testing project targets platforms not compatible with `netstandard2.1`, use the same solution as in the previous point.
+If your enumerator returns by reference and the unit testing project targets platforms not compatible with `netstandard2.1`, use the same solution as in the previous point but, with `warnRefReturns` set to `false`.
 
 ## References
 
