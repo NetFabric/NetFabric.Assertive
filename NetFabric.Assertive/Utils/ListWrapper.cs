@@ -7,14 +7,13 @@ using System.Diagnostics.CodeAnalysis;
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public sealed class ReadOnlyListWrapper<TActual, TActualItem> 
+    public sealed class ListWrapper<TActualItem> 
         : IEnumerable<TActualItem>
-        where TActual : IReadOnlyList<TActualItem>
     {
-        internal ReadOnlyListWrapper(TActual actual) 
+        internal ListWrapper(IList<TActualItem> actual) 
             => Actual = actual;
 
-        public TActual Actual { get; }
+        public IList<TActualItem> Actual { get; }
 
         public IEnumerator<TActualItem> GetEnumerator() => new Enumerator(this);
         IEnumerator IEnumerable.GetEnumerator() => new Enumerator(this);
@@ -22,10 +21,10 @@ namespace NetFabric.Assertive
         sealed class Enumerator 
             : IEnumerator<TActualItem>
         {
-            readonly TActual actual;
+            readonly IList<TActualItem> actual;
             int index;
 
-            public Enumerator(ReadOnlyListWrapper<TActual, TActualItem> enumerable)
+            public Enumerator(ListWrapper<TActualItem> enumerable)
             {
                 actual = enumerable.Actual;
                 index = -1;
@@ -41,6 +40,10 @@ namespace NetFabric.Assertive
                 try
                 {
                     Current = actual[++index];
+                }
+                catch (NotSupportedException)
+                {
+                    throw;
                 }
                 catch
                 {

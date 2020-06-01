@@ -41,6 +41,10 @@ namespace NetFabric.Assertive
                 {
                     Current = actual[++index];
                 }
+                catch (NotSupportedException)
+                {
+                    throw;
+                }
                 catch
                 {
                     return false;

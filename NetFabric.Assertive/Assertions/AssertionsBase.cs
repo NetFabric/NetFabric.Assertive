@@ -116,8 +116,8 @@ namespace NetFabric.Assertive
             Func<TActualItem, TExpectedItem, bool> comparer)
             where TExpected : IEnumerable<TExpectedItem>
         {
-            var publicCount = typeof(TActual).GetProperty("Count", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly, null, typeof(int), Type.EmptyTypes, null);
-            var publicIndexer = typeof(TActual).GetProperty("this", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly, null, typeof(TActualItem), new[] { typeof(int) }, null);
+            var publicCount = typeof(TActual).GetProperty("Count", BindingFlags.Public | BindingFlags.Instance, null, typeof(int), Type.EmptyTypes, null);
+            var publicIndexer = typeof(TActual).GetProperty("Item", BindingFlags.Public | BindingFlags.Instance, null, typeof(TActualItem), new[] { typeof(int) }, null);
             if (publicCount is object && publicIndexer is object)
             {
                 var wrappedActual = new IndexerWrapper<TActual, TActualItem>(actual, publicIndexer);
@@ -127,19 +127,19 @@ namespace NetFabric.Assertive
                         throw new EqualToAssertionException<IndexerWrapper<TActual, TActualItem>, TExpected>(
                             wrappedActual,
                             expected,
-                            $"Actual differs at index {index} when using the indexer.");
+                            $"Actual differs at index {index} when using the indexer {typeof(TActual)}.Item[System.Int32].");
 
                     case EqualityResult.LessItem:
                         throw new EqualToAssertionException<IndexerWrapper<TActual, TActualItem>, TExpected>(
                             wrappedActual,
                             expected,
-                            $"Actual has less items when using the indexer.");
+                            $"Actual has less items when using the indexer {typeof(TActual)}.Item[System.Int32].");
 
                     case EqualityResult.MoreItems:
                         throw new EqualToAssertionException<IndexerWrapper<TActual, TActualItem>, TExpected>(
                             wrappedActual,
                             expected,
-                            $"Actual has more items when using the indexer.");
+                            $"Actual has more items when using the indexer {typeof(TActual)}.Item[System.Int32].");
                 }
             }
 
@@ -196,16 +196,14 @@ namespace NetFabric.Assertive
                         // test Contains
                         try
                         {
-                            using (var enumerator = collectionActual.GetEnumerator())
+                            using var enumerator = collectionActual.GetEnumerator();
+                            while (enumerator.MoveNext())
                             {
-                                while (enumerator.MoveNext())
-                                {
-                                    if (!collectionActual.Contains(enumerator.Current))
-                                        throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
-                                            wrapped,
-                                            expected,
-                                            $"'Contains' return false for an item found when using 'System.Collections.Generic.IEnumerable`1[{typeof(TActualItem)}].GetEnumerator()'.");
-                                }
+                                if (!collectionActual.Contains(enumerator.Current))
+                                    throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
+                                        wrapped,
+                                        expected,
+                                        $"'Contains' return false for an item found when using 'System.Collections.Generic.IEnumerable`1[{typeof(TActualItem)}].GetEnumerator()'.");
                             }
                         }
                         catch (NotSupportedException)
@@ -256,19 +254,52 @@ namespace NetFabric.Assertive
                                     throw new EqualToAssertionException<ReadOnlyListWrapper<TActualItem>, TExpected>(
                                         wrappedActual,
                                         expected,
-                                        $"Actual differs at index {index} when using the indexer.");
+                                        $"Actual differs at index {index} when using the indexer IReadOnlyList`1[{typeof(TActualItem)}].Item[System.Int32].");
 
                                 case EqualityResult.LessItem:
                                     throw new EqualToAssertionException<ReadOnlyListWrapper<TActualItem>, TExpected>(
                                         wrappedActual,
                                         expected,
-                                        $"Actual has less items when using the indexer.");
+                                        $"Actual has less items when using the indexer IReadOnlyList`1[{typeof(TActualItem)}].Item[System.Int32].");
 
                                 case EqualityResult.MoreItems:
                                     throw new EqualToAssertionException<ReadOnlyListWrapper<TActualItem>, TExpected>(
                                         wrappedActual,
                                         expected,
-                                        $"Actual has more items when using the indexer.");
+                                        $"Actual has more items when using the indexer IReadOnlyList`1[{typeof(TActualItem)}].Item[System.Int32].");
+                            }
+                        }
+                        catch (NotSupportedException)
+                        {
+                            // do nothing
+                        }
+                    }
+
+                    if (@interface.IsAssignableTo(typeof(IList<>).MakeGenericType(itemType)))
+                    {
+                        // test the indexer
+                        try
+                        {
+                            var wrappedActual = new ListWrapper<TActualItem>((IList<TActualItem>)actual);
+                            switch (wrappedActual.Compare(expected, comparer, out index))
+                            {
+                                case EqualityResult.NotEqualAtIndex:
+                                    throw new EqualToAssertionException<ListWrapper<TActualItem>, TExpected>(
+                                        wrappedActual,
+                                        expected,
+                                        $"Actual differs at index {index} when using the indexer IList`1[{typeof(TActualItem)}].Item[System.Int32].");
+
+                                case EqualityResult.LessItem:
+                                    throw new EqualToAssertionException<ListWrapper<TActualItem>, TExpected>(
+                                        wrappedActual,
+                                        expected,
+                                        $"Actual has less items when using the indexer IList`1[{typeof(TActualItem)}].Item[System.Int32].");
+
+                                case EqualityResult.MoreItems:
+                                    throw new EqualToAssertionException<ListWrapper<TActualItem>, TExpected>(
+                                        wrappedActual,
+                                        expected,
+                                        $"Actual has more items when using the indexer IList`1[{typeof(TActualItem)}].Item[System.Int32].");
                             }
                         }
                         catch (NotSupportedException)

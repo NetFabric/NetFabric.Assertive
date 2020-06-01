@@ -17,8 +17,5 @@ namespace NetFabric.Assertive
             }
             return count;
         }
-
-        public static bool Any(this IEnumerable enumerable)
-            => enumerable.GetEnumerator().MoveNext();
     }
 }
