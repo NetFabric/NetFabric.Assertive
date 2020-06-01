@@ -26,8 +26,6 @@ This framework uses fluent syntax and the combination of the following methods a
 
 - `BeAsyncEnumerableOf<TActualItem>()` - asserts that the type `TActual`, passed in to `Must<TActual>()`, is an asynchronous enumerable that returns a stream of items of type `TActualItem`.
 
-- `BeObservableOf<TActualItem>()` - asserts that the type `TActual`, passed in to `Must<TActual>()`, is an observable that returns a stream of items of type `TActualItem`.
-
 - `BeEqualTo<TExpectedItem>(IEnumerable<TExpectedItem> expected)` - asserts that the actual enumerable object contains the same items and in the same order as `expected`. It tests all the enumeration forms implemented by the type `TActual`, passed in to `Must<TActual>()`.
 
 Collections can have multiple forms of enumeration. For example; a collection that implements `IReadOnlyList<T>` can be enumerated using the indexer, using `IEnumerable<T>.GetEnumerator()`, using `IEnumerable.GetEnumerator()` and using a public `GetEnumerator()` that is not an override of any of these interfaces. There's no guarantee that they all are correctly implemented. The `Count` property can also return the wrong value.
@@ -37,7 +35,7 @@ _NOTE: This project uses [NetFabric.CodeAnalysis](https://github.com/NetFabric/N
 Here's an example of a collection with multiple possible enumerations and enumerator implementations:
 
 ``` csharp
-public readonly struct MyRange : IReadOnlyList<int>
+public readonly struct MyRange : IReadOnlyList<int>, IList<int>
 {    
     public MyRange(int count)
     {
@@ -58,6 +56,31 @@ public readonly struct MyRange : IReadOnlyList<int>
             static void ThrowIndexOutOfRangeException() => throw new IndexOutOfRangeException();
         }
     }
+ 
+    bool ICollection<int>.IsReadOnly => true;
+
+    public bool Contains(int item) => item >= 0 && item < Count;
+
+    public void CopyTo(int[] array, int arrayIndex)
+    {
+        for (var index = 0; index < Count; index++)
+            array[index + arrayIndex] = index;
+    }
+
+    void ICollection<int>.Add(int item) => throw new NotSupportedException();
+    void ICollection<int>.Clear() => throw new NotSupportedException();
+    bool ICollection<int>.Remove(int item) => throw new NotSupportedException();
+    
+    int IList<int>.this[int index] 
+    { 
+        get => this[index]; 
+        set => throw new NotSupportedException(); 
+    }
+
+    public int IndexOf(int item) => item >= 0 && item < Count ? item : -1;
+
+    void IList<int>.Insert(int index, int item) => throw new NotSupportedException();
+    void IList<int>.RemoveAt(int index) => throw new NotSupportedException();
     
     public readonly Enumerator GetEnumerator() => new Enumerator(Count);
     readonly IEnumerator<int> IEnumerable<int>.GetEnumerator() => new DisposableEnumerator(Count);
@@ -102,15 +125,44 @@ public readonly struct MyRange : IReadOnlyList<int>
 }
 ```
 
-_NOTE: The indexer uses a local function so that the accessor does not throw an exception, making it inlinable. The local function does not add dependencies to the example... ;)_
+This example has two enumerators to: improve performance, allow casting to an enumerable interface and allow the use of extension methods for collections (like LINQ). The public enumerator is a value-type so that calls are not virtual. It doesn't implement `IDispose` so that, a `foreach` that calls it, can be inlined.
 
-This example has two enumerators to: improve performance, allow casting to an enumerable interface and allow the use of extension methods for collections (like LINQ). It can also be enumerated using the indexer.
+It implements `IReadOnlyCollection<>` as the number of items is known. It also implements `ICollection<>` so that it performs better when used with LINQ and when converted to an array or a `List<>`.
 
-The use of `BeEnumerableOf<TActualItem>()` assertions validates if all implementations are correct; the multiple `GetEnumerator()` methods, the `Count` property and the indexer.
+It implements `IReadOnlyList<>` so, the indexer can be used. The indexer performs much better that enumerators. It also implements `IList<>` so that it can be used on methods that still don't take `IReadOnlyList<>` parameters.
 
-### By reference return
+One single call to the `BeEnumerableOf<TActualItem>()` assertion validates if all implementations return the same sequence of items. Returned by the multiple `GetEnumerator()` methods, the `Count` property, the `CopyTo` method and the multiple indexers. It doesn't test `IndexOf()` and only partially tests `Contains()` methods because these would only work for certain sequences.
 
-To make the enumeration independent of any interface, this framework uses reflection to enumerate the items. Invocation of methods that return by reference is only possible in `netstandard2.1` so, the validation of this type of enumerable is only possible when running the tests on `netcoreapp3.0`.
+### `ref struct` enumerators
+
+Enumerators declared as `ref struct` cannot be boxed. This means, they cannot be converted to `object` or implement interfaces. This library uses reflection to be able to handle enumerators that don't implement enumerable interfaces but this requires the conversion to `object`. For this reason, this library cannot handle this type of enumerators but, it can still test all the other functionalities of the enumerable.
+
+In this case, in the call to `BeEnumerableOf<>()`, set the optional parameter `testPubliEnumerator` to `false` and compare the result of the enumerator directly in the unit test.
+
+``` csharp
+var resultEnumerator = result.GetEnumerator();
+using var expectedEnumerator = expected.GetEnumerator();
+while (true)
+{
+    var resultEnded = !resultEnumerator.MoveNext();
+    var expectedEnded = !expectedEnumerator.MoveNext();
+
+    if (resultEnded != expectedEnded)
+        throw new Exception("Not same size");
+
+    if (resultEnded)
+        break;
+
+    if (resultEnumerator.Current != expectedEnumerator.Current)
+        throw new Exception("Items are not equal");
+}
+```
+
+### By reference returns
+
+Enumerators and indexers can return the items by reference. As mentioned above, this library uses reflection for handling enumerators. Unfortunately, the invocation of methods that return-by-reference was made possible only with `netstandard2.1`.
+
+If your enumerator returns by reference and the unit testing project targets platforms not compatible with `netstandard2.1`, use the same solution as in the previous point.
 
 ## References
 

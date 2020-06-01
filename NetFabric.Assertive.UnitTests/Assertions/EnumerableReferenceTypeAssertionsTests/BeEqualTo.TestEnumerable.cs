@@ -6,6 +6,28 @@ namespace NetFabric.Assertive.UnitTests
 {
     public partial class EnumerableReferenceTypeAssertionsTests
     {
+#if NETCORE
+        public static TheoryData<TestEnumerableRef, int[]> BeEqualTo_TestEnumerableRef_EqualData =>
+            new TheoryData<TestEnumerableRef, int[]>
+            {
+                { new TestEnumerableRef(TestData.Empty.AsMemory<int>()), TestData.Empty },
+            };
+
+        [Theory]
+        [MemberData(nameof(BeEqualTo_TestEnumerableRef_EqualData))]
+        public void BeEqualTo_TestEnumerableRef_With_Equal_Should_NotThrow(TestEnumerableRef actual, int[] expected)
+        {
+            // Arrange
+
+            // Act
+            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+
+            // Assert
+            var exception = Assert.Throws<AssertionException>(action);
+            Assert.Equal("Enumerators declared as 'ref struct' are not supported. Set the 'warnRefStructs' parameter to 'false' and use other method of comparison.", exception.Message);
+        }
+#endif
+
         public static TheoryData<TestEnumerable, int[]> BeEqualTo_TestEnumerable_EqualData =>
             new TheoryData<TestEnumerable, int[]>
             {
