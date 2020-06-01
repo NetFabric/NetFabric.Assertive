@@ -5,12 +5,34 @@ namespace NetFabric.Assertive.UnitTests
 {
     public partial class AsyncEnumerableReferenceTypeAssertionsTests
     {
+#if NETCORE
+        public static TheoryData<TestAsyncEnumerableRef, int[]> BeEqualTo_TestAsyncEnumerableRef_EqualData =>
+            new TheoryData<TestAsyncEnumerableRef, int[]>
+            {
+                { new TestAsyncEnumerableRef(TestData.Empty.AsMemory<int>()), TestData.Empty },
+            };
+
+        [Theory]
+        [MemberData(nameof(BeEqualTo_TestAsyncEnumerableRef_EqualData))]
+        public void BeEqualTo_TestAsyncEnumerableRef_With_Equal_Should_NotThrow(TestAsyncEnumerableRef actual, int[] expected)
+        {
+            // Arrange
+
+            // Act
+            void action() => actual.Must().BeAsyncEnumerableOf<int>().BeEqualTo(expected);
+
+            // Assert
+            var exception = Assert.Throws<AssertionException>(action);
+            Assert.Equal("Enumerators declared as 'ref struct' are not supported. Set the 'warnRefStructs' parameter to 'false' and use other method of comparison.", exception.Message);
+        }
+#endif
+
         public static TheoryData<TestAsyncEnumerable, int[]> BeEqualTo_AsyncEnumerable_EqualData =>
             new TheoryData<TestAsyncEnumerable, int[]>
             {
-                { new TestAsyncEnumerable(TestData.Empty),      TestData.Empty },
-                { new TestAsyncEnumerable(TestData.Single),     TestData.Single },
-                { new TestAsyncEnumerable(TestData.Multiple),   TestData.Multiple },
+                { new TestAsyncEnumerable(TestData.Empty),    TestData.Empty },
+                { new TestAsyncEnumerable(TestData.Single),   TestData.Single },
+                { new TestAsyncEnumerable(TestData.Multiple), TestData.Multiple },
             };
 
         [Theory]

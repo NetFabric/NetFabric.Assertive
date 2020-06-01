@@ -23,23 +23,20 @@ namespace NetFabric.Assertive
         public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> EvaluateFalse(Func<TActual, bool> func)
             => EvaluateFalse<AsyncEnumerableValueTypeAssertions<TActual, TActualItem>>(this, func);
 
-        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> BeEmpty(bool deepComparison = true)
-            => BeEqualTo(Enumerable.Empty<TActualItem>(), deepComparison);
+        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> BeEmpty(bool warnRefStructs = true, bool warnRefReturns = true)
+            => BeEqualTo(Enumerable.Empty<TActualItem>(), warnRefStructs, warnRefReturns);
 
-        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected>(TExpected expected, bool deepComparison = true)
+        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected>(TExpected expected, bool warnRefStructs = true, bool warnRefReturns = true)
             where TExpected : IEnumerable<TActualItem>
-            => BeEqualTo<TExpected, TActualItem>(expected, (actual, expected) => EqualityComparer<TActualItem>.Default.Equals(actual, expected), deepComparison);
+            => BeEqualTo<TExpected, TActualItem>(expected, (actual, expected) => EqualityComparer<TActualItem>.Default.Equals(actual, expected), warnRefStructs, warnRefReturns);
 
-        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer, bool deepComparison = true)
+        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer, bool warnRefStructs = true, bool warnRefReturns = true)
             where TExpected : IEnumerable<TExpectedItem>
         {
             if (expected is null)
                 throw new EqualToAssertionException<TActual, TExpected>(Actual, expected);
 
-            AssertAsyncEnumerableEquality(Actual, EnumerableInfo, expected, comparer);
-
-            if (deepComparison)
-                AssertDeepAsyncEnumerableEquality(Actual, expected, comparer);
+            AssertAsyncEnumerableEquality(Actual, EnumerableInfo, expected, comparer, warnRefStructs, warnRefReturns);
 
             return this;
         }

@@ -35,14 +35,14 @@ namespace NetFabric.Assertive
         public EnumerableReferenceTypeAssertions<TActual, TActualItem> EvaluateFalse(Func<TActual, bool> func)
             => EvaluateFalse<EnumerableReferenceTypeAssertions<TActual, TActualItem>>(this, func);
 
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEmpty(bool deepComparison = true)
-            => BeEqualTo(Enumerable.Empty<TActualItem>(), deepComparison);
+        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEmpty(bool warnRefStructs = true, bool warnRefReturns = true)
+            => BeEqualTo(Enumerable.Empty<TActualItem>(), warnRefStructs, warnRefReturns);
 
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected>(TExpected expected, bool deepComparison = true)
+        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected>(TExpected expected, bool warnRefStructs = true, bool warnRefReturns = true)
             where TExpected : IEnumerable<TActualItem>
-            => BeEqualTo<TExpected, TActualItem>(expected, (actual, expected) => EqualityComparer<TActualItem>.Default.Equals(actual, expected), deepComparison);
+            => BeEqualTo<TExpected, TActualItem>(expected, (actual, expected) => EqualityComparer<TActualItem>.Default.Equals(actual, expected), warnRefStructs, warnRefReturns);
 
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer, bool deepComparison = true)
+        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer, bool warnRefStructs = true, bool warnRefReturns = true)
             where TExpected : IEnumerable<TExpectedItem>
         {
             if (Actual is null)
@@ -55,10 +55,7 @@ namespace NetFabric.Assertive
                 if (expected is null)
                     throw new EqualToAssertionException<TActual, TExpected>(Actual, expected);
 
-                AssertEnumerableEquality(Actual, EnumerableInfo, expected, comparer);
-
-                if (deepComparison)
-                    AssertDeepEnumerableEquality(Actual, expected, comparer);
+                AssertEnumerableEquality(Actual, EnumerableInfo, expected, comparer, warnRefStructs, warnRefReturns);
             }
 
             return this;
