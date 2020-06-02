@@ -61,7 +61,7 @@ namespace NetFabric.Assertive {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Return by reference is not supported on target platforms previous to &apos;netstandard2.1&apos;. For the current target platform, set the &apos;warnRefReturns&apos; parameter to &apos;false&apos; and use other method of comparison..
+        ///   Looks up a localized string similar to Return by reference is not supported on target platforms previous to &apos;netstandard2.1&apos;. For the current target platform, set the &apos;testRefReturns&apos; parameter to &apos;false&apos; and use other method of comparison..
         /// </summary>
         internal static string RefReturnsMessage {
             get {
@@ -70,7 +70,7 @@ namespace NetFabric.Assertive {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enumerators declared as &apos;ref struct&apos; are not supported. Set the &apos;warnRefStructs&apos; parameter to &apos;false&apos; and use other method of comparison..
+        ///   Looks up a localized string similar to Enumerators declared as &apos;ref struct&apos; are not supported. Set the &apos;testRefStructs&apos; parameter to &apos;false&apos; and use other method of comparison..
         /// </summary>
         internal static string RefStructMessage {
             get {

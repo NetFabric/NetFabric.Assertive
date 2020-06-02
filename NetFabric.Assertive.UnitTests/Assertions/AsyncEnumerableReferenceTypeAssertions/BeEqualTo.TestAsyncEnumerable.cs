@@ -23,7 +23,7 @@ namespace NetFabric.Assertive.UnitTests
 
             // Assert
             var exception = Assert.Throws<AssertionException>(action);
-            Assert.Equal("Enumerators declared as 'ref struct' are not supported. Set the 'warnRefStructs' parameter to 'false' and use other method of comparison.", exception.Message);
+            Assert.Equal("Enumerators declared as 'ref struct' are not supported. Set the 'testRefStructs' parameter to 'false' and use other method of comparison.", exception.Message);
         }
 #endif
 
