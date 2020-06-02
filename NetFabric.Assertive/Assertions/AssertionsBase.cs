@@ -152,37 +152,41 @@ namespace NetFabric.Assertive
                 {
                     // test enumeration
                     var wrapped = new EnumerableWrapper<TActual, TActualItem>(actual, enumerableInfo);
-
-#if !NETSTANDARD2_1 
-                    // 'Current' may return by-ref but reflection only supports its invocation on netstandard 2.1
-                    if (warnRefReturns && enumerableInfo.EnumeratorInfo.Current.PropertyType.IsByRef)
-                        throw new AssertionException(Resource.RefReturnsMessage);
-#endif
-
-                    switch (wrapped.Compare(expected, comparer, out var index))
-                    {
-                        case EqualityResult.NotEqualAtIndex:
-                            throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
-                                wrapped,
-                                expected,
-                                $"Actual differs at index {index} when using '{@interface}.GetEnumerator()'.");
-
-                        case EqualityResult.LessItem:
-                            throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
-                                wrapped,
-                                expected,
-                                $"Actual has less items when using '{@interface}.GetEnumerator()'.");
-
-                        case EqualityResult.MoreItems:
-                            throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
-                                wrapped,
-                                expected,
-                                $"Actual has more items when using '{@interface}.GetEnumerator()'.");
-                    }
-
                     var itemType = enumerableInfo.EnumeratorInfo.Current.PropertyType;
                     if (itemType.IsByRef)
+                    {
                         itemType = itemType.GetElementType();
+
+#if !NETSTANDARD2_1
+                        // 'Current' may return by-ref but reflection only supports its invocation on netstandard 2.1
+                        if (warnRefReturns)
+                            throw new AssertionException(Resource.RefReturnsMessage);
+#endif
+                    }
+
+                    if (warnRefReturns)
+                    {
+                        switch (wrapped.Compare(expected, comparer, out var index))
+                        {
+                            case EqualityResult.NotEqualAtIndex:
+                                throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
+                                    wrapped,
+                                    expected,
+                                    $"Actual differs at index {index} when using '{@interface}.GetEnumerator()'.");
+
+                            case EqualityResult.LessItem:
+                                throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
+                                    wrapped,
+                                    expected,
+                                    $"Actual has less items when using '{@interface}.GetEnumerator()'.");
+
+                            case EqualityResult.MoreItems:
+                                throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
+                                    wrapped,
+                                    expected,
+                                    $"Actual has more items when using '{@interface}.GetEnumerator()'.");
+                        }
+                    }
 
                     if (@interface.IsAssignableTo(typeof(IReadOnlyCollection<>).MakeGenericType(itemType)))
                     {
@@ -219,7 +223,7 @@ namespace NetFabric.Assertive
                         try
                         {
                             var wrappedActual = new CopyToWrapper<TActualItem>((ICollection<TActualItem>)actual, 10);
-                            switch (wrappedActual.Compare(expected, comparer, out index))
+                            switch (wrappedActual.Compare(expected, comparer, out var index))
                             {
                                 case EqualityResult.NotEqualAtIndex:
                                     throw new EqualToAssertionException<CopyToWrapper<TActualItem>, TExpected>(
@@ -252,7 +256,7 @@ namespace NetFabric.Assertive
                         try
                         {
                             var wrappedActual = new ReadOnlyListWrapper<TActualItem>((IReadOnlyList<TActualItem>)actual);
-                            switch (wrappedActual.Compare(expected, comparer, out index))
+                            switch (wrappedActual.Compare(expected, comparer, out var index))
                             {
                                 case EqualityResult.NotEqualAtIndex:
                                     throw new EqualToAssertionException<ReadOnlyListWrapper<TActualItem>, TExpected>(
@@ -285,7 +289,7 @@ namespace NetFabric.Assertive
                         try
                         {
                             var wrappedActual = new ListWrapper<TActualItem>((IList<TActualItem>)actual);
-                            switch (wrappedActual.Compare(expected, comparer, out index))
+                            switch (wrappedActual.Compare(expected, comparer, out var index))
                             {
                                 case EqualityResult.NotEqualAtIndex:
                                     throw new EqualToAssertionException<ListWrapper<TActualItem>, TExpected>(
@@ -366,12 +370,17 @@ namespace NetFabric.Assertive
                 if (@interface.IsAsyncEnumerable(out var enumerableInfo))
                 {
                     var wrapped = new AsyncEnumerableWrapper<TActual, TActualItem>(actual, enumerableInfo);
+                    var itemType = enumerableInfo.EnumeratorInfo.Current.PropertyType;
+                    if (itemType.IsByRef)
+                    {
+                        itemType = itemType.GetElementType();
 
-#if !NETSTANDARD2_1 
-                    // 'Current' may return by-ref but reflection only supports its invocation on netstandard 2.1
-                    if (warnRefReturns && enumerableInfo.EnumeratorInfo.Current.PropertyType.IsByRef)
-                        throw new AssertionException(Resource.RefReturnsMessage);
+#if !NETSTANDARD2_1
+                        // 'Current' may return by-ref but reflection only supports its invocation on netstandard 2.1
+                        if (warnRefReturns)
+                            throw new AssertionException(Resource.RefReturnsMessage);
 #endif
+                    }
 
                     (var result, var index) = wrapped.Compare(expected, comparer).GetAwaiter().GetResult();
                     switch (result)
