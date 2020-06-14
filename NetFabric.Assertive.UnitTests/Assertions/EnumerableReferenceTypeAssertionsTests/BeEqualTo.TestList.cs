@@ -21,7 +21,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            _ = actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            _ = actual.Must().BeEnumerableOf<int>().BeEqualTo(expected, testIndexOf: true, doesNotContain: new[] { 0, 1 });
 
             // Assert
         }
@@ -82,6 +82,29 @@ namespace NetFabric.Assertive.UnitTests
             Assert.Equal(actual, exception.Actual);
             Assert.Same(expected, exception.Expected);
             Assert.Equal(message, exception.Message);
+        }
+
+        public static TheoryData<TestList, int, int, int> BeEqualTo_TestList_NotEqualIndexOfData =>
+            new TheoryData<TestList, int, int, int>
+            {
+                { new TestList(new[] { 5 },    new[] { 5 },    new[] { 5 },    new[] { 0 }),    5, -1, 0 },
+                { new TestList(new[] { 5 },    new[] { 5 },    new[] { 5 },    new[] { 0, 5 }), 5,  1, 0 },
+            };
+
+        [Theory]
+        [MemberData(nameof(BeEqualTo_TestList_NotEqualIndexOfData))]
+        public void BeEqualTo_TestList_With_DoesNotContain_Should_NotThrow(TestList source, int item, int index, int expected)
+        {
+            // Arrange
+
+            // Act
+            void action() => source.Must().BeEnumerableOf<int>().BeEqualTo(source, testIndexOf: true);
+
+            // Assert
+            var exception = Assert.Throws<EqualToAssertionException<int, int>>(action);
+            Assert.Equal(index, exception.Actual);
+            Assert.Equal(expected, exception.Expected);
+            Assert.Equal($"Actual differs at index {expected} when using IList`1.IndexOf({item}).{Environment.NewLine}Expected: {expected}{Environment.NewLine}Actual: {index}", exception.Message);        
         }
     }
 }

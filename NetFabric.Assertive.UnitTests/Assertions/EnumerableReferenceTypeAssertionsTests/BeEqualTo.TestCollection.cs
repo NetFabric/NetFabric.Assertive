@@ -21,7 +21,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            _ = actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            _ = actual.Must().BeEnumerableOf<int>().BeEqualTo(expected, doesNotContain: new[] { 0, 1 });
 
             // Assert
         }
@@ -100,6 +100,29 @@ namespace NetFabric.Assertive.UnitTests
             Assert.Equal(actual, exception.Actual);
             Assert.Same(expected, exception.Expected);
             Assert.Equal(message, exception.Message);
+        }
+
+        public static TheoryData<TestCollection, int[]> TestCollection_DoesNotContainData =>
+            new TheoryData<TestCollection, int[]>
+            {
+                { new TestCollection(TestData.Single),   TestData.Single },
+                { new TestCollection(TestData.Multiple), TestData.Multiple },
+            };
+
+        [Theory]
+        [MemberData(nameof(TestCollection_DoesNotContainData))]
+        public void BeEqualTo_TestCollection_With_DoesNotContain_Should_NotThrow(TestCollection source, int[] expected)
+        {
+            // Arrange
+
+            // Act
+            void action() => source.Must().BeEnumerableOf<int>().BeEqualTo(expected, doesNotContain: source);
+
+            // Assert
+            var exception = Assert.Throws<ActualAssertionException<int>>(action);
+            var item = source.First();
+            Assert.Equal(item, exception.Actual);
+            Assert.Equal($"'Contains' return true for the item '{item}'.{Environment.NewLine}Actual: {item}", exception.Message);        
         }
     }
 }

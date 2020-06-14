@@ -360,24 +360,27 @@ namespace NetFabric.Assertive
                 // test IndexOf
                 if (testIndexOf)
                 {
-                    try
+                    for (var index = 0; index < listActual.Count; index++)
                     {
-                        for (var index = 0; index < listActual.Count; index++)
+                        var item = listActual[index];
+                        var itemIndex = 0;
+                        
+                        try
                         {
-                            var item = listActual[index];
-                            var itemIndex = listActual.IndexOf(item);
-                            if (itemIndex != index)
-                            {
-                                throw new EqualToAssertionException<int, int>(
-                                    itemIndex,
-                                    index,
-                                    $"Actual differs at index {index} when using IList`1.IndexOf({item}).");
-                            }
+                            itemIndex = listActual.IndexOf(item);
                         }
-                    }
-                    catch (Exception exception)
-                    {
-                        throw new AssertionException("Unhandled exception in IList`1.IndexOf().", exception);
+                        catch (Exception exception)
+                        {
+                            throw new AssertionException("Unhandled exception in IList`1.IndexOf().", exception);
+                        }
+
+                        if (itemIndex != index)
+                        {
+                            throw new EqualToAssertionException<int, int>(
+                                itemIndex,
+                                index,
+                                $"Actual differs at index {index} when using IList`1.IndexOf({item}).");
+                        }
                     }
                 }
 
