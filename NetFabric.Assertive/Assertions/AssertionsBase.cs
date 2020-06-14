@@ -78,12 +78,15 @@ namespace NetFabric.Assertive
         }
 
         protected static void AssertEnumerableEquality<TActual, TActualItem, TExpected, TExpectedItem>(
-            [DisallowNull]TActual actual, EnumerableInfo actualEnumerableInfo, 
-            [DisallowNull]TExpected expected, 
+            TActual actual, EnumerableInfo actualEnumerableInfo, 
+            TExpected expected, 
             Func<TActualItem, TExpectedItem, bool> comparer,
             bool testRefStructs,
             bool testRefReturns,
-            bool testNonGeneric)
+            bool testNonGeneric,
+            bool testIndexOf,
+            IEnumerable<TActualItem>? doesNotContain)
+            where TActual : notnull
             where TExpected : IEnumerable<TExpectedItem>
         {
             var isRefReturn = false;
@@ -237,6 +240,19 @@ namespace NetFabric.Assertive
                                 expected,
                                 $"'Contains' return false for an item found when using 'System.Collections.Generic.IEnumerable`1[{typeof(TActualItem)}].GetEnumerator()'.");
                     }
+
+                    if (doesNotContain is object)
+                    {
+                        foreach (var item in doesNotContain)
+                        {
+                            if (collectionActual.Contains(item))
+                            {
+                                throw new ActualAssertionException<TActualItem>(
+                                    item,
+                                    $"'Contains' return true for the item '{item}'.");
+                            }
+                        }
+                    }
                 }
                 catch (NotSupportedException)
                 {
@@ -309,10 +325,12 @@ namespace NetFabric.Assertive
 
             if (typeof(TActual).IsAssignableTo(typeof(IList<>).MakeGenericType(typeof(TActualItem))))
             {
+                var wrappedActual = new ListWrapper<TActualItem>((IList<TActualItem>)actual);
+                var listActual = (IList<TActualItem>)actual;
+
                 // test the indexer
                 try
                 {
-                    var wrappedActual = new ListWrapper<TActualItem>((IList<TActualItem>)actual);
                     switch (wrappedActual.Compare(expected, comparer, out var index))
                     {
                         case EqualityResult.NotEqualAtIndex:
@@ -337,6 +355,54 @@ namespace NetFabric.Assertive
                 catch (NotSupportedException)
                 {
                     // do nothing
+                }
+
+                // test IndexOf
+                if (testIndexOf)
+                {
+                    for (var index = 0; index < listActual.Count; index++)
+                    {
+                        var item = listActual[index];
+                        var itemIndex = 0;
+                        
+                        try
+                        {
+                            itemIndex = listActual.IndexOf(item);
+                        }
+                        catch (Exception exception)
+                        {
+                            throw new AssertionException("Unhandled exception in IList`1.IndexOf().", exception);
+                        }
+
+                        if (itemIndex != index)
+                        {
+                            throw new EqualToAssertionException<int, int>(
+                                itemIndex,
+                                index,
+                                $"Actual differs at index {index} when using IList`1.IndexOf({item}).");
+                        }
+                    }
+                }
+
+                if (doesNotContain is object)
+                {
+                    try
+                    {
+                        foreach (var item in doesNotContain)
+                        {
+                            var index = listActual.IndexOf(item);
+                            if (index >= 0)
+                            {
+                                throw new ActualAssertionException<int>(
+                                    index,
+                                    $"'IndexOf' return '{index}' for the item '{item}'.");
+                            }
+                        }
+                    }
+                    catch (NotSupportedException)
+                    {
+                        // do nothing
+                    }
                 }
             }
         }
