@@ -21,7 +21,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            _ = actual.Must().BeEnumerableOf<int>().BeEqualTo(expected, testIndexOf: true, doesNotContain: new[] { 0, 1 });
+            _ = actual.Must().BeEnumerableOf<int>().BeEqualTo(expected, doesNotContain: new[] { 0, 1 });
 
             // Assert
         }
@@ -98,7 +98,7 @@ namespace NetFabric.Assertive.UnitTests
             // Arrange
 
             // Act
-            void action() => source.Must().BeEnumerableOf<int>().BeEqualTo(source, testIndexOf: true);
+            void action() => source.Must().BeEnumerableOf<int>().BeEqualTo(source);
 
             // Assert
             var exception = Assert.Throws<EqualToAssertionException<int, int>>(action);

@@ -38,12 +38,12 @@ namespace NetFabric.Assertive
         public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEmpty(bool testRefStructs = true, bool testRefReturns = true)
             => BeEqualTo(Enumerable.Empty<TActualItem>(), testRefStructs, testRefReturns);
 
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected>(TExpected expected, bool testRefStructs = true, bool testRefReturns = true, bool testNonGeneric = true, bool testIndexOf = false, IEnumerable<TActualItem>? doesNotContain = default)
+        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected>(TExpected expected, bool testRefStructs = true, bool testRefReturns = true, bool testNonGeneric = true, bool testIndexOf = true, IEnumerable<TActualItem>? doesNotContain = default)
             where TExpected : IEnumerable<TActualItem>
             => BeEqualTo<TExpected, TActualItem>(expected, (actual, expected) => EqualityComparer<TActualItem>.Default.Equals(actual, expected), testRefStructs, testRefReturns, testNonGeneric, testIndexOf, doesNotContain);
 
         public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer, 
-            bool testRefStructs = true, bool testRefReturns = true, bool testNonGeneric = true, bool testIndexOf = false, IEnumerable<TActualItem>? doesNotContain = default)
+            bool testRefStructs = true, bool testRefReturns = true, bool testNonGeneric = true, bool testIndexOf = true, IEnumerable<TActualItem>? doesNotContain = default)
             where TExpected : IEnumerable<TExpectedItem>
         {
             if (Actual is null)
