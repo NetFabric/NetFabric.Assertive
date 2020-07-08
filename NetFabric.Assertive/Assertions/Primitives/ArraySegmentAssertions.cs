@@ -20,10 +20,10 @@ namespace NetFabric.Assertive
             => EvaluateFalse<ArraySegmentAssertions<TActualItem>>(this, func);
 
         public ArraySegmentAssertions<TActualItem> BeArraySegmentOf<TType>()
-            => BeOfType<ArraySegmentAssertions<TActualItem>, TType[]>(this);
+            => BeOfType<ArraySegmentAssertions<TActualItem>, ArraySegment<TActualItem>>(this);
 
         public ArraySegmentAssertions<TActualItem> NotBeArraySegmentOf<TType>()
-            => NotBeOfType<ArraySegmentAssertions<TActualItem>, TType[]>(this);
+            => NotBeOfType<ArraySegmentAssertions<TActualItem>, ArraySegment<TActualItem>>(this);
 
         public ArraySegmentAssertions<TActualItem> BeAssignableTo<TType>()
             => BeAssignableTo<ArraySegmentAssertions<TActualItem>, TType>(this);
