@@ -16,6 +16,10 @@ namespace NetFabric.Assertive
         public static ArrayAssertions<TActual> Must<TActual>(this TActual[] actual)
             => new ArrayAssertions<TActual>(actual);
 
+        [Pure]
+        public static ArraySegmentAssertions<TActual> Must<TActual>(this ArraySegment<TActual> actual)
+            => new ArraySegmentAssertions<TActual>(actual);
+
 #if NETCORE
 
         [Pure]

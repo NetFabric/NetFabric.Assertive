@@ -174,7 +174,8 @@ namespace NetFabric.Assertive
                 }
             }
         }
-#else
+#endif
+
         public static EqualityResult Compare<TActualItem, TExpectedItem>(this ArraySegment<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer, out int index)
         {
             using var expectedEnumerator = expected.GetEnumerator();
@@ -211,7 +212,5 @@ namespace NetFabric.Assertive
                 }
             }
         }
-#endif
-
     }
 }
