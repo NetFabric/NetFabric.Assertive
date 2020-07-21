@@ -35,19 +35,19 @@ namespace NetFabric.Assertive
                     => throw new EqualToAssertionException<TActualItem[], TExpected>(
                         Actual.ToArray(),
                         expected,
-                        $"ReadOnlyMemory differ at index {index}."),
+                        $"Collections differ at index {index}."),
 
                 EqualityResult.LessItem 
                     => throw new EqualToAssertionException<TActualItem[], TExpected>(
                         Actual.ToArray(),
                         expected,
-                        $"Actual ReadOnlyMemory has less items."),
+                        $"Actual collection has less items."),
 
                 EqualityResult.MoreItems 
                     => throw new EqualToAssertionException<TActualItem[], TExpected>(
                         Actual.ToArray(),
                         expected,
-                        $"Actual ReadOnlyMemory has more items."),
+                        $"Actual collection has more items."),
 
                 _ => this,
             };

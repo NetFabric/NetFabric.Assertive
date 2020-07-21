@@ -5,7 +5,6 @@ namespace NetFabric.Assertive.UnitTests
 {
     public partial class AsyncEnumerableReferenceTypeAssertionsTests
     {
-#if NETCORE
         public static TheoryData<TestAsyncEnumerableRef, int[]> BeEqualTo_TestAsyncEnumerableRef_EqualData =>
             new TheoryData<TestAsyncEnumerableRef, int[]>
             {
@@ -25,7 +24,6 @@ namespace NetFabric.Assertive.UnitTests
             var exception = Assert.Throws<AssertionException>(action);
             Assert.Equal("Enumerators declared as 'ref struct' are not supported. Set the 'testRefStructs' parameter to 'false' and use other method of comparison.", exception.Message);
         }
-#endif
 
         public static TheoryData<TestAsyncEnumerable, int[]> BeEqualTo_AsyncEnumerable_EqualData =>
             new TheoryData<TestAsyncEnumerable, int[]>

@@ -20,25 +20,21 @@ namespace NetFabric.Assertive
         public static ArraySegmentAssertions<TActual> Must<TActual>(this ArraySegment<TActual> actual)
             => new ArraySegmentAssertions<TActual>(actual);
 
-#if NETCORE
+        [Pure]
+        public static ReadOnlyMemoryAssertions<TActual> Must<TActual>(this Span<TActual> actual)
+            => Must((ReadOnlySpan<TActual>)actual);
 
         [Pure]
-        public static SpanAssertions<TActual> Must<TActual>(this Span<TActual> actual)
-            => new SpanAssertions<TActual>(actual.ToArray());
+        public static ReadOnlyMemoryAssertions<TActual> Must<TActual>(this ReadOnlySpan<TActual> actual)
+            => new ReadOnlyMemoryAssertions<TActual>(actual.ToArray().AsMemory());
 
         [Pure]
-        public static ReadOnlySpanAssertions<TActual> Must<TActual>(this ReadOnlySpan<TActual> actual)
-            => new ReadOnlySpanAssertions<TActual>(actual.ToArray());
-
-        [Pure]
-        public static MemoryAssertions<TActual> Must<TActual>(this Memory<TActual> actual)
-            => new MemoryAssertions<TActual>(actual);
+        public static ReadOnlyMemoryAssertions<TActual> Must<TActual>(this Memory<TActual> actual)
+            => new ReadOnlyMemoryAssertions<TActual>(actual);
 
         [Pure]
         public static ReadOnlyMemoryAssertions<TActual> Must<TActual>(this ReadOnlyMemory<TActual> actual)
             => new ReadOnlyMemoryAssertions<TActual>(actual);
-
-#endif
 
         [Pure]
         public static ActionAssertions Must(this Action actual)

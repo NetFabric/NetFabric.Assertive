@@ -56,13 +56,13 @@ namespace NetFabric.Assertive.UnitTests
         public static TheoryData<ArraySegment<int>, ArraySegment<int>, string> NotEqualNullData =>
             new TheoryData<ArraySegment<int>, ArraySegment<int>, string>
             {
-                { SingleArraySegment,                    EmptyArraySegment,       $"Actual array segment has more items.{Environment.NewLine}Expected: {EmptyArraySegment.ToFriendlyString()}{Environment.NewLine}Actual: {SingleArraySegment.ToFriendlyString()}" },
-                { EmptyArraySegment,                     SingleArraySegment,      $"Actual array segment has less items.{Environment.NewLine}Expected: {SingleArraySegment.ToFriendlyString()}{Environment.NewLine}Actual: {EmptyArraySegment.ToFriendlyString()}" },
-                { SingleArraySegmentNotEqual,            SingleArraySegment,      $"Array segments differ at index 0.{Environment.NewLine}Expected: {SingleArraySegment.ToFriendlyString()}{Environment.NewLine}Actual: {SingleArraySegmentNotEqual.ToFriendlyString()}" },
-                { MultipleArraySegment,                  SingleArraySegment,      $"Array segments differ at index 0.{Environment.NewLine}Expected: {SingleArraySegment.ToFriendlyString()}{Environment.NewLine}Actual: {MultipleArraySegment.ToFriendlyString()}" },
-                { MultipleArraySegmentNotEqualFirst,     MultipleArraySegment,    $"Array segments differ at index 0.{Environment.NewLine}Expected: {MultipleArraySegment.ToFriendlyString()}{Environment.NewLine}Actual: {MultipleArraySegmentNotEqualFirst.ToFriendlyString()}" },
-                { MultipleArraySegmentNotEqualMiddle,    MultipleArraySegment,    $"Array segments differ at index 2.{Environment.NewLine}Expected: {MultipleArraySegment.ToFriendlyString()}{Environment.NewLine}Actual: {MultipleArraySegmentNotEqualMiddle.ToFriendlyString()}" },
-                { MultipleArraySegmentNotEqualLast,      MultipleArraySegment,    $"Array segments differ at index 4.{Environment.NewLine}Expected: {MultipleArraySegment.ToFriendlyString()}{Environment.NewLine}Actual: {MultipleArraySegmentNotEqualLast.ToFriendlyString()}" },
+                { SingleArraySegment,                    EmptyArraySegment,       $"Actual collection has more items.{Environment.NewLine}Expected: {EmptyArraySegment.ToFriendlyString()}{Environment.NewLine}Actual: {SingleArraySegment.ToFriendlyString()}" },
+                { EmptyArraySegment,                     SingleArraySegment,      $"Actual collection has less items.{Environment.NewLine}Expected: {SingleArraySegment.ToFriendlyString()}{Environment.NewLine}Actual: {EmptyArraySegment.ToFriendlyString()}" },
+                { SingleArraySegmentNotEqual,            SingleArraySegment,      $"Collections differ at index 0.{Environment.NewLine}Expected: {SingleArraySegment.ToFriendlyString()}{Environment.NewLine}Actual: {SingleArraySegmentNotEqual.ToFriendlyString()}" },
+                { MultipleArraySegment,                  SingleArraySegment,      $"Collections differ at index 0.{Environment.NewLine}Expected: {SingleArraySegment.ToFriendlyString()}{Environment.NewLine}Actual: {MultipleArraySegment.ToFriendlyString()}" },
+                { MultipleArraySegmentNotEqualFirst,     MultipleArraySegment,    $"Collections differ at index 0.{Environment.NewLine}Expected: {MultipleArraySegment.ToFriendlyString()}{Environment.NewLine}Actual: {MultipleArraySegmentNotEqualFirst.ToFriendlyString()}" },
+                { MultipleArraySegmentNotEqualMiddle,    MultipleArraySegment,    $"Collections differ at index 2.{Environment.NewLine}Expected: {MultipleArraySegment.ToFriendlyString()}{Environment.NewLine}Actual: {MultipleArraySegmentNotEqualMiddle.ToFriendlyString()}" },
+                { MultipleArraySegmentNotEqualLast,      MultipleArraySegment,    $"Collections differ at index 4.{Environment.NewLine}Expected: {MultipleArraySegment.ToFriendlyString()}{Environment.NewLine}Actual: {MultipleArraySegmentNotEqualLast.ToFriendlyString()}" },
             };
 
         [Theory]

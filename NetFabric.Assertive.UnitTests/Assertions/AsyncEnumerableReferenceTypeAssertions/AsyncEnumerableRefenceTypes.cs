@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 
 namespace NetFabric.Assertive.UnitTests
 {
-#if NETCORE
-
     public class TestAsyncEnumerableRef
     {
         readonly Memory<int> items;
@@ -33,8 +31,6 @@ namespace NetFabric.Assertive.UnitTests
                 => new ValueTask<bool>(++index < items.Length);
         }
     }
-
-#endif
 
     public class TestAsyncEnumerable
     {

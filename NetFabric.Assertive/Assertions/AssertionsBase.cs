@@ -90,17 +90,13 @@ namespace NetFabric.Assertive
             where TExpected : IEnumerable<TExpectedItem>
         {
             var isRefReturn = false;
-            var isRefStruct = false;
 #if !NETSTANDARD2_1 
             isRefReturn = actualEnumerableInfo.EnumeratorInfo.Current.PropertyType.IsByRef;
 #endif
-#if NETCORE
-            isRefStruct = actualEnumerableInfo.GetEnumerator.ReturnType.IsByRefLike;
-#endif
-
             if (isRefReturn && testRefReturns)
                 throw new AssertionException(Resource.RefReturnsMessage);
 
+            var isRefStruct = actualEnumerableInfo.GetEnumerator.ReturnType.IsRefStruct();
             if (isRefStruct && testRefStructs)
                 throw new AssertionException(Resource.RefStructMessage);
 
@@ -173,13 +169,11 @@ namespace NetFabric.Assertive
             {
                 if (@interface.IsEnumerable(out var enumerableInfo))
                 {
-#if NETCORE
-                    isRefStruct = enumerableInfo.GetEnumerator.ReturnType.IsByRefLike;
+                    isRefStruct = enumerableInfo.GetEnumerator.ReturnType.IsRefStruct();
                     if (!testRefStructs && isRefStruct)
                         continue;
                     if (testRefStructs && isRefStruct)
                         throw new AssertionException(Resource.RefStructMessage);
-#endif
 
                     // test enumeration
                     var itemType = enumerableInfo.EnumeratorInfo.Current.PropertyType;
@@ -417,14 +411,11 @@ namespace NetFabric.Assertive
             where TExpected : IEnumerable<TExpectedItem>
         {
             var isRefReturn = false;
-            var isRefStruct = false;
 #if !NETSTANDARD2_1 
             isRefReturn = actualEnumerableInfo.EnumeratorInfo.Current.PropertyType.IsByRef;
 #endif
-#if NETCORE
-            isRefStruct = actualEnumerableInfo.GetAsyncEnumerator.ReturnType.IsByRefLike;
-#endif
-
+            
+            var isRefStruct = actualEnumerableInfo.GetAsyncEnumerator.ReturnType.IsRefStruct();
             if (isRefReturn && testRefReturns)
                 throw new AssertionException(Resource.RefReturnsMessage);
 
@@ -463,13 +454,11 @@ namespace NetFabric.Assertive
             {
                 if (@interface.IsAsyncEnumerable(out var enumerableInfo))
                 {
-#if NETCORE
-                    isRefStruct = enumerableInfo.GetAsyncEnumerator.ReturnType.IsByRefLike;
+                    isRefStruct = enumerableInfo.GetAsyncEnumerator.ReturnType.IsRefStruct();
                     if (!testRefStructs && isRefStruct)
                         continue;
                     if (testRefStructs && isRefStruct)
                         throw new AssertionException(Resource.RefStructMessage);
-#endif
 
                     // test enumeration
                     var itemType = enumerableInfo.EnumeratorInfo.Current.PropertyType;
