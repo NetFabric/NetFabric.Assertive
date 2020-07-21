@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace NetFabric.Assertive
 {
@@ -29,8 +30,11 @@ namespace NetFabric.Assertive
                 _ => @object.DefaultToFriendlyString(),
             };
 
-        public static string ToFriendlyString(this IEnumerable enumerable)
+        public static string ToFriendlyString(this IEnumerable? enumerable)
         {
+            if (enumerable is null)
+                return "<null>";
+
             var builder = StringBuilderPool.Get();
             try
             {
@@ -54,8 +58,11 @@ namespace NetFabric.Assertive
             }
         }
 
-        public static async ValueTask<string> ToFriendlyStringAsync<T>(this IAsyncEnumerable<T> enumerable)
+        public static async ValueTask<string> ToFriendlyStringAsync<T>(this IAsyncEnumerable<T>? enumerable)
         {
+            if (enumerable is null)
+                return "<null>";
+
             var builder = StringBuilderPool.Get();
             try
             {
@@ -82,7 +89,24 @@ namespace NetFabric.Assertive
             }
         }
 
-        public static string ToFriendlyString<T>(this T[] enumerable)
+        public static string ToFriendlyString<T>(this T[]? enumerable)
+            => enumerable is null
+                ? "<null>"
+                : ToFriendlyString((ReadOnlySpan<T>)enumerable);
+
+        public static string ToFriendlyString<T>(this ArraySegment<T> enumerable)
+            => ToFriendlyString((ReadOnlySpan<T>)enumerable);
+
+        public static string ToFriendlyString<T>(this Memory<T> enumerable)
+            => ToFriendlyString((ReadOnlySpan<T>)enumerable.Span);
+
+        public static string ToFriendlyString<T>(this ReadOnlyMemory<T> enumerable)
+            => ToFriendlyString(enumerable.Span);
+
+        public static string ToFriendlyString<T>(this Span<T> enumerable)
+            => ToFriendlyString((ReadOnlySpan<T>)enumerable);
+
+        public static string ToFriendlyString<T>(this ReadOnlySpan<T> enumerable)
         {
             var builder = StringBuilderPool.Get();
             try
@@ -106,8 +130,11 @@ namespace NetFabric.Assertive
             }
         }
 
-        public static string ToFriendlyString<T>(this IReadOnlyList<T> enumerable)
+        public static string ToFriendlyString<T>(this IReadOnlyList<T>? enumerable)
         {
+            if (enumerable is null)
+                return "<null>";
+
             var builder = StringBuilderPool.Get();
             try
             {

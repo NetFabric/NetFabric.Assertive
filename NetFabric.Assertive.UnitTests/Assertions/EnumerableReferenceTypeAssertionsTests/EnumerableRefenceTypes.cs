@@ -34,8 +34,6 @@ namespace NetFabric.Assertive.UnitTests
         public void Dispose() => throw new Exception();
     }
 
-
-#if NETCORE
     public class TestEnumerableRef
     {
         readonly Memory<int> items;
@@ -60,7 +58,6 @@ namespace NetFabric.Assertive.UnitTests
             public bool MoveNext() => ++index < items.Length;
         }
     }
-#endif
 
     public class TestEnumerable
     {

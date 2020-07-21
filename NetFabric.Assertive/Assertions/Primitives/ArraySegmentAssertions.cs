@@ -19,18 +19,6 @@ namespace NetFabric.Assertive
         public ArraySegmentAssertions<TActualItem> EvaluateFalse(Func<ArraySegment<TActualItem>, bool> func)
             => EvaluateFalse<ArraySegmentAssertions<TActualItem>>(this, func);
 
-        public ArraySegmentAssertions<TActualItem> BeArraySegmentOf<TType>()
-            => BeOfType<ArraySegmentAssertions<TActualItem>, ArraySegment<TActualItem>>(this);
-
-        public ArraySegmentAssertions<TActualItem> NotBeArraySegmentOf<TType>()
-            => NotBeOfType<ArraySegmentAssertions<TActualItem>, ArraySegment<TActualItem>>(this);
-
-        public ArraySegmentAssertions<TActualItem> BeAssignableTo<TType>()
-            => BeAssignableTo<ArraySegmentAssertions<TActualItem>, TType>(this);
-
-        public ArraySegmentAssertions<TActualItem> BeNotAssignableTo<TType>()
-            => BeNotAssignableTo<ArraySegmentAssertions<TActualItem>, TType>(this);
-
         public ArraySegmentAssertions<TActualItem> BeEqualTo<TExpected>(TExpected expected)
             where TExpected : IEnumerable<TActualItem>
             => BeEqualTo<TExpected, TActualItem>(expected, (actual, expected) => EqualityComparer<TActualItem>.Default.Equals(actual, expected));
@@ -41,35 +29,28 @@ namespace NetFabric.Assertive
             if (expected is null)
                 throw new EqualToAssertionException<ArraySegment<TActualItem>, TExpected>(Actual, expected);
 
-            switch (Actual.Compare(expected, comparer, out var index))
+            return (Actual.AsSpan().Compare(expected, comparer, out var index)) switch
             {
-                case EqualityResult.NotEqualAtIndex:
-                    throw new EqualToAssertionException<ArraySegment<TActualItem>, TExpected>(
+                EqualityResult.NotEqualAtIndex 
+                    => throw new EqualToAssertionException<ArraySegment<TActualItem>, TExpected>(
                         Actual,
                         expected,
-                        $"Array segments differ at index {index}.");
+                        $"Collections differ at index {index}."),
 
-                case EqualityResult.LessItem:
-                    throw new EqualToAssertionException<ArraySegment<TActualItem>, TExpected>(
+                EqualityResult.LessItem 
+                    => throw new EqualToAssertionException<ArraySegment<TActualItem>, TExpected>(
                         Actual,
                         expected,
-                        $"Actual array segment has less items.");
+                        $"Actual collection has less items."),
 
-                case EqualityResult.MoreItems:
-                    throw new EqualToAssertionException<ArraySegment<TActualItem>, TExpected>(
+                EqualityResult.MoreItems 
+                    => throw new EqualToAssertionException<ArraySegment<TActualItem>, TExpected>(
                         Actual,
                         expected,
-                        $"Actual array segment has more items.");
-            }
+                        $"Actual collection has more items."),
 
-            return this;
-        }
-
-        public EnumerableValueTypeAssertions<ArraySegment<TActualItem>, TExpectedItem> BeEnumerableOf<TExpectedItem>()
-        {
-            AssertIsEnumerable<ArraySegment<TActualItem>, TExpectedItem>(Actual, out var enumerableInfo);
-
-            return new EnumerableValueTypeAssertions<ArraySegment<TActualItem>, TExpectedItem>(Actual, enumerableInfo);
+                _ => this,
+            };
         }
     }
 }

@@ -29,13 +29,13 @@ namespace NetFabric.Assertive.UnitTests
             new TheoryData<int[], int[], string>
             {
                 { TestData.Empty,                     null,                 $"Expected to be equal but it's not.{Environment.NewLine}Expected: <null>{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },
-                { TestData.Single,                    TestData.Empty,       $"Actual Span has more items.{Environment.NewLine}Expected: {TestData.Empty.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Single.ToFriendlyString()}" },
-                { TestData.Empty,                     TestData.Single,      $"Actual Span has less items.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },
-                { TestData.SingleNotEqual,            TestData.Single,      $"Span differ at index 0.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.SingleNotEqual.ToFriendlyString()}" },
-                { TestData.Multiple,                  TestData.Single,      $"Span differ at index 0.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Multiple.ToFriendlyString()}" },
-                { TestData.MultipleNotEqualFirst,     TestData.Multiple,    $"Span differ at index 0.{Environment.NewLine}Expected: {TestData.Multiple.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.MultipleNotEqualFirst.ToFriendlyString()}" },
-                { TestData.MultipleNotEqualMiddle,    TestData.Multiple,    $"Span differ at index 2.{Environment.NewLine}Expected: {TestData.Multiple.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.MultipleNotEqualMiddle.ToFriendlyString()}" },
-                { TestData.MultipleNotEqualLast,      TestData.Multiple,    $"Span differ at index 4.{Environment.NewLine}Expected: {TestData.Multiple.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.MultipleNotEqualLast.ToFriendlyString()}" },
+                { TestData.Single,                    TestData.Empty,       $"Actual collection has more items.{Environment.NewLine}Expected: {TestData.Empty.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Single.ToFriendlyString()}" },
+                { TestData.Empty,                     TestData.Single,      $"Actual collection has less items.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },
+                { TestData.SingleNotEqual,            TestData.Single,      $"Collections differ at index 0.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.SingleNotEqual.ToFriendlyString()}" },
+                { TestData.Multiple,                  TestData.Single,      $"Collections differ at index 0.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Multiple.ToFriendlyString()}" },
+                { TestData.MultipleNotEqualFirst,     TestData.Multiple,    $"Collections differ at index 0.{Environment.NewLine}Expected: {TestData.Multiple.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.MultipleNotEqualFirst.ToFriendlyString()}" },
+                { TestData.MultipleNotEqualMiddle,    TestData.Multiple,    $"Collections differ at index 2.{Environment.NewLine}Expected: {TestData.Multiple.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.MultipleNotEqualMiddle.ToFriendlyString()}" },
+                { TestData.MultipleNotEqualLast,      TestData.Multiple,    $"Collections differ at index 4.{Environment.NewLine}Expected: {TestData.Multiple.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.MultipleNotEqualLast.ToFriendlyString()}" },
             };
 
         [Theory]
