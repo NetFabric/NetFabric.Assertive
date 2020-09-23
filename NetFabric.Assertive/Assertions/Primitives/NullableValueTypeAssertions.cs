@@ -29,7 +29,7 @@ namespace NetFabric.Assertive
                 ? this
                 : throw new EqualToAssertionException<TActual?, TActual?>(Actual, expected);
 
-        public NullableValueTypeAssertions<TActual> BeEqualTo<TExpected>(TExpected expected, Func<TActual?, TExpected, bool> comparer) 
+        public NullableValueTypeAssertions<TActual> BeEqualTo<TExpected>(TExpected? expected, Func<TActual?, TExpected?, bool> comparer) 
             => comparer(Actual, expected) 
                 ? this
                 : throw new EqualToAssertionException<TActual?, TExpected>(Actual, expected);
@@ -39,7 +39,7 @@ namespace NetFabric.Assertive
                 ? throw new NotEqualToAssertionException<TActual?, TActual?>(Actual, expected)
                 : this;
 
-        public NullableValueTypeAssertions<TActual> BeNotEqualTo<TExpected>(TExpected expected, Func<TActual?, TExpected, bool> comparer) 
+        public NullableValueTypeAssertions<TActual> BeNotEqualTo<TExpected>(TExpected? expected, Func<TActual?, TExpected?, bool> comparer) 
             => comparer(Actual, expected) 
                 ? throw new NotEqualToAssertionException<TActual?, TExpected>(Actual, expected) 
                 : this;

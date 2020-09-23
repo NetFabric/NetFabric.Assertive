@@ -2,12 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace NetFabric.Assertive
 {
-    [DebuggerNonUserCode]
+    //[DebuggerNonUserCode]
     static partial class EnumerableEqualityComparer
     {
         public static EqualityResult Compare(this IEnumerable actual, IEnumerable expected, out int index)
@@ -175,6 +174,30 @@ namespace NetFabric.Assertive
                         return EqualityResult.NotEqualAtIndex;
                 }
             }
+        }
+
+        public static bool Compare(this string actual, string expected, out int index)
+        {
+            var end = Math.Min(actual.Length, expected.Length);
+            for (index = 0; index < end; index++)
+            {
+                if (actual[index] != expected[index])
+                    return false;
+            }
+
+            if (actual.Length < expected.Length)
+            {
+                index = actual.Length;
+                return false;
+            }
+
+            if (actual.Length > expected.Length)
+            {
+                index = expected.Length;
+                return false;
+            }
+
+            return true;
         }
     }
 }

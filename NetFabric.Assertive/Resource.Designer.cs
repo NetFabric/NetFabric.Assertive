@@ -61,6 +61,42 @@ namespace NetFabric.Assertive {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Actual is not &apos;null&apos; or empty..
+        /// </summary>
+        internal static string BeNullOrEmptyMessage {
+            get {
+                return ResourceManager.GetString("BeNullOrEmptyMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Actual is not &apos;null&apos;, empty or whitespace..
+        /// </summary>
+        internal static string BeNullOrWhitespaceMessage {
+            get {
+                return ResourceManager.GetString("BeNullOrWhitespaceMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Actual is &apos;null&apos; or empty..
+        /// </summary>
+        internal static string NotBeNullOrEmptyMessage {
+            get {
+                return ResourceManager.GetString("NotBeNullOrEmptyMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Actual is &apos;null&apos;, empty or whitespace..
+        /// </summary>
+        internal static string NotBeNullOrWhitespaceMessage {
+            get {
+                return ResourceManager.GetString("NotBeNullOrWhitespaceMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Return by reference is not supported on target platforms previous to &apos;netstandard2.1&apos;. For the current target platform, set the &apos;testRefReturns&apos; parameter to &apos;false&apos; and use other method of comparison..
         /// </summary>
         internal static string RefReturnsMessage {
