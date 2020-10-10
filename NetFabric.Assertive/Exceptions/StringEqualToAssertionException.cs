@@ -1,9 +1,10 @@
 using System;
+using System.Diagnostics;
 using System.Text;
 
 namespace NetFabric.Assertive
 {
-    //[DebuggerNonUserCode]
+    [DebuggerNonUserCode]
     public class StringEqualToAssertionException
         : ActualAssertionException<string>
     {

@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public partial class ArrayAssertions<TActualItem>
+    public class ArrayAssertions<TActualItem>
         : ReferenceTypeAssertionsBase<TActualItem[]>
     {
         internal ArrayAssertions(TActualItem[] actual)

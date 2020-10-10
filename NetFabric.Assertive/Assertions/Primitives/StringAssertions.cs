@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 namespace NetFabric.Assertive
 {
-    //[DebuggerNonUserCode]
+    [DebuggerNonUserCode]
     public class StringAssertions
         : ReferenceTypeAssertionsBase<string>
     {
@@ -51,7 +50,7 @@ namespace NetFabric.Assertive
         public StringAssertions EvaluateFalse(Func<string?, bool> func)
             => EvaluateFalse(this, func);
 
-        public StringAssertions BeEqualTo(string? expected)
+        public StringAssertions BeEqualTo(string? expected, bool ignoreCase = false)
         {
             if (Actual is null)
             {
@@ -63,7 +62,7 @@ namespace NetFabric.Assertive
                 if (expected is null)
                     throw new EqualToAssertionException<string, string>(Actual, expected);
 
-                if (!Actual.Compare(expected, out var index))
+                if (!Actual.Compare(expected, ignoreCase, out var index))
                     throw new StringEqualToAssertionException(Actual, expected, index);
             }
 

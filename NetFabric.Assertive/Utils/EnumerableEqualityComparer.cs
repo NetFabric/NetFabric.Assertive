@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetFabric.Assertive
 {
-    //[DebuggerNonUserCode]
+    [DebuggerNonUserCode]
     static partial class EnumerableEqualityComparer
     {
         public static EqualityResult Compare(this IEnumerable actual, IEnumerable expected, out int index)
@@ -176,13 +176,24 @@ namespace NetFabric.Assertive
             }
         }
 
-        public static bool Compare(this string actual, string expected, out int index)
+        public static bool Compare(this string actual, string expected, bool ignoreCase, out int index)
         {
             var end = Math.Min(actual.Length, expected.Length);
-            for (index = 0; index < end; index++)
+            if (ignoreCase)
             {
-                if (actual[index] != expected[index])
-                    return false;
+                for (index = 0; index < end; index++)
+                { 
+                    if (char.ToLower(actual[index]) != char.ToLower(expected[index]))
+                        return false;
+                }
+            }
+            else
+            {
+                for (index = 0; index < end; index++)
+                {
+                    if (actual[index] != expected[index])
+                        return false;
+                }
             }
 
             if (actual.Length < expected.Length)

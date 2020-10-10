@@ -6,15 +6,20 @@ namespace NetFabric.Assertive.UnitTests
     public partial class StringAssertionsTests
     {
         [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData(" ")]
-        public void BeEqualTo_With_Equal_Should_NotThrow(string value)
+        [InlineData(null, null, false)]
+        [InlineData("", "", false)]
+        [InlineData("", "", true)]
+        [InlineData(" ", " ", false)]
+        [InlineData(" ", " ", true)]
+        [InlineData("a", "a", false)]
+        [InlineData("a", "a", true)]
+        [InlineData("a", "A", true)]
+        public void BeEqualTo_With_Equal_Should_NotThrow(string value, string expected, bool ignoreCase)
         {
             // Arrange
 
             // Act
-            _ = value.Must().BeEqualTo(value);
+            _ = value.Must().BeEqualTo(expected, ignoreCase);
 
             // Assert
         }

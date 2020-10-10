@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public partial class NullableValueTypeAssertions<TActual>
+    public class NullableValueTypeAssertions<TActual>
         : AssertionsBase
         where TActual : struct
     {

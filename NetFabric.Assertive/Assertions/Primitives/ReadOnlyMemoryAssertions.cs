@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public partial class ReadOnlyMemoryAssertions<TActualItem>
+    public class ReadOnlyMemoryAssertions<TActualItem>
         : ValueTypeAssertionsBase<ReadOnlyMemory<TActualItem>>
     {
         internal ReadOnlyMemoryAssertions(ReadOnlyMemory<TActualItem> actual)
