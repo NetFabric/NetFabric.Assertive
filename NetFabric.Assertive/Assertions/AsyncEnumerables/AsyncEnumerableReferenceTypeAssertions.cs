@@ -11,7 +11,7 @@ namespace NetFabric.Assertive
         : ReferenceTypeAssertionsBase<TActual>
         where TActual : class
     {
-        internal AsyncEnumerableReferenceTypeAssertions(TActual Actual, AsyncEnumerableInfo enumerableInfo)
+        internal AsyncEnumerableReferenceTypeAssertions(TActual? Actual, AsyncEnumerableInfo enumerableInfo)
             : base(Actual) 
             => EnumerableInfo = enumerableInfo;
 
@@ -29,25 +29,25 @@ namespace NetFabric.Assertive
         public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeNotSameAs<TOther>(TOther other)
             => BeNotSameAs<AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>, TOther>(this, other);
 
-        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> EvaluateTrue(Func<TActual, bool> func)
+        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> EvaluateTrue(Func<TActual?, bool> func)
             => EvaluateTrue<AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>>(this, func);
 
-        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> EvaluateFalse(Func<TActual, bool> func)
+        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> EvaluateFalse(Func<TActual?, bool> func)
             => EvaluateFalse<AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>>(this, func);
 
         public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeEmpty(bool testRefStructs = true, bool testRefReturns = true)
             => BeEqualTo(Enumerable.Empty<TActualItem>(), testRefStructs, testRefReturns);
 
-        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected>(TExpected expected, bool testRefStructs = true, bool testRefReturns = true)
+        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected>(TExpected? expected, bool testRefStructs = true, bool testRefReturns = true)
             where TExpected : IEnumerable<TActualItem>
             => BeEqualTo<TExpected, TActualItem>(expected, (actual, expected) => EqualityComparer<TActualItem>.Default.Equals(actual, expected), testRefStructs, testRefReturns);
 
-        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer, bool testRefStructs = true, bool testRefReturns = true)
+        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected? expected, Func<TActualItem, TExpectedItem, bool> comparer, bool testRefStructs = true, bool testRefReturns = true)
             where TExpected : IEnumerable<TExpectedItem>
         {
             if (Actual is null)
             {
-                if (expected is object)
+                if (expected is not null)
                     throw new EqualToAssertionException<TActual, TExpected>(Actual, expected);
             }
             else

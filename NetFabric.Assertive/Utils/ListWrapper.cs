@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 namespace NetFabric.Assertive
 {
@@ -31,8 +30,8 @@ namespace NetFabric.Assertive
                 Current = default!;
             }
 
-            [AllowNull]
-            public TActualItem Current { get; private set; }
+            public TActualItem? Current { get; private set; }
+            TActualItem IEnumerator<TActualItem>.Current => Current!;
             object? IEnumerator.Current => Current;
 
             public bool MoveNext()

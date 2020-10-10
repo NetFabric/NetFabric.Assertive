@@ -14,6 +14,6 @@ namespace NetFabric.Assertive
         public static bool IsRefStruct(this Type type)
             => type
                 .GetCustomAttributes()
-                .FirstOrDefault(attribute => attribute.GetType().Name == "IsByRefLikeAttribute") is object;
+                .FirstOrDefault(attribute => attribute.GetType().Name == "IsByRefLikeAttribute") is not null;
     }
 }

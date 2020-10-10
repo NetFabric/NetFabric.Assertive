@@ -13,6 +13,10 @@ namespace NetFabric.Assertive
             => new BooleanAssertions(actual);
 
         [Pure]
+        public static StringAssertions Must(this string? actual)
+            => new StringAssertions(actual);
+
+        [Pure]
         public static ArrayAssertions<TActual> Must<TActual>(this TActual[] actual)
             => new ArrayAssertions<TActual>(actual);
 

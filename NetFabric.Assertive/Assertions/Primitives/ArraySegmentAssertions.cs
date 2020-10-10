@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public partial class ArraySegmentAssertions<TActualItem>
+    public class ArraySegmentAssertions<TActualItem>
         : ValueTypeAssertionsBase<ArraySegment<TActualItem>>
     {
         internal ArraySegmentAssertions(ArraySegment<TActualItem> actual)

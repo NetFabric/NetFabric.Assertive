@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BeNullOrEmptyMessage" xml:space="preserve">
+    <value>Actual is not 'null' or empty.</value>
+  </data>
+  <data name="BeNullOrWhitespaceMessage" xml:space="preserve">
+    <value>Actual is not 'null', empty or whitespace.</value>
+  </data>
+  <data name="NotBeNullOrEmptyMessage" xml:space="preserve">
+    <value>Actual is 'null' or empty.</value>
+  </data>
+  <data name="NotBeNullOrWhitespaceMessage" xml:space="preserve">
+    <value>Actual is 'null', empty or whitespace.</value>
+  </data>
   <data name="RefReturnsMessage" xml:space="preserve">
     <value>Return by reference is not supported on target platforms previous to 'netstandard2.1'. For the current target platform, set the 'testRefReturns' parameter to 'false' and use other method of comparison.</value>
   </data>

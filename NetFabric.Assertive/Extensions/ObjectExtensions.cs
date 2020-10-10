@@ -19,6 +19,8 @@ namespace NetFabric.Assertive
             {
                 null => "<null>",
 
+                string @string when @string == String.Empty => "<empty>",
+
                 string @string => $"\"{@string}\"",
 
                 Exception exception => exception.GetType().ToString(),

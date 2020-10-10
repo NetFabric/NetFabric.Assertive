@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public partial class ArrayAssertions<TActualItem>
+    public class ArrayAssertions<TActualItem>
         : ReferenceTypeAssertionsBase<TActualItem[]>
     {
         internal ArrayAssertions(TActualItem[] actual)
@@ -25,10 +25,10 @@ namespace NetFabric.Assertive
         public ArrayAssertions<TActualItem> BeNotSameAs<TExpected>(TExpected[] expected)
             => BeNotSameAs<ArrayAssertions<TActualItem>, TExpected[]>(this, expected);
 
-        public ArrayAssertions<TActualItem> EvaluateTrue(Func<TActualItem[], bool> func)
+        public ArrayAssertions<TActualItem> EvaluateTrue(Func<TActualItem[]?, bool> func)
             => EvaluateTrue<ArrayAssertions<TActualItem>>(this, func);
 
-        public ArrayAssertions<TActualItem> EvaluateFalse(Func<TActualItem[], bool> func)
+        public ArrayAssertions<TActualItem> EvaluateFalse(Func<TActualItem[]?, bool> func)
             => EvaluateFalse<ArrayAssertions<TActualItem>>(this, func);
 
         public ArrayAssertions<TActualItem> BeArrayOf<TType>()
@@ -52,7 +52,7 @@ namespace NetFabric.Assertive
         {
             if (Actual is null)
             {
-                if (expected is object)
+                if (expected is not null)
                     throw new EqualToAssertionException<TActualItem[], TExpected>(Actual, expected);
             }
             else

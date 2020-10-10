@@ -11,7 +11,7 @@ namespace NetFabric.Assertive
     [DebuggerNonUserCode]
     public abstract class AssertionsBase
     {
-        protected static void AssertIsEnumerable<TActual, TActualItem>(TActual actual, out EnumerableInfo enumerableInfo)
+        protected static void AssertIsEnumerable<TActual, TActualItem>(TActual? actual, out EnumerableInfo enumerableInfo)
         {
             var actualType = typeof(TActual);
             if (actualType == typeof(TActualItem[])) // convert TActualItem[] to IList<TActualItem>
@@ -45,7 +45,7 @@ namespace NetFabric.Assertive
             }
         }
 
-        protected static void AssertIsAsyncEnumerable<TActual, TActualItem>(TActual actual, out AsyncEnumerableInfo enumerableInfo)
+        protected static void AssertIsAsyncEnumerable<TActual, TActualItem>(TActual? actual, out AsyncEnumerableInfo enumerableInfo)
         {
             var actualType = typeof(TActual);
             if (actualType.IsAsyncEnumerable(out var temp, out var errors))
@@ -140,7 +140,7 @@ namespace NetFabric.Assertive
 
             var publicCount = typeof(TActual).GetProperty("Count", BindingFlags.Public | BindingFlags.Instance, null, typeof(int), Type.EmptyTypes, null);
             var publicIndexer = typeof(TActual).GetProperty("Item", BindingFlags.Public | BindingFlags.Instance, null, typeof(TActualItem), new[] { typeof(int) }, null);
-            if (publicCount is object && publicIndexer is object)
+            if (publicCount is not null && publicIndexer is not null)
             {
                 var wrappedActual = new IndexerWrapper<TActual, TActualItem>(actual, publicIndexer);
                 switch (wrappedActual.Compare(expected, comparer, out var index))
@@ -235,7 +235,7 @@ namespace NetFabric.Assertive
                                 $"'Contains' return false for an item found when using 'System.Collections.Generic.IEnumerable`1[{typeof(TActualItem)}].GetEnumerator()'.");
                     }
 
-                    if (doesNotContain is object)
+                    if (doesNotContain is not null)
                     {
                         foreach (var item in doesNotContain)
                         {
@@ -378,7 +378,7 @@ namespace NetFabric.Assertive
                     }
                 }
 
-                if (doesNotContain is object)
+                if (doesNotContain is not null)
                 {
                     try
                     {
