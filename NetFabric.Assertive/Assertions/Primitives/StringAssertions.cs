@@ -62,7 +62,8 @@ namespace NetFabric.Assertive
                 if (expected is null)
                     throw new EqualToAssertionException<string, string>(Actual, expected);
 
-                if (!Actual.Compare(expected, ignoreCase, out var index))
+                var (equal, index) = Actual.Compare(expected, ignoreCase);
+                if (!equal)
                     throw new StringEqualToAssertionException(Actual, expected, index);
             }
 

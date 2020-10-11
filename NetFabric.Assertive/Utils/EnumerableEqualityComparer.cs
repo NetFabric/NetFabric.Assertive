@@ -9,7 +9,7 @@ namespace NetFabric.Assertive
     [DebuggerNonUserCode]
     static partial class EnumerableEqualityComparer
     {
-        public static EqualityResult Compare(this IEnumerable actual, IEnumerable expected, out int index)
+        public static (EqualityResult, int, T?, T?) Compare<T>(this IEnumerable<T> actual, IEnumerable<T> expected)
         {
             var actualEnumerator = actual.GetEnumerator();
             var expectedEnumerator = expected.GetEnumerator();
@@ -17,22 +17,22 @@ namespace NetFabric.Assertive
             {
                 checked
                 {
-                    for (index = 0; true; index++)
+                    for (var index = 0; true; index++)
                     {
                         var isActualCompleted = !actualEnumerator.MoveNext();
                         var isExpectedCompleted = !expectedEnumerator.MoveNext();
 
                         if (isActualCompleted && isExpectedCompleted)
-                            return EqualityResult.Equal;
+                            return (EqualityResult.Equal, index, default, default);
 
                         if (isActualCompleted)
-                            return EqualityResult.LessItem;
+                            return (EqualityResult.LessItem, index, default, default);
 
                         if (isExpectedCompleted)
-                            return EqualityResult.MoreItems;
+                            return (EqualityResult.MoreItems, index, default, default);
 
-                        if (!actualEnumerator.Current.Equals(expectedEnumerator.Current))
-                            return EqualityResult.NotEqualAtIndex;
+                        if (!EqualityComparer<T>.Default.Equals(actualEnumerator.Current, expectedEnumerator.Current))
+                            return (EqualityResult.NotEqualAtIndex, index, actualEnumerator.Current, expectedEnumerator.Current);
                     }
                 }
             }
@@ -46,33 +46,33 @@ namespace NetFabric.Assertive
             }
         }
 
-        public static EqualityResult Compare<TActualItem, TExpectedItem>(this IEnumerable<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer, out int index)
+        public static (EqualityResult, int, TActualItem?, TExpectedItem?) Compare<TActualItem, TExpectedItem>(this IEnumerable<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer)
         {
             using var actualEnumerator = actual.GetEnumerator();
             using var expectedEnumerator = expected.GetEnumerator();
             checked
             {
-                for (index = 0; true; index++)
+                for (var index = 0; true; index++)
                 {
                     var isActualCompleted = !actualEnumerator.MoveNext();
                     var isExpectedCompleted = !expectedEnumerator.MoveNext();
 
                     if (isActualCompleted && isExpectedCompleted)
-                        return EqualityResult.Equal;
+                        return (EqualityResult.Equal, index, default, default);
 
                     if (isActualCompleted)
-                        return EqualityResult.LessItem;
+                        return (EqualityResult.LessItem, index, default, default);
 
                     if (isExpectedCompleted)
-                        return EqualityResult.MoreItems;
+                        return (EqualityResult.MoreItems, index, default, default);
 
-                    if (!comparer(actualEnumerator.Current, expectedEnumerator.Current))
-                        return EqualityResult.NotEqualAtIndex;
+                if (!comparer(actualEnumerator.Current, expectedEnumerator.Current))
+                        return (EqualityResult.NotEqualAtIndex, index, actualEnumerator.Current, expectedEnumerator.Current);
                 }
             }
         }
 
-        public static async ValueTask<(EqualityResult, int)> Compare<TActualItem, TExpectedItem>(this IAsyncEnumerable<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer)
+        public static async ValueTask<(EqualityResult, int, TActualItem?, TExpectedItem?)> Compare<TActualItem, TExpectedItem>(this IAsyncEnumerable<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer)
         {
             var actualEnumerator = actual.GetAsyncEnumerator();
             await using (actualEnumerator.ConfigureAwait(false))
@@ -86,27 +86,27 @@ namespace NetFabric.Assertive
                         var isExpectedCompleted = !expectedEnumerator.MoveNext();
 
                         if (isActualCompleted && isExpectedCompleted)
-                            return (EqualityResult.Equal, index);
+                            return (EqualityResult.Equal, index, default, default);
 
                         if (isActualCompleted)
-                            return (EqualityResult.LessItem, index);
+                            return (EqualityResult.LessItem, index, default, default);
 
                         if (isExpectedCompleted)
-                            return (EqualityResult.MoreItems, index);
+                            return (EqualityResult.MoreItems, index, default, default);
 
                         if (!comparer(actualEnumerator.Current, expectedEnumerator.Current))
-                            return (EqualityResult.NotEqualAtIndex, index);
+                            return (EqualityResult.NotEqualAtIndex, index, actualEnumerator.Current, expectedEnumerator.Current);
                     }
                 }
             }
         }
 
-        public static EqualityResult Compare<TActualItem, TExpectedItem>(this IReadOnlyList<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer, out int index)
+        public static (EqualityResult, int, TActualItem?, TExpectedItem?) Compare<TActualItem, TExpectedItem>(this IReadOnlyList<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer)
         {
             using var expectedEnumerator = expected.GetEnumerator();
             checked
             {
-                for (index = 0; true; index++)
+                for (var index = 0; true; index++)
                 {
                     var isActualCompleted = false;
                     var actualItem = default(TActualItem);
@@ -122,29 +122,29 @@ namespace NetFabric.Assertive
                     var isExpectedCompleted = !expectedEnumerator.MoveNext();
 
                     if (isActualCompleted && isExpectedCompleted)
-                        return EqualityResult.Equal;
+                        return (EqualityResult.Equal, index, default, default);
 
                     if (isActualCompleted)
-                        return EqualityResult.LessItem;
+                        return (EqualityResult.LessItem, index, default, default);
 
                     if (isExpectedCompleted)
-                        return EqualityResult.MoreItems;
+                        return (EqualityResult.MoreItems, index, default, default);
 
                     if (!comparer(actualItem!, expectedEnumerator.Current))
-                        return EqualityResult.NotEqualAtIndex;
+                        return (EqualityResult.NotEqualAtIndex, index, actualItem, expectedEnumerator.Current);
                 }
             }
         }
 
-        public static EqualityResult Compare<TActualItem, TExpectedItem>(this Span<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer, out int index)
-            => Compare((ReadOnlySpan<TActualItem>)actual, expected, comparer, out index);
+        public static (EqualityResult, int, TActualItem?, TExpectedItem?) Compare<TActualItem, TExpectedItem>(this Span<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer)
+            => Compare((ReadOnlySpan<TActualItem>)actual, expected, comparer);
 
-        public static EqualityResult Compare<TActualItem, TExpectedItem>(this ReadOnlySpan<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer, out int index)
+        public static (EqualityResult, int, TActualItem?, TExpectedItem?) Compare<TActualItem, TExpectedItem>(this ReadOnlySpan<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer)
         {
             using var expectedEnumerator = expected.GetEnumerator();
             checked
             {
-                for (index = 0; true; index++)
+                for (var index = 0; true; index++)
                 {
                     var isActualCompleted = false;
                     isActualCompleted = index == actual.Length;
@@ -152,13 +152,13 @@ namespace NetFabric.Assertive
                     var isExpectedCompleted = !expectedEnumerator.MoveNext();
 
                     if (isActualCompleted && isExpectedCompleted)
-                        return EqualityResult.Equal;
+                        return (EqualityResult.Equal, index, default, default);
 
                     if (isActualCompleted)
-                        return EqualityResult.LessItem;
+                        return (EqualityResult.LessItem, index, default, default);
 
                     if (isExpectedCompleted)
-                        return EqualityResult.MoreItems;
+                        return (EqualityResult.MoreItems, index, default, default);
 
                     TActualItem item;
                     try
@@ -167,48 +167,42 @@ namespace NetFabric.Assertive
                     }
                     catch
                     {
-                        return EqualityResult.NotEqualAtIndex;
+                        return (EqualityResult.LessItem, index, default, default);
                     }
 
                     if (!comparer(item, expectedEnumerator.Current))
-                        return EqualityResult.NotEqualAtIndex;
+                        return (EqualityResult.NotEqualAtIndex, index, item, expectedEnumerator.Current);
                 }
             }
         }
 
-        public static bool Compare(this string actual, string expected, bool ignoreCase, out int index)
+        public static (bool, int) Compare(this string actual, string expected, bool ignoreCase)
         {
             var end = Math.Min(actual.Length, expected.Length);
             if (ignoreCase)
             {
-                for (index = 0; index < end; index++)
+                for (var index = 0; index < end; index++)
                 { 
                     if (char.ToLower(actual[index]) != char.ToLower(expected[index]))
-                        return false;
+                        return (false, index);
                 }
             }
             else
             {
-                for (index = 0; index < end; index++)
+                for (var index = 0; index < end; index++)
                 {
                     if (actual[index] != expected[index])
-                        return false;
+                        return (false, index);
                 }
             }
 
             if (actual.Length < expected.Length)
-            {
-                index = actual.Length;
-                return false;
-            }
+                return (false, actual.Length);
 
             if (actual.Length > expected.Length)
-            {
-                index = expected.Length;
-                return false;
-            }
+                return (false, expected.Length);
 
-            return true;
+            return (true, actual.Length);
         }
     }
 }
