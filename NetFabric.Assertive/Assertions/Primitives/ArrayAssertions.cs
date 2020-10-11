@@ -60,7 +60,8 @@ namespace NetFabric.Assertive
                 if (expected is null)
                     throw new EqualToAssertionException<TActualItem[], TExpected>(Actual, expected);
 
-                switch (Actual.Compare(expected, comparer, out var index))
+                var (result, index, _, _) = Actual.Compare(expected, comparer);
+                switch (result)
                 {
                     case EqualityResult.NotEqualAtIndex:
                         throw new EqualToAssertionException<TActualItem[], TExpected>(

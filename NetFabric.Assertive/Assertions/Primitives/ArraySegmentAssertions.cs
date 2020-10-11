@@ -29,7 +29,8 @@ namespace NetFabric.Assertive
             if (expected is null)
                 throw new EqualToAssertionException<ArraySegment<TActualItem>, TExpected>(Actual, expected);
 
-            return (Actual.AsSpan().Compare(expected, comparer, out var index)) switch
+            var (result, index, _, _) = Actual.AsSpan().Compare(expected, comparer);
+            return result switch
             {
                 EqualityResult.NotEqualAtIndex 
                     => throw new EqualToAssertionException<ArraySegment<TActualItem>, TExpected>(
