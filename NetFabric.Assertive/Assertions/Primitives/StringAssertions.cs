@@ -5,18 +5,12 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class StringAssertions
-        : ReferenceTypeAssertionsBase<string>
+        : ReferenceTypeAssertionsBase<StringAssertions, string>
     {
         internal StringAssertions(string? actual)
             : base(actual)
         {
         }
-
-        public StringAssertions BeNull()
-            => BeNull(this);
-
-        public StringAssertions BeNotNull()
-            => BeNotNull(this);
 
         public StringAssertions BeNullOrEmpty()
             => string.IsNullOrEmpty(Actual)
@@ -38,18 +32,6 @@ namespace NetFabric.Assertive
                 ? throw new ActualAssertionException<string>(Actual, Resource.NotBeNullOrWhitespaceMessage)
                 : this;
 
-        public StringAssertions BeSameAs<TOther>(TOther other)
-            => BeSameAs(this, other);
-
-        public StringAssertions BeNotSameAs<TOther>(TOther other)
-            => BeNotSameAs(this, other);
-
-        public StringAssertions EvaluateTrue(Func<string?, bool> func)
-            => EvaluateTrue(this, func);
-
-        public StringAssertions EvaluateFalse(Func<string?, bool> func)
-            => EvaluateFalse(this, func);
-
         public StringAssertions BeEqualTo(string? expected, bool ignoreCase = false)
         {
             if (Actual is null)
@@ -69,9 +51,6 @@ namespace NetFabric.Assertive
 
             return this;
         }
-
-        public StringAssertions BeNotEqualTo(string? expected)
-            => BeNotEqualTo(this, expected);
 
         public StringAssertions EndWith(string? value)
             => Actual?.EndsWith(value) ?? false

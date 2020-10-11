@@ -8,7 +8,7 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class EnumerableReferenceTypeAssertions<TActual, TActualItem> 
-        : ReferenceTypeAssertionsBase<TActual>
+        : ReferenceTypeAssertionsBase<EnumerableReferenceTypeAssertions<TActual, TActualItem>, TActual>
         where TActual : class
     {
         internal EnumerableReferenceTypeAssertions(TActual? Actual, EnumerableInfo enumerableInfo)
@@ -16,24 +16,6 @@ namespace NetFabric.Assertive
             => EnumerableInfo = enumerableInfo;
 
         public EnumerableInfo EnumerableInfo { get; }
-
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeNull()
-            => BeNull<EnumerableReferenceTypeAssertions<TActual, TActualItem>>(this);
-
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeNotNull()
-            => BeNotNull<EnumerableReferenceTypeAssertions<TActual, TActualItem>>(this);
-
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeSameAs<TOther>(TOther? other)
-            => BeSameAs<EnumerableReferenceTypeAssertions<TActual, TActualItem>, TOther>(this, other);
-
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeNotSameAs<TOther>(TOther? other)
-            => BeNotSameAs<EnumerableReferenceTypeAssertions<TActual, TActualItem>, TOther>(this, other);
-
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> EvaluateTrue(Func<TActual?, bool> func)
-            => EvaluateTrue<EnumerableReferenceTypeAssertions<TActual, TActualItem>>(this, func);
-
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> EvaluateFalse(Func<TActual?, bool> func)
-            => EvaluateFalse<EnumerableReferenceTypeAssertions<TActual, TActualItem>>(this, func);
 
         public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEmpty(bool testRefStructs = true, bool testRefReturns = true)
             => BeEqualTo(Enumerable.Empty<TActualItem>(), testRefStructs, testRefReturns);

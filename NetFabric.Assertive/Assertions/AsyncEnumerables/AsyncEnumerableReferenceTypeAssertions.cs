@@ -8,7 +8,7 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>
-        : ReferenceTypeAssertionsBase<TActual>
+        : ReferenceTypeAssertionsBase<AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>, TActual>
         where TActual : class
     {
         internal AsyncEnumerableReferenceTypeAssertions(TActual? Actual, AsyncEnumerableInfo enumerableInfo)
@@ -16,24 +16,6 @@ namespace NetFabric.Assertive
             => EnumerableInfo = enumerableInfo;
 
         public AsyncEnumerableInfo EnumerableInfo { get; }
-
-        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeNull()
-            => BeNull<AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>>(this);
-
-        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeNotNull()
-            => BeNotNull<AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>>(this);
-
-        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeSameAs<TOther>(TOther other)
-            => BeSameAs<AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>, TOther>(this, other);
-
-        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeNotSameAs<TOther>(TOther other)
-            => BeNotSameAs<AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>, TOther>(this, other);
-
-        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> EvaluateTrue(Func<TActual?, bool> func)
-            => EvaluateTrue<AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>>(this, func);
-
-        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> EvaluateFalse(Func<TActual?, bool> func)
-            => EvaluateFalse<AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>>(this, func);
 
         public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeEmpty(bool testRefStructs = true, bool testRefReturns = true)
             => BeEqualTo(Enumerable.Empty<TActualItem>(), testRefStructs, testRefReturns);

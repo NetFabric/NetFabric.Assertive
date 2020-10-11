@@ -8,7 +8,7 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class AsyncEnumerableValueTypeAssertions<TActual, TActualItem> 
-        : ValueTypeAssertionsBase<TActual>
+        : ValueTypeAssertionsBase<AsyncEnumerableValueTypeAssertions<TActual, TActualItem>, TActual>
         where TActual : struct
     {
         internal AsyncEnumerableValueTypeAssertions(TActual Actual, AsyncEnumerableInfo enumerableInfo)
@@ -16,12 +16,6 @@ namespace NetFabric.Assertive
             => EnumerableInfo = enumerableInfo;
 
         public AsyncEnumerableInfo EnumerableInfo { get; }
-
-        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> EvaluateTrue(Func<TActual, bool> func)
-            => EvaluateTrue<AsyncEnumerableValueTypeAssertions<TActual, TActualItem>>(this, func);
-
-        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> EvaluateFalse(Func<TActual, bool> func)
-            => EvaluateFalse<AsyncEnumerableValueTypeAssertions<TActual, TActualItem>>(this, func);
 
         public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> BeEmpty(bool testRefStructs = true, bool testRefReturns = true)
             => BeEqualTo(Enumerable.Empty<TActualItem>(), testRefStructs, testRefReturns);

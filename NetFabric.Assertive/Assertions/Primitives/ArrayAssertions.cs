@@ -6,42 +6,12 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class ArrayAssertions<TActualItem>
-        : ReferenceTypeAssertionsBase<TActualItem[]>
+        : ReferenceTypeAssertionsBase<ArrayAssertions<TActualItem>, TActualItem[]>
     {
         internal ArrayAssertions(TActualItem[] actual)
             : base(actual)
         {
         }
-
-        public ArrayAssertions<TActualItem> BeNull()
-            => BeNull<ArrayAssertions<TActualItem>>(this);
-
-        public ArrayAssertions<TActualItem> BeNotNull()
-            => BeNotNull<ArrayAssertions<TActualItem>>(this);
-
-        public ArrayAssertions<TActualItem> BeSameAs<TExpected>(TExpected[] expected)
-            => BeSameAs<ArrayAssertions<TActualItem>, TExpected[]>(this, expected);
-
-        public ArrayAssertions<TActualItem> BeNotSameAs<TExpected>(TExpected[] expected)
-            => BeNotSameAs<ArrayAssertions<TActualItem>, TExpected[]>(this, expected);
-
-        public ArrayAssertions<TActualItem> EvaluateTrue(Func<TActualItem[]?, bool> func)
-            => EvaluateTrue<ArrayAssertions<TActualItem>>(this, func);
-
-        public ArrayAssertions<TActualItem> EvaluateFalse(Func<TActualItem[]?, bool> func)
-            => EvaluateFalse<ArrayAssertions<TActualItem>>(this, func);
-
-        public ArrayAssertions<TActualItem> BeArrayOf<TType>()
-            => BeOfType<ArrayAssertions<TActualItem>, TType[]>(this);
-
-        public ArrayAssertions<TActualItem> NotBeArrayOf<TType>()
-            => NotBeOfType<ArrayAssertions<TActualItem>, TType[]>(this);
-
-        public ArrayAssertions<TActualItem> BeAssignableTo<TType>()
-            => BeAssignableTo<ArrayAssertions<TActualItem>, TType>(this);
-
-        public ArrayAssertions<TActualItem> BeNotAssignableTo<TType>()
-            => BeNotAssignableTo<ArrayAssertions<TActualItem>, TType>(this);
 
         public ArrayAssertions<TActualItem> BeEqualTo<TExpected>(TExpected expected)
             where TExpected : IEnumerable<TActualItem>

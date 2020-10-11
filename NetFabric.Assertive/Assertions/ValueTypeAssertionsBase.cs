@@ -5,8 +5,9 @@ using System.Diagnostics;
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public partial class ValueTypeAssertionsBase<TActual> 
-        : AssertionsBase
+    public class ValueTypeAssertionsBase<TAssertions, TActual> 
+        : AssertionsBase<TAssertions>
+        where TAssertions : ValueTypeAssertionsBase<TAssertions, TActual>
         where TActual : struct
     {
         internal ValueTypeAssertionsBase(TActual actual) 
@@ -14,65 +15,78 @@ namespace NetFabric.Assertive
 
         public TActual Actual { get; }
 
-        protected static TAssertions EvaluateTrue<TAssertions>(TAssertions assertions, Func<TActual, bool> func)
-            where TAssertions : ValueTypeAssertionsBase<TActual> 
-            => func(assertions.Actual)
-                ? assertions
-                : throw new ActualAssertionException<TActual>(assertions.Actual, $"Evaluates to 'false'.");
-
-        protected static TAssertions EvaluateFalse<TAssertions>(TAssertions assertions, Func<TActual, bool> func)
-            where TAssertions : ValueTypeAssertionsBase<TActual> 
-            => func(assertions.Actual)
-                ? throw new ActualAssertionException<TActual>(assertions.Actual, $"Evaluates to 'true'.")
-                : assertions;
-
-        protected static TAssertions BeOfType<TAssertions, TType>(TAssertions assertions)
-            where TAssertions : ValueTypeAssertionsBase<TActual> 
+        public TAssertions BeOfType<TType>()
             => typeof(TActual) == typeof(TType)
-                ? assertions
-                : throw new ActualAssertionException<TActual>(assertions.Actual, $"Expected '{ObjectExtensions.ToFriendlyString(assertions.Actual)}' to be of type '{typeof(TType)}' but it's not.");
+                ? (TAssertions)this
+                : throw new ActualAssertionException<TActual>(Actual, $"Expected '{ObjectExtensions.ToFriendlyString(Actual)}' to be of type '{typeof(TType)}' but it's not.");
 
-        protected static TAssertions NotBeOfType<TAssertions, TType>(TAssertions assertions)
-            where TAssertions : ValueTypeAssertionsBase<TActual> 
+        public TAssertions NotBeOfType<TType>()
             => typeof(TActual) == typeof(TType)
-                ? throw new ActualAssertionException<TActual>(assertions.Actual, $"Expected '{ObjectExtensions.ToFriendlyString(assertions.Actual)}' not to be of type '{typeof(TType)}' but it is.")
-                : assertions;
+                ? throw new ActualAssertionException<TActual>(Actual, $"Expected '{ObjectExtensions.ToFriendlyString(Actual)}' not to be of type '{typeof(TType)}' but it is.")
+                : (TAssertions)this;
 
-        protected static TAssertions BeAssignableTo<TAssertions, TType>(TAssertions assertions)
-            where TAssertions : ValueTypeAssertionsBase<TActual> 
+        public TAssertions BeAssignableTo<TType>()
             => typeof(TActual).IsAssignableTo(typeof(TType))
-                ? assertions
-                : throw new ActualAssertionException<TActual>(assertions.Actual, $"Expected '{ObjectExtensions.ToFriendlyString(assertions.Actual)}' to be assignable to '{typeof(TType)}' but it's not.");
+                ? (TAssertions)this
+                : throw new ActualAssertionException<TActual>(Actual, $"Expected '{ObjectExtensions.ToFriendlyString(Actual)}' to be assignable to '{typeof(TType)}' but it's not.");
 
-        protected static TAssertions BeNotAssignableTo<TAssertions, TType>(TAssertions assertions)
-            where TAssertions : ValueTypeAssertionsBase<TActual> 
+        public TAssertions BeNotAssignableTo<TType>()
             => typeof(TActual).IsAssignableTo(typeof(TType))
-                ? throw new ActualAssertionException<TActual>(assertions.Actual, $"Expected '{ObjectExtensions.ToFriendlyString(assertions.Actual)}' to be not assignable to '{typeof(TType)}' but it is.")
-                : assertions;
+                ? throw new ActualAssertionException<TActual>(Actual, $"Expected '{ObjectExtensions.ToFriendlyString(Actual)}' to be not assignable to '{typeof(TType)}' but it is.")
+                : (TAssertions)this;
 
-        protected static TAssertions BeEqualTo<TAssertions>(TAssertions assertions, TActual expected)
-            where TAssertions : ValueTypeAssertionsBase<TActual> 
-            => EqualityComparer<TActual>.Default.Equals(assertions.Actual, expected)
-                ? assertions
-                : throw new EqualToAssertionException<TActual, TActual>(assertions.Actual, expected);
+        public TAssertions EvaluateTrue(Func<TActual, bool> func)
+            => func(Actual)
+                ? (TAssertions)this
+                : throw new ActualAssertionException<TActual>(Actual, $"Evaluates to 'false'.");
 
-        protected static TAssertions BeEqualTo<TAssertions, TExpected>(TAssertions assertions, TExpected expected, Func<TActual, TExpected, bool> comparer)
-            where TAssertions : ValueTypeAssertionsBase<TActual> 
-            => comparer(assertions.Actual, expected)
-                ? assertions
-                : throw new EqualToAssertionException<TActual, TExpected>(assertions.Actual, expected);
+        public TAssertions EvaluateFalse(Func<TActual, bool> func)
+            => func(Actual)
+                ? throw new ActualAssertionException<TActual>(Actual, $"Evaluates to 'true'.")
+                : (TAssertions)this;
 
-        protected static TAssertions BeNotEqualTo<TAssertions>(TAssertions assertions, TActual expected)
-            where TAssertions : ValueTypeAssertionsBase<TActual> 
-            => EqualityComparer<TActual>.Default.Equals(assertions.Actual, expected)
-                ? throw new NotEqualToAssertionException<TActual, TActual>(assertions.Actual, expected)
-                : assertions;
+        public TAssertions BeEqualTo(TActual expected)
+            => EqualityComparer<TActual>.Default.Equals(Actual, expected)
+                ? (TAssertions)this
+                : throw new EqualToAssertionException<TActual, TActual>(Actual, expected);
 
-        protected static TAssertions BeNotEqualTo<TAssertions, TExpected>(TAssertions assertions, TExpected expected, Func<TActual, TExpected, bool> comparer)
-            where TAssertions : ValueTypeAssertionsBase<TActual> 
-            => comparer(assertions.Actual, expected)
-                ? throw new NotEqualToAssertionException<TActual, TExpected>(assertions.Actual, expected)
-                : assertions;
+        public TAssertions BeEqualTo<TExpected>(TExpected? expected, Func<TActual, TExpected?, bool> comparer)
+            => comparer(Actual, expected)
+                ? (TAssertions)this
+                : throw new EqualToAssertionException<TActual, TExpected?>(Actual, expected);
 
+        public TAssertions BeNotEqualTo(TActual expected)
+            => EqualityComparer<TActual>.Default.Equals(Actual, expected)
+                ? throw new NotEqualToAssertionException<TActual, TActual>(Actual, expected)
+                : (TAssertions)this;
+
+        public TAssertions BeNotEqualTo<TExpected>(TExpected? expected, Func<TActual, TExpected?, bool> comparer)
+            => comparer(Actual, expected)
+                ? throw new NotEqualToAssertionException<TActual, TExpected?>(Actual, expected)
+                : (TAssertions)this;
+
+        public TAssertions BeDefault()
+            => EqualityComparer<TActual>.Default.Equals(Actual, default)
+                ? (TAssertions)this
+                : throw new EqualToAssertionException<TActual, TActual>(Actual, default);
+
+        public TAssertions BeNotDefault()
+            => EqualityComparer<TActual>.Default.Equals(Actual, default)
+                ? throw new EqualToAssertionException<TActual, TActual>(Actual, default)
+                : (TAssertions)this;
+
+        public EnumerableValueTypeAssertions<TActual, TActualItem> BeEnumerableOf<TActualItem>()
+        {
+            AssertIsEnumerable<TActual, TActualItem>(Actual, out var enumerableInfo);
+
+            return new EnumerableValueTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
+        }
+
+        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> BeAsyncEnumerableOf<TActualItem>()
+        {
+            AssertIsAsyncEnumerable<TActual, TActualItem>(Actual, out var enumerableInfo);
+
+            return new AsyncEnumerableValueTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
+        }
     }
 }
