@@ -46,7 +46,7 @@ namespace NetFabric.Assertive
 
                 var (equal, index) = Actual.Compare(expected, ignoreCase);
                 if (!equal)
-                    throw new StringEqualToAssertionException(Actual, expected, index);
+                    throw StringEqualToAssertionException.Create(Actual, expected, index);
             }
 
             return this;

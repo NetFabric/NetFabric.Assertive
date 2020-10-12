@@ -56,11 +56,10 @@ namespace NetFabric.Assertive
             return this;
         }
 
-        public EnumerableReferenceTypeAssertions<TActualItem[], TExpectedItem> BeEnumerableOf<TExpectedItem>()
-        {
-            AssertIsEnumerable<TActualItem[], TExpectedItem>(Actual, out var enumerableInfo);
+        public ArrayAssertions<TActualItem> BeArrayOf<TType>()
+            => BeOfType<TType[]>();
 
-            return new EnumerableReferenceTypeAssertions<TActualItem[], TExpectedItem>(Actual, enumerableInfo);
-        }
+        public ArrayAssertions<TActualItem> NotBeArrayOf<TType>()
+            => NotBeOfType<TType[]>();
     }
 }

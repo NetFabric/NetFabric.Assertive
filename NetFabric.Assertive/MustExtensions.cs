@@ -21,6 +21,10 @@ namespace NetFabric.Assertive
             => new ArrayAssertions<TActual>(actual);
 
         [Pure]
+        public static StringArrayAssertions Must(this string[] actual)
+            => new StringArrayAssertions(actual);
+
+        [Pure]
         public static ArraySegmentAssertions<TActual> Must<TActual>(this ArraySegment<TActual> actual)
             => new ArraySegmentAssertions<TActual>(actual);
 
@@ -77,6 +81,6 @@ namespace NetFabric.Assertive
         [Pure]
         public static ReferenceTypeAssertions<TActual> Must<TActual>(this TActual actual) 
             where TActual : class
-            => new ReferenceTypeAssertions<TActual>(actual); 
+            => new ReferenceTypeAssertions<TActual>(actual);
     }
 }

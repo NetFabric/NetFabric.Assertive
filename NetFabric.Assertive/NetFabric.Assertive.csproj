@@ -5,7 +5,7 @@
     <PackageId>NetFabric.Assertive</PackageId>
     <Title>NetFabric.Assertive</Title>
     <Description>A fluent assertions library that performs full coverage on enumerable types.</Description>
-    <Version>2.5.0</Version>
+    <Version>3.0.0</Version>
     <PackageIcon>Icon.png</PackageIcon>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>netfabric, enumeration, test, testing, unittest, assertion, TDD, fluent, netcore, netstandard</PackageTags>

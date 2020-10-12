@@ -51,15 +51,15 @@ namespace NetFabric.Assertive.UnitTests
         public static TheoryData<string, string, int, string> Enumerable_NotEqualData =>
             new TheoryData<string, string, int, string>
             {
-                { "*", "", 0, $"Expected to be equal but it's not at position 0.{Environment.NewLine}Expected: <empty>{Environment.NewLine}  Actual: *{Environment.NewLine}          \u25b2" },
-                { "*", "0", 0, $"Expected to be equal but it's not at position 0.{Environment.NewLine}Expected: 0{Environment.NewLine}  Actual: *{Environment.NewLine}          \u25b2" },
-                { "0", "012345", 1, $"Expected to be equal but it's not at position 1.{Environment.NewLine}Expected: 012345{Environment.NewLine}  Actual: 0{Environment.NewLine}           \u25b2" },
-                { "012345", "0", 1, $"Expected to be equal but it's not at position 1.{Environment.NewLine}Expected: 0{Environment.NewLine}  Actual: 012345{Environment.NewLine}           \u25b2" },
-                { "01234*", "012345", 5, $"Expected to be equal but it's not at position 5.{Environment.NewLine}Expected: 012345{Environment.NewLine}  Actual: 01234*{Environment.NewLine}               \u25b2" },
-                { "01234*6789", "0123456789", 5, $"Expected to be equal but it's not at position 5.{Environment.NewLine}Expected: 0123456789{Environment.NewLine}  Actual: 01234*6789{Environment.NewLine}               \u25b2" },
-                { "0123456789a*", "0123456789ab", 11, $"Expected to be equal but it's not at position 11.{Environment.NewLine}Expected: \u2026123456789ab{Environment.NewLine}  Actual: \u2026123456789a*{Environment.NewLine}                     \u25b2" },
-                { "0123456789a*cdefghijkl", "0123456789abcdefghijkl", 11, $"Expected to be equal but it's not at position 11.{Environment.NewLine}Expected: \u2026123456789abcdefghijk\u2026{Environment.NewLine}  Actual: \u2026123456789a*cdefghijk\u2026{Environment.NewLine}                     \u25b2" },
-                { " \n\r34*", " \n\r345", 5, $"Expected to be equal but it's not at position 5.{Environment.NewLine}Expected: \u2022\u2193\u2190345{Environment.NewLine}  Actual: \u2022\u2193\u219034*{Environment.NewLine}               \u25b2" },
+                { "*", "", 0, $"Expected to be equal but it's not at line 1, character 1.{Environment.NewLine}Expected: <empty>{Environment.NewLine}  Actual: *{Environment.NewLine}          \u25b2" },
+                { "*", "0", 0, $"Expected to be equal but it's not at line 1, character 1.{Environment.NewLine}Expected: 0{Environment.NewLine}  Actual: *{Environment.NewLine}          \u25b2" },
+                { "0", "012345", 1, $"Expected to be equal but it's not at line 1, character 2.{Environment.NewLine}Expected: 012345{Environment.NewLine}  Actual: 0{Environment.NewLine}           \u25b2" },
+                { "012345", "0", 1, $"Expected to be equal but it's not at line 1, character 2.{Environment.NewLine}Expected: 0{Environment.NewLine}  Actual: 012345{Environment.NewLine}           \u25b2" },
+                { "01234*", "012345", 5, $"Expected to be equal but it's not at line 1, character 6.{Environment.NewLine}Expected: 012345{Environment.NewLine}  Actual: 01234*{Environment.NewLine}               \u25b2" },
+                { "01234*6789", "0123456789", 5, $"Expected to be equal but it's not at line 1, character 6.{Environment.NewLine}Expected: 0123456789{Environment.NewLine}  Actual: 01234*6789{Environment.NewLine}               \u25b2" },
+                { "abcdefghijklmnopqrstu*wxyz", "abcdefghijklmnopqrstuvwxyz", 21, $"Expected to be equal but it's not at line 1, character 22.{Environment.NewLine}Expected: \u2026bcdefghijklmnopqrstuvwxyz{Environment.NewLine}  Actual: \u2026bcdefghijklmnopqrstu*wxyz{Environment.NewLine}                               \u25b2" },
+                { "abcdefghijklmnopqrstu*wxyzabcdefghijklmnopq", "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopq", 21, $"Expected to be equal but it's not at line 1, character 22.{Environment.NewLine}Expected: \u2026bcdefghijklmnopqrstuvwxyzabcdefghijklmno\u2026{Environment.NewLine}  Actual: \u2026bcdefghijklmnopqrstu*wxyzabcdefghijklmno\u2026{Environment.NewLine}                               \u25b2" },
+                { $" {Environment.NewLine}34*", $" {Environment.NewLine}345", 5, $"Expected to be equal but it's not at line 2, character 3.{Environment.NewLine}Expected: \u00b7\u2190\u2193345{Environment.NewLine}  Actual: \u00b7\u2190\u219334*{Environment.NewLine}               \u25b2" },
             };
 
         [Theory]

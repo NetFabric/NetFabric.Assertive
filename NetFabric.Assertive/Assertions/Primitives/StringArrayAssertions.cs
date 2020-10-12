@@ -34,11 +34,12 @@ namespace NetFabric.Assertive
                             if (actualItem is not null && expectedItem is not null)
                             {
                                 var (_, stringIndex) = actualItem!.Compare(expectedItem!, ignoreCase);
+                                var (line, character) = actualItem.IndexToLineCharacter(stringIndex);
                                 throw new StringEqualToAssertionException(
                                     actualItem,
                                     expectedItem,
                                     stringIndex,
-                                    $"Arrays differ at index {index}.");
+                                    $"Arrays differ at index {index}, in line {line} character {character}.");
                             }
                             else
                             {
