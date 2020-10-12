@@ -9,8 +9,10 @@ using System.Reflection;
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public abstract class AssertionsBase
+    public abstract class AssertionsBase<TAssertions>
+        where TAssertions : AssertionsBase<TAssertions>
     {
+
         protected static void AssertIsEnumerable<TActual, TActualItem>(TActual? actual, out EnumerableInfo enumerableInfo)
         {
             var actualType = typeof(TActual);

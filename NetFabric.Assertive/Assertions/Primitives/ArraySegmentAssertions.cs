@@ -6,18 +6,12 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class ArraySegmentAssertions<TActualItem>
-        : ValueTypeAssertionsBase<ArraySegment<TActualItem>>
+        : ValueTypeAssertionsBase<ArraySegmentAssertions<TActualItem>, ArraySegment<TActualItem>>
     {
         internal ArraySegmentAssertions(ArraySegment<TActualItem> actual)
             : base(actual)
         {
         }
-
-        public ArraySegmentAssertions<TActualItem> EvaluateTrue(Func<ArraySegment<TActualItem>, bool> func)
-            => EvaluateTrue<ArraySegmentAssertions<TActualItem>>(this, func);
-
-        public ArraySegmentAssertions<TActualItem> EvaluateFalse(Func<ArraySegment<TActualItem>, bool> func)
-            => EvaluateFalse<ArraySegmentAssertions<TActualItem>>(this, func);
 
         public ArraySegmentAssertions<TActualItem> BeEqualTo<TExpected>(TExpected expected)
             where TExpected : IEnumerable<TActualItem>

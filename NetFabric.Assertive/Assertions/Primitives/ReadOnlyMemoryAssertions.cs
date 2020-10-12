@@ -6,18 +6,12 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class ReadOnlyMemoryAssertions<TActualItem>
-        : ValueTypeAssertionsBase<ReadOnlyMemory<TActualItem>>
+        : ValueTypeAssertionsBase<ReadOnlyMemoryAssertions<TActualItem>, ReadOnlyMemory<TActualItem>>
     {
         internal ReadOnlyMemoryAssertions(ReadOnlyMemory<TActualItem> actual)
             : base(actual)
         {
         }
-
-        public ReadOnlyMemoryAssertions<TActualItem> EvaluateTrue(Func<ReadOnlyMemory<TActualItem>, bool> func)
-            => EvaluateTrue<ReadOnlyMemoryAssertions<TActualItem>>(this, func);
-
-        public ReadOnlyMemoryAssertions<TActualItem> EvaluateFalse(Func<ReadOnlyMemory<TActualItem>, bool> func)
-            => EvaluateFalse<ReadOnlyMemoryAssertions<TActualItem>>(this, func);
 
         public ReadOnlyMemoryAssertions<TActualItem> BeEqualTo<TExpected>(TExpected expected)
             where TExpected : IEnumerable<TActualItem>

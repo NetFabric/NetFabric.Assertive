@@ -6,7 +6,7 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class NullableValueTypeAssertions<TActual>
-        : AssertionsBase
+        : AssertionsBase<NullableValueTypeAssertions<TActual>>
         where TActual : struct
     {
         internal NullableValueTypeAssertions(TActual? actual) 
