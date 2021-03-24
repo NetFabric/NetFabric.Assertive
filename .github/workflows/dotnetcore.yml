@@ -6,36 +6,19 @@ on:
   pull_request:
     branches: [ master ]
 
-jobs:
-  linux:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Check out repository
-      uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1.4.0
-      with:
-        dotnet-version: 5.0.100-rc.1
-    - name: Build solution
-      run: dotnet build -c:Release
-    - name: Tests
-      run: dotnet test ./NetFabric.Assertive.UnitTests/NetFabric.Assertive.UnitTests.csproj -f:net5.0 -c:Release
-      
+jobs:      
   windows:
     runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1.4.0
+      uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.100-rc.1
+        dotnet-version: 5.0.201
     - name: Build with dotnet
       run: dotnet build -c:Release
     - name: Tests
-      run: dotnet test ./NetFabric.Assertive.UnitTests/NetFabric.Assertive.UnitTests.csproj -c:Release -f:net5.0
-    - name: Generate coverage report
       run: dotnet test ./NetFabric.Assertive.UnitTests/NetFabric.Assertive.UnitTests.csproj -c:Release -f:net5.0 -p:CollectCoverage=true -p:CoverletOutputFormat=lcov -p:CoverletOutput=TestResults/
     - name: Publish coverage report to coveralls.io
       uses: coverallsapp/github-action@master
