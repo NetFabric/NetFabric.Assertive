@@ -6,7 +6,7 @@ namespace NetFabric.Assertive.UnitTests
     public partial class ReferenceTypeAssertionsTests
     {
         public static TheoryData<object> BeSameAs_SameData =>
-            new TheoryData<object>
+            new()
             {
                 { null },
                 { new object() },
@@ -25,7 +25,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         public static TheoryData<object, object, string> BeSameAs_NotSameData =>
-            new TheoryData<object, object, string>
+            new()
             {
                 { new object(), new object(), $"Not the same instance.{Environment.NewLine}Expected: System.Object{Environment.NewLine}Actual: System.Object" },
             };

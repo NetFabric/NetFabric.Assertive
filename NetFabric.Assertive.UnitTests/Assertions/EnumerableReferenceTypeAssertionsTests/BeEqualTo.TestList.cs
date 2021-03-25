@@ -7,7 +7,7 @@ namespace NetFabric.Assertive.UnitTests
     public partial class EnumerableReferenceTypeAssertionsTests
     {
         public static TheoryData<TestList, int[]> BeEqualTo_TestList_EqualData =>
-            new TheoryData<TestList, int[]>
+            new()
             {
                 { new TestList(TestData.Empty),    TestData.Empty },
                 { new TestList(TestData.Single),   TestData.Single },
@@ -27,7 +27,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         public static TheoryData<TestList, int[], int[], string> BeEqualTo_TestList_NotEqualPrivateIndexerData =>
-            new TheoryData<TestList, int[], int[], string>
+            new()
             {
                 { new TestList(TestData.Empty,    TestData.Single,                 TestData.Empty,    TestData.Empty),    TestData.Single,                 TestData.Empty,     $"Actual has more items when using the indexer IList`1[System.Int32].Item[System.Int32].{Environment.NewLine}Expected: {TestData.Empty.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Single.ToFriendlyString()}" },
                 { new TestList(TestData.Single,   TestData.Empty,                  TestData.Single,   TestData.Single),   TestData.Empty,                  TestData.Single,    $"Actual has less items when using the indexer IList`1[System.Int32].Item[System.Int32].{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },
@@ -56,7 +56,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         public static TheoryData<TestList, int[], int[], string> BeEqualTo_TestList_NotEqualPublicIndexerData =>
-            new TheoryData<TestList, int[], int[], string>
+            new()
             {
                 { new TestList(TestData.Empty,    TestData.Empty,    TestData.Single,                 TestData.Empty),    TestData.Single,                 TestData.Empty,     $"Actual has more items when using the indexer NetFabric.Assertive.UnitTests.TestList.Item[System.Int32].{Environment.NewLine}Expected: {TestData.Empty.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Single.ToFriendlyString()}" },
                 { new TestList(TestData.Single,   TestData.Single,   TestData.Empty,                  TestData.Single),   TestData.Empty,                  TestData.Single,    $"Actual has less items when using the indexer NetFabric.Assertive.UnitTests.TestList.Item[System.Int32].{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },
@@ -85,7 +85,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         public static TheoryData<TestList, int, int, int> BeEqualTo_TestList_NotEqualIndexOfData =>
-            new TheoryData<TestList, int, int, int>
+            new()
             {
                 { new TestList(new[] { 5 },    new[] { 5 },    new[] { 5 },    new[] { 0 }),    5, -1, 0 },
                 { new TestList(new[] { 5 },    new[] { 5 },    new[] { 5 },    new[] { 0, 5 }), 5,  1, 0 },

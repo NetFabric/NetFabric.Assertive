@@ -13,8 +13,6 @@
     <DefineConstants>$(DefineConstants);CONTRACTS_FULL</DefineConstants>
     <PackageReleaseNotes>
     </PackageReleaseNotes>
-    <Nullable>enable</Nullable>
-    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp2.1' Or '$(TargetFramework)'=='netstandard2.1'">

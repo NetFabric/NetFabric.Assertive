@@ -6,7 +6,7 @@ namespace NetFabric.Assertive.UnitTests
     public partial class MemoryAssertionsTests
     {
         public static TheoryData<int[]> EqualData =>
-            new TheoryData<int[]>
+            new()
             {
                 { TestData.Empty },
                 { TestData.Single },
@@ -26,7 +26,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         public static TheoryData<int[], int[], string> NotEqualNullData =>
-            new TheoryData<int[], int[], string>
+            new()
             {
                 { TestData.Empty,                     null,                 $"Expected to be equal but it's not.{Environment.NewLine}Expected: <null>{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },
                 { TestData.Single,                    TestData.Empty,       $"Actual collection has more items.{Environment.NewLine}Expected: {TestData.Empty.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Single.ToFriendlyString()}" },

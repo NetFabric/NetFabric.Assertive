@@ -5,11 +5,11 @@ namespace NetFabric.Assertive
     public class ExpectedAssertionException<TActual, TExpected>
         : ActualAssertionException<TActual>
     {
-        public ExpectedAssertionException(TActual? actual, TExpected? expected, string message)
+        public ExpectedAssertionException(TActual actual, TExpected expected, string message)
             : base(actual,
-                  $"{message}{Environment.NewLine}Expected: {ObjectExtensions.ToFriendlyString(expected)}") 
+                  $"{message}{Environment.NewLine}Expected: {expected.ToFriendlyString()}") 
             => Expected = expected;
 
-        public TExpected? Expected { get; }
+        public TExpected Expected { get; }
     }
 }

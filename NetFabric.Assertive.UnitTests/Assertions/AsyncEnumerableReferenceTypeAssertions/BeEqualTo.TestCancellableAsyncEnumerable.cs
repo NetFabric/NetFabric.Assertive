@@ -6,7 +6,7 @@ namespace NetFabric.Assertive.UnitTests
     public partial class AsyncEnumerableReferenceTypeAssertionsTests
     {
         public static TheoryData<TestCancellableAsyncEnumerable, int[]> BeEqualTo_AsyncCancellableEnumerable_EqualData =>
-       new TheoryData<TestCancellableAsyncEnumerable, int[]>
+       new()
        {
             { new TestCancellableAsyncEnumerable(TestData.Empty),       TestData.Empty },
             { new TestCancellableAsyncEnumerable(TestData.Single),      TestData.Single },
@@ -26,7 +26,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         public static TheoryData<TestCancellableAsyncEnumerable, int[], string> BeEqualTo_AsyncCancellableEnumerable_NotEqualData =>
-            new TheoryData<TestCancellableAsyncEnumerable, int[], string>
+            new()
             {
                 { new TestCancellableAsyncEnumerable(TestData.Single),                 TestData.Empty,     $"Actual has more items when using 'NetFabric.Assertive.UnitTests.TestCancellableAsyncEnumerable.GetAsyncEnumerator()'.{Environment.NewLine}Expected: {TestData.Empty.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Single.ToFriendlyString()}" },
                 { new TestCancellableAsyncEnumerable(TestData.Empty),                  TestData.Single,    $"Actual has less items when using 'NetFabric.Assertive.UnitTests.TestCancellableAsyncEnumerable.GetAsyncEnumerator()'.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },

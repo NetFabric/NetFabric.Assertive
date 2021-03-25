@@ -161,7 +161,7 @@ namespace NetFabric.Assertive.UnitTests
 
             public ByRefEnumerable(T[] source) => this.source = source;
 
-            public Enumerator GetEnumerator() => new Enumerator(this);
+            public Enumerator GetEnumerator() => new(this);
 
             public struct Enumerator
             {

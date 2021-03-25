@@ -5,14 +5,14 @@ namespace NetFabric.Assertive
     public class NotEqualToAssertionException<TActual, TNotExpected>
         : ActualAssertionException<TActual>
     {
-        public NotEqualToAssertionException(TActual? actual, TNotExpected? notExpected)
+        public NotEqualToAssertionException(TActual actual, TNotExpected? notExpected)
             : this(actual, notExpected, $"Expected to be not equal but it is.")
         {
         }
 
-        public NotEqualToAssertionException(TActual? actual, TNotExpected? notExpected, string message)
+        public NotEqualToAssertionException(TActual actual, TNotExpected? notExpected, string message)
             : base(actual,
-                  $"{message}{Environment.NewLine}Not Expected: {ObjectExtensions.ToFriendlyString(notExpected)}") 
+                  $"{message}{Environment.NewLine}Not Expected: {notExpected.ToFriendlyString()}") 
             => NotExpected = notExpected;
 
         public TNotExpected? NotExpected { get; }

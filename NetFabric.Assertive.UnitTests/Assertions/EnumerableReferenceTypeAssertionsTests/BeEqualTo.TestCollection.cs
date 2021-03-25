@@ -7,7 +7,7 @@ namespace NetFabric.Assertive.UnitTests
     public partial class EnumerableReferenceTypeAssertionsTests
     {
         public static TheoryData<TestCollection, int[]> TestCollection_EqualData =>
-            new TheoryData<TestCollection, int[]>
+            new()
             {
                 { new TestCollection(TestData.Empty),    TestData.Empty },
                 { new TestCollection(TestData.Single),   TestData.Single },
@@ -27,7 +27,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         public static TheoryData<TestCollection, int[], string> BeEqualTo_TestCollection_NotEqualCountData =>
-            new TheoryData<TestCollection, int[], string>
+            new()
             {
                 { new TestCollection(TestData.Empty,    TestData.SingleCount,   TestData.Single,   TestData.Empty),    TestData.Empty,     $"Expected collections to have same count value.{Environment.NewLine}Expected: {TestData.EmptyCount}{Environment.NewLine}Actual: {TestData.SingleCount}" },
                 { new TestCollection(TestData.Single,   TestData.EmptyCount,    TestData.Empty,    TestData.Single),   TestData.Single,    $"Expected collections to have same count value.{Environment.NewLine}Expected: {TestData.SingleCount}{Environment.NewLine}Actual: {TestData.EmptyCount}" },
@@ -53,7 +53,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         public static TheoryData<TestCollection, int[], string> BeEqualTo_TestCollection_NotEqualContainsData =>
-            new TheoryData<TestCollection, int[], string>
+            new()
             {
                 { new TestCollection(TestData.Single,   TestData.SingleCount,   TestData.Single,   TestData.SingleNotEqual),         TestData.Single,    $"'Contains' return false for an item found when using 'System.Collections.Generic.IEnumerable`1[System.Int32].GetEnumerator()'.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Single.ToFriendlyString()}" },
                 { new TestCollection(TestData.Multiple, TestData.MultipleCount, TestData.Multiple, TestData.MultipleNotEqualFirst),  TestData.Multiple,  $"'Contains' return false for an item found when using 'System.Collections.Generic.IEnumerable`1[System.Int32].GetEnumerator()'.{Environment.NewLine}Expected: {TestData.Multiple.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Multiple.ToFriendlyString()}" },
@@ -78,7 +78,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         public static TheoryData<TestCollection, int[], int[], string> BeEqualTo_TestCollection_NotEqualCopyToData =>
-            new TheoryData<TestCollection, int[], int[], string>
+            new()
             {
                 { new TestCollection(TestData.Single,   TestData.SingleCount,   TestData.SingleNotEqual,         TestData.Single),   TestData.SingleNotEqual,         TestData.Single,    $"Actual differs at index 0 when using the CopyTo.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.SingleNotEqual.ToFriendlyString()}" },
                 { new TestCollection(TestData.Multiple, TestData.MultipleCount, TestData.MultipleNotEqualFirst,  TestData.Multiple), TestData.MultipleNotEqualFirst,  TestData.Multiple,  $"Actual differs at index 0 when using the CopyTo.{Environment.NewLine}Expected: {TestData.Multiple.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.MultipleNotEqualFirst.ToFriendlyString()}" },
@@ -103,7 +103,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         public static TheoryData<TestCollection, int[]> TestCollection_DoesNotContainData =>
-            new TheoryData<TestCollection, int[]>
+            new()
             {
                 { new TestCollection(TestData.Single),   TestData.Single },
                 { new TestCollection(TestData.Multiple), TestData.Multiple },

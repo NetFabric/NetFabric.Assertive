@@ -52,7 +52,7 @@ namespace NetFabric.Assertive
             return this;
         }
 
-        public StringAssertions EndWith(string? value)
+        public StringAssertions EndWith(string value)
             => Actual?.EndsWith(value) ?? false
                 ? throw new EqualToAssertionException<string, string>(Actual, null)
                 : this;

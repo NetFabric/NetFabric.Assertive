@@ -5,8 +5,8 @@ namespace NetFabric.Assertive.UnitTests
 {
     public partial class ArrayAssertionsTests
     {
-        public static TheoryData<int[]> EqualData =>
-            new TheoryData<int[]>
+        public static TheoryData<int[]?> EqualData =>
+            new()
             {
                 { null },
                 { TestData.Empty },
@@ -16,7 +16,7 @@ namespace NetFabric.Assertive.UnitTests
 
         [Theory]
         [MemberData(nameof(EqualData))]
-        public void BeEqualTo_With_Equal_Should_NotThrow(int[] value)
+        public void BeEqualTo_With_Equal_Should_NotThrow(int[]? value)
         {
             // Arrange
 
@@ -26,8 +26,8 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
         }
 
-        public static TheoryData<int[], int[], string> NotEqualNullData =>
-            new TheoryData<int[], int[], string>
+        public static TheoryData<int[], int[]?, string> NotEqualNullData =>
+            new()
             {
                 { TestData.Empty,                     null,                 $"Expected to be equal but it's not.{Environment.NewLine}Expected: <null>{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },
                 { TestData.Single,                    TestData.Empty,       $"Actual array has more items.{Environment.NewLine}Expected: {TestData.Empty.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Single.ToFriendlyString()}" },
@@ -41,7 +41,7 @@ namespace NetFabric.Assertive.UnitTests
 
         [Theory]
         [MemberData(nameof(NotEqualNullData))]
-        public void BeEqualTo_With_NotEqual_Should_Throw(int[] actual, int[] expected, string message)
+        public void BeEqualTo_With_NotEqual_Should_Throw(int[] actual, int[]? expected, string message)
         {
             // Arrange
 

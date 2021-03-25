@@ -11,8 +11,8 @@ namespace NetFabric.Assertive
         : ValueTypeAssertionsBase<EnumerableValueTypeAssertions<TActual, TActualItem>, TActual>
         where TActual : struct
     {
-        internal EnumerableValueTypeAssertions(TActual Actual, EnumerableInfo enumerableInfo)
-            : base(Actual) 
+        internal EnumerableValueTypeAssertions(TActual actual, EnumerableInfo enumerableInfo)
+            : base(actual) 
             => EnumerableInfo = enumerableInfo;
 
         public EnumerableInfo EnumerableInfo { get; }

@@ -11,8 +11,8 @@ namespace NetFabric.Assertive
         : ReferenceTypeAssertionsBase<EnumerableReferenceTypeAssertions<TActual, TActualItem>, TActual>
         where TActual : class
     {
-        internal EnumerableReferenceTypeAssertions(TActual? Actual, EnumerableInfo enumerableInfo)
-            : base(Actual) 
+        internal EnumerableReferenceTypeAssertions(TActual actual, EnumerableInfo enumerableInfo)
+            : base(actual) 
             => EnumerableInfo = enumerableInfo;
 
         public EnumerableInfo EnumerableInfo { get; }
@@ -20,11 +20,11 @@ namespace NetFabric.Assertive
         public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEmpty(bool testRefStructs = true, bool testRefReturns = true)
             => BeEqualTo(Enumerable.Empty<TActualItem>(), testRefStructs, testRefReturns);
 
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected>(TExpected? expected, bool testRefStructs = true, bool testRefReturns = true, bool testNonGeneric = true, bool testIndexOf = true, IEnumerable<TActualItem>? doesNotContain = default)
+        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected>(TExpected expected, bool testRefStructs = true, bool testRefReturns = true, bool testNonGeneric = true, bool testIndexOf = true, IEnumerable<TActualItem>? doesNotContain = default)
             where TExpected : IEnumerable<TActualItem>
             => BeEqualTo<TExpected, TActualItem>(expected, (actual, expected) => EqualityComparer<TActualItem>.Default.Equals(actual!, expected!), testRefStructs, testRefReturns, testNonGeneric, testIndexOf, doesNotContain);
 
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected? expected, Func<TActualItem?, TExpectedItem?, bool> comparer, 
+        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected expected, Func<TActualItem?, TExpectedItem?, bool> comparer, 
             bool testRefStructs = true, bool testRefReturns = true, bool testNonGeneric = true, bool testIndexOf = true, IEnumerable<TActualItem>? doesNotContain = default)
             where TExpected : IEnumerable<TExpectedItem>
         {

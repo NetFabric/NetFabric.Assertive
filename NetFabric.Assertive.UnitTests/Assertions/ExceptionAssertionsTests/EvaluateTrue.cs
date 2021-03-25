@@ -25,7 +25,7 @@ namespace NetFabric.Assertive.UnitTests
             Action actual = () => throw new ArgumentNullException("Test");
 
             // Act
-            void action() => actual.Must().Throw<ArgumentNullException>().EvaluateTrue(exception => exception.Message == "Something else");
+            void action() => actual.Must().Throw<ArgumentNullException>().EvaluateTrue(argumentNullException => argumentNullException.Message is "Something else");
 
             // Assert
             var exception = Assert.Throws<ActualAssertionException<ArgumentNullException>>(action);
