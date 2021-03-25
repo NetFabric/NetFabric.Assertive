@@ -7,14 +7,14 @@ namespace NetFabric.Assertive.UnitTests
     public partial class EnumerableReferenceTypeAssertionsTests
     {
         public static TheoryData<TestEnumerableRef, int[]> BeEqualTo_TestEnumerableRef_EqualData =>
-            new TheoryData<TestEnumerableRef, int[]>
+            new()
             {
                 { new TestEnumerableRef(TestData.Empty.AsMemory<int>()), TestData.Empty },
             };
 
         [Theory]
         [MemberData(nameof(BeEqualTo_TestEnumerableRef_EqualData))]
-        public void BeEqualTo_TestEnumerableRef_With_Equal_Should_NotThrow(TestEnumerableRef actual, int[] expected)
+        public void BeEqualTo_TestEnumerableRef_With_Equal_Should_Throw(TestEnumerableRef actual, int[] expected)
         {
             // Arrange
 
@@ -27,7 +27,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         public static TheoryData<TestEnumerable, int[]> BeEqualTo_TestEnumerable_EqualData =>
-            new TheoryData<TestEnumerable, int[]>
+            new()
             {
                 { new TestEnumerable(TestData.Empty),       TestData.Empty },
                 { new TestEnumerable(TestData.Single),      TestData.Single },
@@ -111,7 +111,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         public static TheoryData<TestEnumerable, int[], string> BeEqualTo_TestEnumerable_NotEqualData =>
-            new TheoryData<TestEnumerable, int[], string>
+            new()
             {
                 { new TestEnumerable(TestData.Single),                 TestData.Empty,     $"Actual has more items when using 'NetFabric.Assertive.UnitTests.TestEnumerable.GetEnumerator()'.{Environment.NewLine}Expected: {TestData.Empty.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Single.ToFriendlyString()}" },
                 { new TestEnumerable(TestData.Empty),                  TestData.Single,    $"Actual has less items when using 'NetFabric.Assertive.UnitTests.TestEnumerable.GetEnumerator()'.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },

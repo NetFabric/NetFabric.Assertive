@@ -7,7 +7,7 @@ namespace NetFabric.Assertive
         : ReferenceTypeAssertionsBase<ReferenceTypeAssertions<TActual>, TActual>
         where TActual : class
     {
-        internal ReferenceTypeAssertions(TActual? actual)
+        internal ReferenceTypeAssertions(TActual actual)
             : base(actual)
         { }
     }

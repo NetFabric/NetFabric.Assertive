@@ -7,7 +7,7 @@ namespace NetFabric.Assertive
     {
         const int MaximumBuilderSize = 0x100000; // 1 MB
 
-        readonly static ObjectPool<StringBuilder> Pool;
+        static readonly ObjectPool<StringBuilder> Pool;
 
         static StringBuilderPool()
         {

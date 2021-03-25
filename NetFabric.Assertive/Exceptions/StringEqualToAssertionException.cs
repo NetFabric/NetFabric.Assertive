@@ -77,7 +77,7 @@ namespace NetFabric.Assertive
             Message = $"{message}{Environment.NewLine}{expectedMessage}{Environment.NewLine}{actualMessage}{Environment.NewLine}{pointerMessage}";
         }
 
-        string ReplaceSpecialCharacters(string str)
+        static string ReplaceSpecialCharacters(string str)
             => str
             .Replace('\n', newLine)
             .Replace('\r', carriageReturn)

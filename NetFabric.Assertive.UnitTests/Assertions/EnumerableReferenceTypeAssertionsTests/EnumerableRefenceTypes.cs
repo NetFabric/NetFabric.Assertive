@@ -40,7 +40,7 @@ namespace NetFabric.Assertive.UnitTests
 
         public TestEnumerableRef(Memory<int> items) => this.items = items;
 
-        public Enumerator GetEnumerator() => new Enumerator(items);
+        public Enumerator GetEnumerator() => new(items);
 
         public ref struct Enumerator
         {
@@ -65,7 +65,7 @@ namespace NetFabric.Assertive.UnitTests
 
         public TestEnumerable(int[] items) => this.items = items;
 
-        public Enumerator GetEnumerator() => new Enumerator(items);
+        public Enumerator GetEnumerator() => new(items);
 
         public struct Enumerator
         {

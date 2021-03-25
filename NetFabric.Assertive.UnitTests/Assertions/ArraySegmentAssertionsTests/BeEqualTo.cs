@@ -5,18 +5,18 @@ namespace NetFabric.Assertive.UnitTests
 {
     public partial class ArraySegmentAssertionsTests
     {
-        public static readonly ArraySegment<int> EmptyArraySegment = new ArraySegment<int>(TestData.Empty);
+        public static readonly ArraySegment<int> EmptyArraySegment = new(TestData.Empty);
 
-        public static readonly ArraySegment<int> SingleArraySegment = new ArraySegment<int>(TestData.Single);
-        public static readonly ArraySegment<int> SingleArraySegmentNotEqual = new ArraySegment<int>(TestData.SingleNotEqual);
+        public static readonly ArraySegment<int> SingleArraySegment = new(TestData.Single);
+        public static readonly ArraySegment<int> SingleArraySegmentNotEqual = new(TestData.SingleNotEqual);
 
-        public static readonly ArraySegment<int> MultipleArraySegment = new ArraySegment<int>(TestData.Multiple);
-        public static readonly ArraySegment<int> MultipleArraySegmentNotEqualFirst = new ArraySegment<int>(TestData.MultipleNotEqualFirst);
-        public static readonly ArraySegment<int> MultipleArraySegmentNotEqualMiddle = new ArraySegment<int>(TestData.MultipleNotEqualMiddle);
-        public static readonly ArraySegment<int> MultipleArraySegmentNotEqualLast = new ArraySegment<int>(TestData.MultipleNotEqualLast);
+        public static readonly ArraySegment<int> MultipleArraySegment = new(TestData.Multiple);
+        public static readonly ArraySegment<int> MultipleArraySegmentNotEqualFirst = new(TestData.MultipleNotEqualFirst);
+        public static readonly ArraySegment<int> MultipleArraySegmentNotEqualMiddle = new(TestData.MultipleNotEqualMiddle);
+        public static readonly ArraySegment<int> MultipleArraySegmentNotEqualLast = new(TestData.MultipleNotEqualLast);
 
         public static TheoryData<ArraySegment<int>> EmptyArraySegments =>
-            new TheoryData<ArraySegment<int>>
+            new()
             {
                 { EmptyArraySegment },
                 { new ArraySegment<int>(TestData.Single, 0, 0) },
@@ -24,7 +24,7 @@ namespace NetFabric.Assertive.UnitTests
             };
 
         public static TheoryData<ArraySegment<int>> SingleArraySegments =>
-            new TheoryData<ArraySegment<int>>
+            new()
             {
                 { SingleArraySegment },
                 { new ArraySegment<int>(TestData.Multiple, 0, 1) },
@@ -32,7 +32,7 @@ namespace NetFabric.Assertive.UnitTests
             };
 
         public static TheoryData<ArraySegment<int>> MultipleArraySegments =>
-            new TheoryData<ArraySegment<int>>
+            new()
             {
                 { MultipleArraySegment },
                 { new ArraySegment<int>(TestData.Multiple, 0, 3) },
@@ -54,7 +54,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         public static TheoryData<ArraySegment<int>, ArraySegment<int>, string> NotEqualNullData =>
-            new TheoryData<ArraySegment<int>, ArraySegment<int>, string>
+            new()
             {
                 { SingleArraySegment,                    EmptyArraySegment,       $"Actual collection has more items.{Environment.NewLine}Expected: {EmptyArraySegment.ToFriendlyString()}{Environment.NewLine}Actual: {SingleArraySegment.ToFriendlyString()}" },
                 { EmptyArraySegment,                     SingleArraySegment,      $"Actual collection has less items.{Environment.NewLine}Expected: {SingleArraySegment.ToFriendlyString()}{Environment.NewLine}Actual: {EmptyArraySegment.ToFriendlyString()}" },

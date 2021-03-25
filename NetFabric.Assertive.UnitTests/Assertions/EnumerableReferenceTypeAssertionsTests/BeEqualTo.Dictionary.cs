@@ -7,7 +7,7 @@ namespace NetFabric.Assertive.UnitTests
     public partial class EnumerableReferenceTypeAssertionsTests
     {
         public static TheoryData<KeyValuePair<int, int>[]> BeEqualTo_Dictionary_EqualData =>
-            new TheoryData<KeyValuePair<int, int>[]>
+            new()
             {
                 {
                     new KeyValuePair<int, int>[] { }
@@ -15,15 +15,15 @@ namespace NetFabric.Assertive.UnitTests
                 { 
                     new KeyValuePair<int, int>[] 
                     { 
-                        new KeyValuePair<int, int>(5, 5),
+                        new(5, 5),
                     } 
                 },
                 {
                     new KeyValuePair<int, int>[]
                     {
-                        new KeyValuePair<int, int>(1, 1),
-                        new KeyValuePair<int, int>(2, 2),
-                        new KeyValuePair<int, int>(3, 3),
+                        new(1, 1),
+                        new(2, 2),
+                        new(3, 3),
                     }
                 },
             };

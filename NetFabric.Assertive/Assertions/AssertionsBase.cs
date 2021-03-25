@@ -13,7 +13,7 @@ namespace NetFabric.Assertive
         where TAssertions : AssertionsBase<TAssertions>
     {
 
-        protected static void AssertIsEnumerable<TActual, TActualItem>(TActual? actual, out EnumerableInfo enumerableInfo)
+        protected static void AssertIsEnumerable<TActual, TActualItem>(TActual actual, out EnumerableInfo enumerableInfo)
         {
             var actualType = typeof(TActual);
             if (actualType == typeof(TActualItem[])) // convert TActualItem[] to IList<TActualItem>
@@ -47,7 +47,7 @@ namespace NetFabric.Assertive
             }
         }
 
-        protected static void AssertIsAsyncEnumerable<TActual, TActualItem>(TActual? actual, out AsyncEnumerableInfo enumerableInfo)
+        protected static void AssertIsAsyncEnumerable<TActual, TActualItem>(TActual actual, out AsyncEnumerableInfo enumerableInfo)
         {
             var actualType = typeof(TActual);
             if (actualType.IsAsyncEnumerable(out var temp, out var errors))

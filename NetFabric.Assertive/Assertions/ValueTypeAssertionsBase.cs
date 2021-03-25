@@ -50,19 +50,19 @@ namespace NetFabric.Assertive
                 ? (TAssertions)this
                 : throw new EqualToAssertionException<TActual, TActual>(Actual, expected);
 
-        public TAssertions BeEqualTo<TExpected>(TExpected? expected, Func<TActual, TExpected?, bool> comparer)
+        public TAssertions BeEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
             => comparer(Actual, expected)
                 ? (TAssertions)this
-                : throw new EqualToAssertionException<TActual, TExpected?>(Actual, expected);
+                : throw new EqualToAssertionException<TActual, TExpected>(Actual, expected);
 
         public TAssertions BeNotEqualTo(TActual expected)
             => EqualityComparer<TActual>.Default.Equals(Actual, expected)
                 ? throw new NotEqualToAssertionException<TActual, TActual>(Actual, expected)
                 : (TAssertions)this;
 
-        public TAssertions BeNotEqualTo<TExpected>(TExpected? expected, Func<TActual, TExpected?, bool> comparer)
+        public TAssertions BeNotEqualTo<TExpected>(TExpected expected, Func<TActual, TExpected, bool> comparer)
             => comparer(Actual, expected)
-                ? throw new NotEqualToAssertionException<TActual, TExpected?>(Actual, expected)
+                ? throw new NotEqualToAssertionException<TActual, TExpected>(Actual, expected)
                 : (TAssertions)this;
 
         public TAssertions BeDefault()

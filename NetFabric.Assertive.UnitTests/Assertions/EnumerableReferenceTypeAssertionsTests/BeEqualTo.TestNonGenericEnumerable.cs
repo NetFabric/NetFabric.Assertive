@@ -6,7 +6,7 @@ namespace NetFabric.Assertive.UnitTests
     public partial class EnumerableReferenceTypeAssertionsTests
     {
         public static TheoryData<TestNonGenericEnumerable, int[]> BeEqualTo_TestNonGenericEnumerable_EqualData =>
-            new TheoryData<TestNonGenericEnumerable, int[]>
+            new()
             {
                 { new TestNonGenericEnumerable(TestData.Empty),     TestData.Empty },
                 { new TestNonGenericEnumerable(TestData.Single),    TestData.Single },
@@ -26,7 +26,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         public static TheoryData<TestNonGenericEnumerable, int[], string> BeEqualTo_TestNonGenericEnumerable_NotEqualData =>
-            new TheoryData<TestNonGenericEnumerable, int[], string>
+            new()
             {
                 { new TestNonGenericEnumerable(TestData.Empty,    TestData.Single),                 TestData.Empty,     $"Actual has more items when using 'System.Collections.IEnumerable.GetEnumerator()'.{Environment.NewLine}Expected: {TestData.Empty.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Single.ToFriendlyString()}" },
                 { new TestNonGenericEnumerable(TestData.Single,   TestData.Empty),                  TestData.Single,    $"Actual has less items when using 'System.Collections.IEnumerable.GetEnumerator()'.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },

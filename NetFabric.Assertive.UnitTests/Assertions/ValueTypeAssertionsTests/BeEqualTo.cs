@@ -20,7 +20,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         public static TheoryData<int, int, string> NotEqualtData =>
-            new TheoryData<int, int, string>
+            new()
             {
                 { 0, 1, $"Expected to be equal but it's not.{Environment.NewLine}Expected: 1{Environment.NewLine}Actual: 0" },
             };

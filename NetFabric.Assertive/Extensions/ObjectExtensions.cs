@@ -19,7 +19,7 @@ namespace NetFabric.Assertive
             {
                 null => "<null>",
 
-                string @string when @string == String.Empty => "<empty>",
+                string { Length: 0 } => "<empty>",
 
                 string @string => $"\"{@string}\"",
 
@@ -166,18 +166,18 @@ namespace NetFabric.Assertive
             if (type.IsEnumerable(out var enumerableInfo))
             {
                 var wrapperType = typeof(EnumerableWrapper<,>).MakeGenericType(type, typeof(object));
-                var wrapper = (IEnumerable)Activator.CreateInstance(wrapperType, @object, enumerableInfo);
+                var wrapper = (IEnumerable)Activator.CreateInstance(wrapperType, @object, enumerableInfo)!;
                 return wrapper.ToFriendlyString();
             }
 
             if (type.IsAsyncEnumerable(out var asyncEnumerableInfo))
             {
                 var wrapperType = typeof(AsyncEnumerableWrapper<,>).MakeGenericType(type, typeof(object));
-                var wrapper = (IAsyncEnumerable<object>)Activator.CreateInstance(wrapperType, @object, asyncEnumerableInfo);
+                var wrapper = (IAsyncEnumerable<object>)Activator.CreateInstance(wrapperType, @object, asyncEnumerableInfo)!;
                 return wrapper.ToFriendlyStringAsync().GetAwaiter().GetResult();
             }
 
-            return @object.ToString();
+            return @object.ToString() ?? string.Empty;
         }
     }
 }

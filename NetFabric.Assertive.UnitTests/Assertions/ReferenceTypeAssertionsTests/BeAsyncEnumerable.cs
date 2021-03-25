@@ -113,7 +113,7 @@ namespace NetFabric.Assertive.UnitTests
             public MissingCurrentAsyncEnumerable<T> GetAsyncEnumerator() => this;
 
             public ValueTask<bool> MoveNextAsync() 
-                => new ValueTask<bool>(false);
+                => new(false);
         }
 
         class MissingMoveNextAsyncAsyncEnumerable<T>
@@ -130,7 +130,7 @@ namespace NetFabric.Assertive.UnitTests
             public T Current => default;
 
             public ValueTask<bool> MoveNextAsync() 
-                => new ValueTask<bool>(false);
+                => new(false);
         }
 
         class EmptyAsyncEnumerableExplicitInterfaces<T> : IAsyncEnumerable<T>, IAsyncEnumerator<T>
@@ -140,7 +140,7 @@ namespace NetFabric.Assertive.UnitTests
             T IAsyncEnumerator<T>.Current => default;
 
             ValueTask<bool> IAsyncEnumerator<T>.MoveNextAsync() 
-                => new ValueTask<bool>(false);
+                => new(false);
 
             ValueTask IAsyncDisposable.DisposeAsync() 
                 => default;
@@ -152,7 +152,7 @@ namespace NetFabric.Assertive.UnitTests
 
             public ByRefAsyncEnumerable(T[] source) => this.source = source;
 
-            public Enumerator GetAsyncEnumerator() => new Enumerator(this);
+            public Enumerator GetAsyncEnumerator() => new(this);
 
             public struct Enumerator
             {
@@ -169,7 +169,7 @@ namespace NetFabric.Assertive.UnitTests
                     => ref source[current];
 
                 public ValueTask<bool> MoveNextAsync() 
-                    => new ValueTask<bool>(++current < source.Length);
+                    => new(++current < source.Length);
             }
         }
     }

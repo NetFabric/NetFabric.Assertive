@@ -25,7 +25,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         public static TheoryData<string, string, string> Enumerable_NotEqualNullData =>
-            new TheoryData<string, string, string>
+            new()
             {
                 { null, "", $"Expected to be equal but it's not.{Environment.NewLine}Expected: <empty>{Environment.NewLine}Actual: <null>" },
                 { "", null, $"Expected to be equal but it's not.{Environment.NewLine}Expected: <null>{Environment.NewLine}Actual: <empty>" },
@@ -49,7 +49,7 @@ namespace NetFabric.Assertive.UnitTests
 
 
         public static TheoryData<string, string, int, string> Enumerable_NotEqualData =>
-            new TheoryData<string, string, int, string>
+            new()
             {
                 { "*", "", 0, $"Expected to be equal but it's not at line 1, character 1.{Environment.NewLine}Expected: <empty>{Environment.NewLine}  Actual: *{Environment.NewLine}          \u25b2" },
                 { "*", "0", 0, $"Expected to be equal but it's not at line 1, character 1.{Environment.NewLine}Expected: 0{Environment.NewLine}  Actual: *{Environment.NewLine}          \u25b2" },

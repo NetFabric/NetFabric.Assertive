@@ -12,7 +12,7 @@ namespace NetFabric.Assertive.UnitTests
         public TestAsyncEnumerableRef(Memory<int> items) => this.items = items;
 
         public Enumerator GetAsyncEnumerator()
-            => new Enumerator(items);
+            => new(items);
 
         public ref struct Enumerator
         {
@@ -28,7 +28,7 @@ namespace NetFabric.Assertive.UnitTests
             public int Current => items[index];
 
             public ValueTask<bool> MoveNextAsync()
-                => new ValueTask<bool>(++index < items.Length);
+                => new(++index < items.Length);
         }
     }
 
@@ -39,7 +39,7 @@ namespace NetFabric.Assertive.UnitTests
         public TestAsyncEnumerable(int[] items) => this.items = items;
 
         public Enumerator GetAsyncEnumerator() 
-            => new Enumerator(items);
+            => new(items);
 
         public struct Enumerator
         {
@@ -55,7 +55,7 @@ namespace NetFabric.Assertive.UnitTests
             public int Current => items[index];
 
             public ValueTask<bool> MoveNextAsync() 
-                => new ValueTask<bool>(++index < items.Length);
+                => new(++index < items.Length);
         }
     }
 
@@ -66,7 +66,7 @@ namespace NetFabric.Assertive.UnitTests
         public TestCancellableAsyncEnumerable(int[] items) => this.items = items;
 
         public Enumerator GetAsyncEnumerator(CancellationToken token = default) 
-            => new Enumerator(items, token);
+            => new(items, token);
 
         public struct Enumerator
         {

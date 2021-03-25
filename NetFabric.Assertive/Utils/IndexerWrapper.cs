@@ -49,7 +49,7 @@ namespace NetFabric.Assertive
                 try
                 {
                     indexArray[0] = ++index;
-                    Current = (TActualItem)indexer.GetValue(actual, indexArray);
+                    Current = (TActualItem?)indexer.GetValue(actual, indexArray);
                 }
                 catch
                 {

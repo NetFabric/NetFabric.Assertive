@@ -72,7 +72,7 @@ namespace NetFabric.Assertive
             }
         }
 
-        public static async ValueTask<(EqualityResult, int, TActualItem?, TExpectedItem?)> Compare<TActualItem, TExpectedItem>(this IAsyncEnumerable<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer)
+        public static async Task<(EqualityResult, int, TActualItem?, TExpectedItem?)> Compare<TActualItem, TExpectedItem>(this IAsyncEnumerable<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer)
         {
             var actualEnumerator = actual.GetAsyncEnumerator();
             await using (actualEnumerator.ConfigureAwait(false))

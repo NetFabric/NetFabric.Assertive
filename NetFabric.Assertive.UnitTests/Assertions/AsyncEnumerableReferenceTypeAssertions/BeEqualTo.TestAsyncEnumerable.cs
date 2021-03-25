@@ -6,14 +6,14 @@ namespace NetFabric.Assertive.UnitTests
     public partial class AsyncEnumerableReferenceTypeAssertionsTests
     {
         public static TheoryData<TestAsyncEnumerableRef, int[]> BeEqualTo_TestAsyncEnumerableRef_EqualData =>
-            new TheoryData<TestAsyncEnumerableRef, int[]>
+            new()
             {
                 { new TestAsyncEnumerableRef(TestData.Empty.AsMemory<int>()), TestData.Empty },
             };
 
         [Theory]
         [MemberData(nameof(BeEqualTo_TestAsyncEnumerableRef_EqualData))]
-        public void BeEqualTo_TestAsyncEnumerableRef_With_Equal_Should_NotThrow(TestAsyncEnumerableRef actual, int[] expected)
+        public void BeEqualTo_TestAsyncEnumerableRef_With_Equal_Should_Throw(TestAsyncEnumerableRef actual, int[] expected)
         {
             // Arrange
 
@@ -26,7 +26,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         public static TheoryData<TestAsyncEnumerable, int[]> BeEqualTo_AsyncEnumerable_EqualData =>
-            new TheoryData<TestAsyncEnumerable, int[]>
+            new()
             {
                 { new TestAsyncEnumerable(TestData.Empty),    TestData.Empty },
                 { new TestAsyncEnumerable(TestData.Single),   TestData.Single },
@@ -46,7 +46,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         public static TheoryData<TestAsyncEnumerable, int[], string> BeEqualTo_NotEqualNullData =>
-            new TheoryData<TestAsyncEnumerable, int[], string>
+            new()
             {
                 { null, TestData.Empty, $"Expected to be equal but it's not.{Environment.NewLine}Expected: {TestData.Empty.ToFriendlyString()}{Environment.NewLine}Actual: <null>" },
                 { new TestAsyncEnumerable(TestData.Empty), null, $"Expected to be equal but it's not.{Environment.NewLine}Expected: <null>{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },
@@ -71,7 +71,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
         public static TheoryData<TestAsyncEnumerable, int[], string> BeEqualTo_AsyncEnumerable_NotEqualData =>
-            new TheoryData<TestAsyncEnumerable, int[], string>
+            new()
             {
                 { new TestAsyncEnumerable(TestData.Single),                 TestData.Empty,     $"Actual has more items when using 'NetFabric.Assertive.UnitTests.TestAsyncEnumerable.GetAsyncEnumerator()'.{Environment.NewLine}Expected: {TestData.Empty.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Single.ToFriendlyString()}" },
                 { new TestAsyncEnumerable(TestData.Empty),                  TestData.Single,    $"Actual has less items when using 'NetFabric.Assertive.UnitTests.TestAsyncEnumerable.GetAsyncEnumerator()'.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },
