@@ -9,22 +9,16 @@ namespace NetFabric.Assertive.UnitTests
         public static TheoryData<KeyValuePair<int, int>[]> BeEqualTo_Dictionary_EqualData =>
             new()
             {
-                {
-                    new KeyValuePair<int, int>[] { }
-                },
+                new KeyValuePair<int, int>[] { },
+                new KeyValuePair<int, int>[] 
                 { 
-                    new KeyValuePair<int, int>[] 
-                    { 
-                        new(5, 5),
-                    } 
+                    new(5, 5),
                 },
+                new KeyValuePair<int, int>[]
                 {
-                    new KeyValuePair<int, int>[]
-                    {
-                        new(1, 1),
-                        new(2, 2),
-                        new(3, 3),
-                    }
+                    new(1, 1),
+                    new(2, 2),
+                    new(3, 3),
                 },
             };
 

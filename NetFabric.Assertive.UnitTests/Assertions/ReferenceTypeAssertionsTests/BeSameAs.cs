@@ -8,8 +8,8 @@ namespace NetFabric.Assertive.UnitTests
         public static TheoryData<object> BeSameAs_SameData =>
             new()
             {
-                { null },
-                { new object() },
+                null,
+                new object(),
             };
 
         [Theory]

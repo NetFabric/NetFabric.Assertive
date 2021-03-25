@@ -8,10 +8,10 @@ namespace NetFabric.Assertive.UnitTests
         public static TheoryData<int[]?> EqualData =>
             new()
             {
-                { null },
-                { TestData.Empty },
-                { TestData.Single },
-                { TestData.Multiple },
+                null,
+                TestData.Empty,
+                TestData.Single,
+                TestData.Multiple,
             };
 
         [Theory]

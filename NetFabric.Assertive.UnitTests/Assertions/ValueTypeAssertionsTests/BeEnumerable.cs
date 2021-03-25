@@ -97,34 +97,34 @@ namespace NetFabric.Assertive.UnitTests
 
         readonly struct MissingCurrentEnumerable<T>
         {
-            public readonly MissingCurrentEnumerable<T> GetEnumerator() => this;
+            public MissingCurrentEnumerable<T> GetEnumerator() => this;
 
             public bool MoveNext() => false;
         }
 
         readonly struct MissingMoveNextEnumerable<T>
         {
-            public readonly MissingMoveNextEnumerable<T> GetEnumerator() => this;
+            public MissingMoveNextEnumerable<T> GetEnumerator() => this;
 
             public T Current => default;
         }
 
         readonly struct EmptyEnumerable<T>
         {
-            public readonly EmptyEnumerable<T> GetEnumerator() => this;
+            public EmptyEnumerable<T> GetEnumerator() => this;
 
-            public readonly T Current => default;
+            public T Current => default!;
 
             public bool MoveNext() => false;
         }
 
         readonly struct EmptyEnumerableExplicitInterfaces<T> : IEnumerable<T>, IEnumerator<T>
         {
-            readonly IEnumerator<T> IEnumerable<T>.GetEnumerator() => this;
-            readonly IEnumerator IEnumerable.GetEnumerator() => this;
+            IEnumerator<T> IEnumerable<T>.GetEnumerator() => this;
+            IEnumerator IEnumerable.GetEnumerator() => this;
 
-            readonly T IEnumerator<T>.Current => default;
-            readonly object IEnumerator.Current => default;
+            T IEnumerator<T>.Current => default!;
+            object? IEnumerator.Current => default;
 
             bool IEnumerator.MoveNext() => false;
             void IEnumerator.Reset() {}

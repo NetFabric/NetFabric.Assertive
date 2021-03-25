@@ -5,33 +5,6 @@ using System.Threading.Tasks;
 
 namespace NetFabric.Assertive.UnitTests
 {
-    public class TestAsyncEnumerableRef
-    {
-        readonly Memory<int> items;
-
-        public TestAsyncEnumerableRef(Memory<int> items) => this.items = items;
-
-        public Enumerator GetAsyncEnumerator()
-            => new(items);
-
-        public ref struct Enumerator
-        {
-            readonly Span<int> items;
-            int index;
-
-            internal Enumerator(Memory<int> items)
-            {
-                this.items = items.Span;
-                index = -1;
-            }
-
-            public int Current => items[index];
-
-            public ValueTask<bool> MoveNextAsync()
-                => new(++index < items.Length);
-        }
-    }
-
     public class TestAsyncEnumerable
     {
         readonly int[] items;
