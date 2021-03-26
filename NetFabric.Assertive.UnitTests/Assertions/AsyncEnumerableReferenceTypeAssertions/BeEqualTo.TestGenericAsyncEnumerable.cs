@@ -5,8 +5,8 @@ namespace NetFabric.Assertive.UnitTests
 {
     public partial class AsyncEnumerableReferenceTypeAssertionsTests
     {
-        public static TheoryData<TestGenericAsyncEnumerable, int[]> BeEqualTo_TestGenericAsyncEnumerable_EqualData =>
-            new()
+        public static TheoryData<TestGenericAsyncEnumerable, int[]> BeEqualTo_TestGenericAsyncEnumerable_EqualData 
+            => new()
             {
                 { new TestGenericAsyncEnumerable(TestData.Empty),       TestData.Empty },
                 { new TestGenericAsyncEnumerable(TestData.Single),      TestData.Single },
@@ -25,8 +25,8 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
         }
 
-        public static TheoryData<TestGenericAsyncEnumerable, int[], string> BeEqualTo_TestGenericAsyncEnumerable_NotEqualData =>
-            new()
+        public static TheoryData<TestGenericAsyncEnumerable, int[], string> BeEqualTo_TestGenericAsyncEnumerable_NotEqualData 
+            => new()
             {
                 { new TestGenericAsyncEnumerable(TestData.Empty,    TestData.Single),                   TestData.Empty,     $"Actual has more items when using 'System.Collections.Generic.IAsyncEnumerable`1[System.Int32].GetAsyncEnumerator()'.{Environment.NewLine}Expected: {TestData.Empty.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Single.ToFriendlyString()}" },
                 { new TestGenericAsyncEnumerable(TestData.Single,   TestData.Empty),                    TestData.Single,    $"Actual has less items when using 'System.Collections.Generic.IAsyncEnumerable`1[System.Int32].GetAsyncEnumerator()'.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },

@@ -9,7 +9,8 @@ namespace NetFabric.Assertive
     [DebuggerNonUserCode]
     static partial class EnumerableEqualityComparer
     {
-        public static (EqualityResult, int, T?, T?) Compare<T>(this IEnumerable<T> actual, IEnumerable<T> expected)
+        public static (EqualityResult, int, T?, T?) Compare<T, TExpected>(this IEnumerable<T> actual, TExpected expected)
+            where TExpected : IEnumerable<T>
         {
             var actualEnumerator = actual.GetEnumerator();
             var expectedEnumerator = expected.GetEnumerator();
@@ -46,7 +47,8 @@ namespace NetFabric.Assertive
             }
         }
 
-        public static (EqualityResult, int, TActualItem?, TExpectedItem?) Compare<TActualItem, TExpectedItem>(this IEnumerable<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer)
+        public static (EqualityResult, int, TActualItem?, TExpectedItem?) Compare<TActualItem, TExpected, TExpectedItem>(this IEnumerable<TActualItem> actual, TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer)
+            where TExpected : IEnumerable<TExpectedItem>
         {
             using var actualEnumerator = actual.GetEnumerator();
             using var expectedEnumerator = expected.GetEnumerator();
@@ -72,7 +74,8 @@ namespace NetFabric.Assertive
             }
         }
 
-        public static async Task<(EqualityResult, int, TActualItem?, TExpectedItem?)> Compare<TActualItem, TExpectedItem>(this IAsyncEnumerable<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer)
+        public static async Task<(EqualityResult, int, TActualItem?, TExpectedItem?)> Compare<TActualItem, TExpected, TExpectedItem>(this IAsyncEnumerable<TActualItem> actual, TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer)
+            where TExpected : IEnumerable<TExpectedItem>
         {
             var actualEnumerator = actual.GetAsyncEnumerator();
             await using (actualEnumerator.ConfigureAwait(false))
@@ -101,7 +104,8 @@ namespace NetFabric.Assertive
             }
         }
 
-        public static (EqualityResult, int, TActualItem?, TExpectedItem?) Compare<TActualItem, TExpectedItem>(this IReadOnlyList<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer)
+        public static (EqualityResult, int, TActualItem?, TExpectedItem?) Compare<TActualItem, TExpected, TExpectedItem>(this IReadOnlyList<TActualItem> actual, TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer)
+            where TExpected : IEnumerable<TExpectedItem>
         {
             using var expectedEnumerator = expected.GetEnumerator();
             checked
@@ -136,10 +140,12 @@ namespace NetFabric.Assertive
             }
         }
 
-        public static (EqualityResult, int, TActualItem?, TExpectedItem?) Compare<TActualItem, TExpectedItem>(this Span<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer)
+        public static (EqualityResult, int, TActualItem?, TExpectedItem?) Compare<TActualItem, TExpected, TExpectedItem>(this Span<TActualItem> actual, TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer)
+            where TExpected : IEnumerable<TExpectedItem>
             => Compare((ReadOnlySpan<TActualItem>)actual, expected, comparer);
 
-        public static (EqualityResult, int, TActualItem?, TExpectedItem?) Compare<TActualItem, TExpectedItem>(this ReadOnlySpan<TActualItem> actual, IEnumerable<TExpectedItem> expected, Func<TActualItem, TExpectedItem, bool> comparer)
+        public static (EqualityResult, int, TActualItem?, TExpectedItem?) Compare<TActualItem, TExpected, TExpectedItem>(this ReadOnlySpan<TActualItem> actual, TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer)
+            where TExpected : IEnumerable<TExpectedItem>
         {
             using var expectedEnumerator = expected.GetEnumerator();
             checked

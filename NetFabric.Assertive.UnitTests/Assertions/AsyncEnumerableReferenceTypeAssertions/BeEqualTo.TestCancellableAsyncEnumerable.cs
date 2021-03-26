@@ -5,13 +5,13 @@ namespace NetFabric.Assertive.UnitTests
 {
     public partial class AsyncEnumerableReferenceTypeAssertionsTests
     {
-        public static TheoryData<TestCancellableAsyncEnumerable, int[]> BeEqualTo_AsyncCancellableEnumerable_EqualData =>
-       new()
-       {
-            { new TestCancellableAsyncEnumerable(TestData.Empty),       TestData.Empty },
-            { new TestCancellableAsyncEnumerable(TestData.Single),      TestData.Single },
-            { new TestCancellableAsyncEnumerable(TestData.Multiple),    TestData.Multiple },
-       };
+        public static TheoryData<TestCancellableAsyncEnumerable, int[]> BeEqualTo_AsyncCancellableEnumerable_EqualData 
+            => new()
+               {
+                    { new TestCancellableAsyncEnumerable(TestData.Empty),       TestData.Empty },
+                    { new TestCancellableAsyncEnumerable(TestData.Single),      TestData.Single },
+                    { new TestCancellableAsyncEnumerable(TestData.Multiple),    TestData.Multiple },
+               };
 
         [Theory]
         [MemberData(nameof(BeEqualTo_AsyncCancellableEnumerable_EqualData))]
@@ -25,8 +25,8 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
         }
 
-        public static TheoryData<TestCancellableAsyncEnumerable, int[], string> BeEqualTo_AsyncCancellableEnumerable_NotEqualData =>
-            new()
+        public static TheoryData<TestCancellableAsyncEnumerable, int[], string> BeEqualTo_AsyncCancellableEnumerable_NotEqualData 
+            => new()
             {
                 { new TestCancellableAsyncEnumerable(TestData.Single),                 TestData.Empty,     $"Actual has more items when using 'NetFabric.Assertive.UnitTests.TestCancellableAsyncEnumerable.GetAsyncEnumerator()'.{Environment.NewLine}Expected: {TestData.Empty.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Single.ToFriendlyString()}" },
                 { new TestCancellableAsyncEnumerable(TestData.Empty),                  TestData.Single,    $"Actual has less items when using 'NetFabric.Assertive.UnitTests.TestCancellableAsyncEnumerable.GetAsyncEnumerator()'.{Environment.NewLine}Expected: {TestData.Single.ToFriendlyString()}{Environment.NewLine}Actual: {TestData.Empty.ToFriendlyString()}" },

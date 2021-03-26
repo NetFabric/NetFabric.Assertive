@@ -18,25 +18,25 @@ namespace NetFabric.Assertive.UnitTests
         public static TheoryData<ArraySegment<int>> EmptyArraySegments =>
             new()
             {
-                { EmptyArraySegment },
-                { new ArraySegment<int>(TestData.Single, 0, 0) },
-                { new ArraySegment<int>(TestData.Multiple, 2, 0) },
+                EmptyArraySegment,
+                new ArraySegment<int>(TestData.Single, 0, 0),
+                new ArraySegment<int>(TestData.Multiple, 2, 0),
             };
 
         public static TheoryData<ArraySegment<int>> SingleArraySegments =>
             new()
             {
-                { SingleArraySegment },
-                { new ArraySegment<int>(TestData.Multiple, 0, 1) },
-                { new ArraySegment<int>(TestData.Multiple, 2, 1) },
+                SingleArraySegment,
+                new ArraySegment<int>(TestData.Multiple, 0, 1),
+                new ArraySegment<int>(TestData.Multiple, 2, 1),
             };
 
         public static TheoryData<ArraySegment<int>> MultipleArraySegments =>
             new()
             {
-                { MultipleArraySegment },
-                { new ArraySegment<int>(TestData.Multiple, 0, 3) },
-                { new ArraySegment<int>(TestData.Multiple, 2, 3) },
+                MultipleArraySegment,
+                new ArraySegment<int>(TestData.Multiple, 0, 3),
+                new ArraySegment<int>(TestData.Multiple, 2, 3),
             };
 
         [Theory]

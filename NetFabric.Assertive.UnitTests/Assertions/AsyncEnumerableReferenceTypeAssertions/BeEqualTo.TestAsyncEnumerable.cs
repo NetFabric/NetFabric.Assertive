@@ -5,26 +5,6 @@ namespace NetFabric.Assertive.UnitTests
 {
     public partial class AsyncEnumerableReferenceTypeAssertionsTests
     {
-        public static TheoryData<TestAsyncEnumerableRef, int[]> BeEqualTo_TestAsyncEnumerableRef_EqualData =>
-            new()
-            {
-                { new TestAsyncEnumerableRef(TestData.Empty.AsMemory<int>()), TestData.Empty },
-            };
-
-        [Theory]
-        [MemberData(nameof(BeEqualTo_TestAsyncEnumerableRef_EqualData))]
-        public void BeEqualTo_TestAsyncEnumerableRef_With_Equal_Should_Throw(TestAsyncEnumerableRef actual, int[] expected)
-        {
-            // Arrange
-
-            // Act
-            void action() => actual.Must().BeAsyncEnumerableOf<int>().BeEqualTo(expected);
-
-            // Assert
-            var exception = Assert.Throws<AssertionException>(action);
-            Assert.Equal("Enumerators declared as 'ref struct' are not supported. Set the 'testRefStructs' parameter to 'false' and use other method of comparison.", exception.Message);
-        }
-
         public static TheoryData<TestAsyncEnumerable, int[]> BeEqualTo_AsyncEnumerable_EqualData =>
             new()
             {
@@ -45,7 +25,7 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
         }
 
-        public static TheoryData<TestAsyncEnumerable, int[], string> BeEqualTo_NotEqualNullData =>
+        public static TheoryData<TestAsyncEnumerable?, int[]?, string> BeEqualTo_NotEqualNullData =>
             new()
             {
                 { null, TestData.Empty, $"Expected to be equal but it's not.{Environment.NewLine}Expected: {TestData.Empty.ToFriendlyString()}{Environment.NewLine}Actual: <null>" },
@@ -54,7 +34,7 @@ namespace NetFabric.Assertive.UnitTests
 
         [Theory]
         [MemberData(nameof(BeEqualTo_NotEqualNullData))]
-        public void BeEqualTo_With_NotEqual_Null_Should_Throw(TestAsyncEnumerable actual, int[] expected, string message)
+        public void BeEqualTo_With_NotEqual_Null_Should_Throw(TestAsyncEnumerable? actual, int[]? expected, string message)
         {
             // Arrange
 
