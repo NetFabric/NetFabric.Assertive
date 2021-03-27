@@ -1,16 +1,19 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using NetFabric.Reflection;
 
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     static partial class EnumerableEqualityComparer
     {
-        public static (EqualityResult, int, T?, T?) Compare<T, TExpected>(this IEnumerable<T> actual, TExpected expected)
-            where TExpected : IEnumerable<T>
+        public static (EqualityResult, int, TActualItem?, TActualItem?) Compare<TActual, TActualItem, TExpected>(this TActual actual, TExpected expected)
+            where TActual : IEnumerable<TActualItem>
+            where TExpected : IEnumerable<TActualItem>
         {
             var actualEnumerator = actual.GetEnumerator();
             var expectedEnumerator = expected.GetEnumerator();
@@ -32,7 +35,7 @@ namespace NetFabric.Assertive
                         if (isExpectedCompleted)
                             return (EqualityResult.MoreItems, index, default, default);
 
-                        if (!EqualityComparer<T>.Default.Equals(actualEnumerator.Current, expectedEnumerator.Current))
+                        if (!EqualityComparer<TActualItem>.Default.Equals(actualEnumerator.Current, expectedEnumerator.Current))
                             return (EqualityResult.NotEqualAtIndex, index, actualEnumerator.Current, expectedEnumerator.Current);
                     }
                 }
@@ -45,9 +48,34 @@ namespace NetFabric.Assertive
                 if (expectedEnumerator is IDisposable expectedDisposable)
                     expectedDisposable.Dispose();
             }
+
+            static Expression DisposeEnumerator(ParameterExpression instance, EnumeratorInfo info)
+            {
+                if (info.Dispose is not null)
+                {
+                    if (info.IsByRefLike)
+                    {
+                        return Expression.Call(instance, info.Dispose);
+                    }
+                    else
+                    {
+                        var disposable = Expression.Variable(typeof(IDisposable), "disposable");
+                        return Expression.Block(
+                            new ParameterExpression[] {instance, disposable},
+                            Expression.Assign(disposable, Expression.TypeAs(instance, typeof(IDisposable))),
+                            Expression.IfThen(
+                                Expression.NotEqual(disposable, Expression.Constant(null)),
+                                Expression.Call(disposable, info.Dispose))
+                        );
+                    }
+                }
+
+                return Expression.Empty();
+            }
         }
 
-        public static (EqualityResult, int, TActualItem?, TExpectedItem?) Compare<TActualItem, TExpected, TExpectedItem>(this IEnumerable<TActualItem> actual, TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer)
+        public static (EqualityResult, int, TActualItem?, TExpectedItem?) Compare<TActual, TActualItem, TExpected, TExpectedItem>(this TActual actual, TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer)
+            where TActual : IEnumerable<TActualItem>
             where TExpected : IEnumerable<TExpectedItem>
         {
             using var actualEnumerator = actual.GetEnumerator();
@@ -68,13 +96,14 @@ namespace NetFabric.Assertive
                     if (isExpectedCompleted)
                         return (EqualityResult.MoreItems, index, default, default);
 
-                if (!comparer(actualEnumerator.Current, expectedEnumerator.Current))
+                    if (!comparer(actualEnumerator.Current, expectedEnumerator.Current))
                         return (EqualityResult.NotEqualAtIndex, index, actualEnumerator.Current, expectedEnumerator.Current);
                 }
             }
         }
 
-        public static async Task<(EqualityResult, int, TActualItem?, TExpectedItem?)> Compare<TActualItem, TExpected, TExpectedItem>(this IAsyncEnumerable<TActualItem> actual, TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer)
+        public static async Task<(EqualityResult, int, TActualItem?, TExpectedItem?)> CompareAsync<TActual, TActualItem, TExpected, TExpectedItem>(this TActual actual, TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer)
+            where TActual : IAsyncEnumerable<TActualItem>
             where TExpected : IEnumerable<TExpectedItem>
         {
             var actualEnumerator = actual.GetAsyncEnumerator();
@@ -104,7 +133,8 @@ namespace NetFabric.Assertive
             }
         }
 
-        public static (EqualityResult, int, TActualItem?, TExpectedItem?) Compare<TActualItem, TExpected, TExpectedItem>(this IReadOnlyList<TActualItem> actual, TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer)
+        public static (EqualityResult, int, TActualItem?, TExpectedItem?) Compare<TActual, TActualItem, TExpected, TExpectedItem>(this IReadOnlyList<TActualItem> actual, TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer)
+            // where TActual : IReadOnlyList<TActualItem>
             where TExpected : IEnumerable<TExpectedItem>
         {
             using var expectedEnumerator = expected.GetEnumerator();

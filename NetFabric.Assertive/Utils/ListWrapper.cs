@@ -6,13 +6,14 @@ using System.Diagnostics;
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public sealed class ListWrapper<TActualItem> 
+    public sealed class ListWrapper<TActual, TActualItem> 
         : IEnumerable<TActualItem>
+        where TActual : IList<TActualItem>
     {
-        internal ListWrapper(IList<TActualItem> actual) 
+        internal ListWrapper(TActual actual) 
             => Actual = actual;
 
-        public IList<TActualItem> Actual { get; }
+        public TActual Actual { get; }
 
         public IEnumerator<TActualItem> GetEnumerator() => new Enumerator(this);
         IEnumerator IEnumerable.GetEnumerator() => new Enumerator(this);
@@ -20,10 +21,10 @@ namespace NetFabric.Assertive
         sealed class Enumerator 
             : IEnumerator<TActualItem>
         {
-            readonly IList<TActualItem> actual;
+            readonly TActual actual;
             int index;
 
-            public Enumerator(ListWrapper<TActualItem> enumerable)
+            public Enumerator(ListWrapper<TActual, TActualItem> enumerable)
             {
                 actual = enumerable.Actual;
                 index = -1;

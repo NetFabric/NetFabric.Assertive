@@ -10,5 +10,9 @@ namespace NetFabric.Assertive
     {
         public static bool IsAssignableTo(this Type type, Type toType)
             => toType.IsAssignableFrom(type);
+        
+        public static bool IsByRefLike(this Type type)
+            => type.GetCustomAttributes()
+                .FirstOrDefault(attribute => attribute.GetType().Name == "IsByRefLikeAttribute") is not null;
     }
 }

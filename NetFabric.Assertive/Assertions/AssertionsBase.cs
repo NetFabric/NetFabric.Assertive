@@ -326,8 +326,8 @@ namespace NetFabric.Assertive
 
             if (typeof(TActual).IsAssignableTo(typeof(IList<>).MakeGenericType(typeof(TActualItem))))
             {
-                var wrappedActual = new ListWrapper<TActualItem>((IList<TActualItem>)actual);
                 var listActual = (IList<TActualItem>)actual;
+                var wrappedActual = new ListWrapper<IList<TActualItem>, TActualItem>(listActual);
 
                 // test the indexer
                 try
@@ -336,19 +336,19 @@ namespace NetFabric.Assertive
                     switch (result)
                     {
                         case EqualityResult.NotEqualAtIndex:
-                            throw new EqualToAssertionException<ListWrapper<TActualItem>, TExpected>(
+                            throw new EqualToAssertionException<ListWrapper<IList<TActualItem>, TActualItem>, TExpected>(
                                 wrappedActual,
                                 expected,
                                 $"Actual differs at index {index} when using the indexer IList`1[{typeof(TActualItem)}].Item[System.Int32].");
 
                         case EqualityResult.LessItem:
-                            throw new EqualToAssertionException<ListWrapper<TActualItem>, TExpected>(
+                            throw new EqualToAssertionException<ListWrapper<IList<TActualItem>, TActualItem>, TExpected>(
                                 wrappedActual,
                                 expected,
                                 $"Actual has less items when using the indexer IList`1[{typeof(TActualItem)}].Item[System.Int32].");
 
                         case EqualityResult.MoreItems:
-                            throw new EqualToAssertionException<ListWrapper<TActualItem>, TExpected>(
+                            throw new EqualToAssertionException<ListWrapper<IList<TActualItem>, TActualItem>, TExpected>(
                                 wrappedActual,
                                 expected,
                                 $"Actual has more items when using the indexer IList`1[{typeof(TActualItem)}].Item[System.Int32].");
@@ -431,7 +431,7 @@ namespace NetFabric.Assertive
                 var getEnumeratorDeclaringType = actualEnumerableInfo.GetAsyncEnumerator.DeclaringType;
                 var actualItemType = actualEnumerableInfo.EnumeratorInfo.Current.PropertyType;
                 var wrapped = new AsyncEnumerableWrapper<TActual, TActualItem>(actual, actualEnumerableInfo);
-                var (result, index, _, _) = wrapped.Compare(expected, comparer).GetAwaiter().GetResult();
+                var (result, index, _, _) = wrapped.CompareAsync(expected, comparer).GetAwaiter().GetResult();
                 switch (result)
                 {
                     case EqualityResult.NotEqualAtIndex:
@@ -478,7 +478,7 @@ namespace NetFabric.Assertive
                         continue;
 
                     var wrapped = new AsyncEnumerableWrapper<TActual, TActualItem>(actual, enumerableInfo);
-                    var (result, index, _, _) = wrapped.Compare(expected, comparer).GetAwaiter().GetResult();
+                    var (result, index, _, _) = wrapped.CompareAsync(expected, comparer).GetAwaiter().GetResult();
                     switch (result)
                     {
                         case EqualityResult.NotEqualAtIndex:
