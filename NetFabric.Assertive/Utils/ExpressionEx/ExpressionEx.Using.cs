@@ -1,55 +1,49 @@
 using System;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using static System.Linq.Expressions.Expression;
 
 namespace NetFabric.Assertive
 {
     static partial class ExpressionEx
     {
-        public static Expression Using(ParameterExpression variable, Expression value, Expression content)
+        public static Expression Using(Expression variable, Expression body)
         {
-            return Block(new[] { variable },
-                Assign(variable, value),
-                TryFinally(
-                    content,
-                    variable.Type switch 
+            return TryFinally(
+                    body,
+                    variable.Type switch
                     {
-                        {IsValueType: true} => ValueTypeUsing(variable, content),
-                        
-                        _ => ReferenceTypeUsing(variable, content)
-                    }));
+                        { IsValueType: true } => DisposeValueType(variable),
+                        _ => DisposeReferenceType(variable)
+                    });
 
-            static Expression ValueTypeUsing(Expression variable, Expression content)
+            static Expression DisposeValueType(Expression variable)
             {
-                return variable.Type.IsByRefLike() switch
+                var isByRefLike = IsByRefLike(variable.Type);
+                return isByRefLike switch
                 {
-                    true => ByRefLikeValueTypeUsing(variable, content),
-                    
-                    _ => ValueTypeUsing(variable, content)
+                    true => DisposeByRefLike(variable),
+                    _ => Dispose(variable)
                 };
 
-                static Expression ByRefLikeValueTypeUsing(Expression variable, Expression content)
+                static Expression DisposeByRefLike(Expression variable)
                 {
-                    var disposeMethod = variable.Type.GetMethod("Dispose");
-                    return disposeMethod switch
-                    {
-                        null => ThrowMustBeImplicitlyConvertibleToIDisposable<Expression>(variable),
-                        
-                        _ => Call(variable, disposeMethod)
-                    };
+                    var disposeMethodInfo = variable.Type.GetMethod("Dispose")
+                                            ?? ThrowMustBeImplicitlyConvertibleToIDisposable<MethodInfo>(variable);
+                    return Call(variable, disposeMethodInfo);
                 }
 
-                static Expression ValueTypeUsing(Expression variable, Expression content)
+                static Expression Dispose(Expression variable)
                     => typeof(IDisposable).IsAssignableFrom(variable.Type) switch
                     {
                         false => ThrowMustBeImplicitlyConvertibleToIDisposable<Expression>(variable),
-                        
-                        _ => Call(Convert(variable, typeof(IDisposable)),
-                                typeof(IDisposable).GetMethod("Dispose")!)
+
+                        _ => Call(Convert(variable, typeof(IDisposable)), typeof(IDisposable).GetMethod("Dispose")!)
                     };
             }
 
-            static Expression ReferenceTypeUsing(Expression variable, Expression content)
+            static Expression DisposeReferenceType(Expression variable)
                 => typeof(IDisposable).IsAssignableFrom(variable.Type) switch
                 {
                     false => ThrowMustBeImplicitlyConvertibleToIDisposable<Expression>(variable),
@@ -63,6 +57,10 @@ namespace NetFabric.Assertive
 
             static T ThrowMustBeImplicitlyConvertibleToIDisposable<T>(Expression variable)
                 => throw new Exception($"'{variable.Type.FullName}': type used in a using statement must be implicitly convertible to 'System.IDisposable'");
+
+            static bool IsByRefLike(Type type)
+                => type.GetCustomAttributes()
+                    .FirstOrDefault(attribute => attribute.GetType().Name == "IsByRefLikeAttribute") is not null;
         }
     }
 }
