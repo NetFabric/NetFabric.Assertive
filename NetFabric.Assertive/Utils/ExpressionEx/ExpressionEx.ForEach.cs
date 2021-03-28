@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using System.Xml;
 using NetFabric.Reflection;
 using static System.Linq.Expressions.Expression;
 
@@ -7,7 +8,7 @@ namespace NetFabric.Assertive
 {
     static partial class ExpressionEx
     {
-        public static Expression ForEach(Expression enumerable, ParameterExpression loopVar, Func<Expression, Expression> content)
+        public static Expression ForEach(ParameterExpression enumerable, Func<Expression, Expression> body)
         {
             var enumerableType = enumerable.Type;
             if (!enumerableType.IsEnumerable(out var enumerableInfo, out var errors))
@@ -21,60 +22,54 @@ namespace NetFabric.Assertive
                 if (errors.HasFlag(Errors.MissingMoveNext))
                     throw new Exception($"'{enumerableInfo!.GetEnumerator.ReturnType.Name}' does not contain a public definition for 'MoveNext'");
 
-                throw new Exception("Unhandled exception!");
+                throw new Exception("Unhandled error!");
             }
             
             var enumeratorType = enumerableInfo.GetEnumerator.ReturnType;
             var enumeratorInfo = enumerableInfo.EnumeratorInfo;
-            var enumeratorVariable = Variable(enumeratorType, "enumerator");
-
+            var enumerator = Variable(enumeratorType, "enumerator");
             return Block(
-                new[] {enumeratorVariable},
-                Assign(enumeratorVariable, Call(enumerable, enumerableInfo.GetEnumerator)),
-                enumeratorType.IsValueType switch
+                new[] { enumerable, enumerator },
+                Assign(enumerator, Call(enumerable, enumerableInfo.GetEnumerator)),
+                enumeratorInfo switch
                 {
-                    true => EnumerateValueType(enumeratorInfo, enumeratorVariable, Property(enumeratorVariable, enumeratorInfo.Current)),
-                    _ => EnumerateReferenceType(enumeratorInfo, enumeratorVariable, Property(enumeratorVariable, enumeratorInfo.Current))
-                });
-        }
-        
-        static Expression EnumerateValueType(EnumeratorInfo enumeratorInfo, ParameterExpression enumeratorVariable, Expression content)
-        {
-            return enumeratorInfo switch 
+                    { Dispose: not null } => Disposable(enumeratorInfo, enumerator, body),
+                    _ => enumeratorType switch
+                    {
+                        { IsValueType: true } => NonDisposableValueType(enumeratorInfo, enumerator, body),
+                        _ => NonDisposableReferenceType(enumeratorInfo, enumerator, body)
+                    }
+                }
+            );
+                
+            static Expression Disposable(EnumeratorInfo enumeratorInfo, Expression enumerator, Func<Expression, Expression> body)
+                => Using(enumerator,
+                        Enumeration(enumeratorInfo, enumerator, body)
+                    );
+                
+            static Expression NonDisposableValueType(EnumeratorInfo enumeratorInfo, Expression enumerator, Func<Expression, Expression> body)
+                => Enumeration(enumeratorInfo, enumerator, body);
+                
+            static Expression NonDisposableReferenceType(EnumeratorInfo enumeratorInfo, ParameterExpression  enumerator, Func<Expression, Expression> body)
             {
-                { Dispose: null } => content,
-                { IsByRefLike: true } => DisposeByRefLike(enumeratorInfo, enumeratorVariable, content),
-                _ => Dispose(enumeratorInfo, enumeratorVariable, content)
-            };
-            
-            static Expression DisposeByRefLike(EnumeratorInfo enumeratorInfo, ParameterExpression enumeratorVariable, Expression content)
-                => TryFinally(
-                    content,
-                    Call(enumeratorVariable, enumeratorInfo.Dispose!));
+                var disposable = Variable(typeof(IDisposable), "disposable");
+                return TryFinally(
+                    Enumeration(enumeratorInfo, enumerator, body),
+                    Block(
+                        new [] { disposable, enumerator },
+                        Assign(disposable, TypeAs(enumerator, typeof(IDisposable))),
+                        IfThen(
+                            NotEqual(disposable, Constant(null)),
+                            Call(disposable, typeof(IDisposable).GetMethod("Dispose")!)
+                        )
+                    )
+                );
+            }
 
-            static Expression Dispose(EnumeratorInfo enumeratorInfo, ParameterExpression enumeratorVariable, Expression content)
-                => TryFinally(
-                    content,
-                    Call(Convert(enumeratorVariable, typeof(IDisposable)), enumeratorInfo.Dispose!));
-        }
-
-        static Expression EnumerateReferenceType(EnumeratorInfo enumeratorInfo, ParameterExpression enumeratorVariable, Expression content)
-        {
-            return enumeratorInfo switch
-            {
-                { Dispose: null } => NotDisposable(enumeratorInfo, enumeratorVariable, content),
-                _ => Disposable(enumeratorInfo, enumeratorVariable, content)
-            };
-            
-            static Expression NotDisposable(EnumeratorInfo enumeratorInfo, ParameterExpression enumeratorVariable, Expression content)
-                => TryFinally(
-                    content,
-                    Call(enumeratorVariable, enumeratorInfo.Dispose!));
-
-            static Expression Disposable(EnumeratorInfo enumeratorInfo, ParameterExpression enumeratorVariable, Expression content)
-                => TryFinally(
-                    content,
-                    Call(Convert(enumeratorVariable, typeof(IDisposable)), enumeratorInfo.Dispose!));
+            static Expression Enumeration(EnumeratorInfo enumeratorInfo, Expression enumerator, Func<Expression, Expression> body)
+                => While(Call(enumerator, enumeratorInfo.MoveNext),
+                    body(Property(enumerator, enumeratorInfo.Current))
+                );
         }
     }
 }

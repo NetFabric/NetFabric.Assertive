@@ -50,9 +50,8 @@ namespace NetFabric.Assertive
 
                     _ => IfThen(
                             NotEqual(variable, Constant(null)),
-                            Call(
-                                Convert(variable, typeof(IDisposable)),
-                                typeof(IDisposable).GetMethod("Dispose")!))
+                            Call(Convert(variable, typeof(IDisposable)), typeof(IDisposable).GetMethod("Dispose")!)
+                        )
                 };
 
             static T ThrowMustBeImplicitlyConvertibleToIDisposable<T>(Expression variable)
