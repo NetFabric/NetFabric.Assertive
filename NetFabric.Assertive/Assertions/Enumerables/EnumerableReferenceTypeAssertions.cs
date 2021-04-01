@@ -20,12 +20,12 @@ namespace NetFabric.Assertive
         public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEmpty(bool testRefStructs = true, bool testRefReturns = true)
             => BeEqualTo(Enumerable.Empty<TActualItem>(), testRefStructs, testRefReturns);
 
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected>(TExpected expected, bool testRefStructs = true, bool testRefReturns = true, bool testNonGeneric = true, bool testIndexOf = true, IEnumerable<TActualItem>? doesNotContain = default)
+        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected>(TExpected expected,bool testNonGeneric = true, bool testIndexOf = true, IEnumerable<TActualItem>? doesNotContain = default)
             where TExpected : IEnumerable<TActualItem>
-            => BeEqualTo<TExpected, TActualItem>(expected, (actual, expected) => EqualityComparer<TActualItem>.Default.Equals(actual!, expected!), testRefStructs, testRefReturns, testNonGeneric, testIndexOf, doesNotContain);
+            => BeEqualTo<TExpected, TActualItem>(expected, (actual, expected) => EqualityComparer<TActualItem>.Default.Equals(actual!, expected!), testNonGeneric, testIndexOf, doesNotContain);
 
         public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected expected, Func<TActualItem?, TExpectedItem?, bool> comparer, 
-            bool testRefStructs = true, bool testRefReturns = true, bool testNonGeneric = true, bool testIndexOf = true, IEnumerable<TActualItem>? doesNotContain = default)
+            bool testNonGeneric = true, bool testIndexOf = true, IEnumerable<TActualItem>? doesNotContain = default)
             where TExpected : IEnumerable<TExpectedItem>
         {
             if (Actual is null)
@@ -38,7 +38,7 @@ namespace NetFabric.Assertive
                 if (expected is null)
                     throw new EqualToAssertionException<TActual, TExpected>(Actual, expected);
 
-                AssertEnumerableEquality(Actual, EnumerableInfo, expected, comparer, testRefStructs, testRefReturns, testNonGeneric, testIndexOf, doesNotContain);
+                AssertEnumerableEquality(Actual, EnumerableInfo, expected, comparer, testNonGeneric, testIndexOf, doesNotContain);
             }
 
             return this;

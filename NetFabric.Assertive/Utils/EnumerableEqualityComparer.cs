@@ -1,14 +1,17 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 using NetFabric.Reflection;
+using static NetFabric.Expressions.ExpressionEx;
+using static System.Linq.Expressions.Expression;
 
 namespace NetFabric.Assertive
 {
-    [DebuggerNonUserCode]
+    //[DebuggerNonUserCode]
     static partial class EnumerableEqualityComparer
     {
         public static (EqualityResult, int, TActualItem?, TActualItem?) Compare<TActual, TActualItem, TExpected>(this TActual actual, TExpected expected)
@@ -48,36 +51,13 @@ namespace NetFabric.Assertive
                 if (expectedEnumerator is IDisposable expectedDisposable)
                     expectedDisposable.Dispose();
             }
-
-            static Expression DisposeEnumerator(ParameterExpression instance, EnumeratorInfo info)
-            {
-                if (info.Dispose is not null)
-                {
-                    if (info.IsByRefLike)
-                    {
-                        return Expression.Call(instance, info.Dispose);
-                    }
-                    else
-                    {
-                        var disposable = Expression.Variable(typeof(IDisposable), "disposable");
-                        return Expression.Block(
-                            new ParameterExpression[] {instance, disposable},
-                            Expression.Assign(disposable, Expression.TypeAs(instance, typeof(IDisposable))),
-                            Expression.IfThen(
-                                Expression.NotEqual(disposable, Expression.Constant(null)),
-                                Expression.Call(disposable, info.Dispose))
-                        );
-                    }
-                }
-
-                return Expression.Empty();
-            }
-        }
+        } 
 
         public static (EqualityResult, int, TActualItem?, TExpectedItem?) Compare<TActual, TActualItem, TExpected, TExpectedItem>(this TActual actual, TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer)
-            where TActual : IEnumerable<TActualItem>
-            where TExpected : IEnumerable<TExpectedItem>
+            // where TActual : IEnumerable<TActualItem>
+            // where TExpected : IEnumerable<TExpectedItem>
         {
+            /*
             using var actualEnumerator = actual.GetEnumerator();
             using var expectedEnumerator = expected.GetEnumerator();
             checked
@@ -100,6 +80,111 @@ namespace NetFabric.Assertive
                         return (EqualityResult.NotEqualAtIndex, index, actualEnumerator.Current, expectedEnumerator.Current);
                 }
             }
+            */
+            
+            _ = typeof(TActual).IsEnumerable(out var actualEnumerableInfo);
+            _ = typeof(TExpected).IsEnumerable(out var expectedEnumerableInfo);
+
+            var actualParameter = Parameter(typeof(TActual), "actual");
+            var expectedParameter = Parameter(typeof(TExpected), "expected");
+            var comparerParameter = Parameter(typeof(Func<TActualItem, TExpectedItem, bool>), "comparer");
+
+            Type actualEnumeratorType;
+            Expression actualGetEnumerator;
+            PropertyInfo actualCurrentInfo;
+            MethodInfo actualMoveNextInfo;
+            if (actualParameter.Type.IsArray)
+            {
+                var enumerableType = typeof(IEnumerable<TActualItem>);
+                actualGetEnumerator = Call(Convert(actualParameter, enumerableType), enumerableType.GetPublicMethod(nameof(IEnumerable.GetEnumerator))!);
+                actualEnumeratorType = typeof(IEnumerator<TActualItem>);
+                actualCurrentInfo = actualEnumeratorType.GetPublicProperty(nameof(IEnumerator.Current))!;
+                actualMoveNextInfo = actualEnumeratorType.GetPublicMethod(nameof(IEnumerator.MoveNext))!;
+            }
+            else
+            {
+                actualEnumeratorType = actualEnumerableInfo!.GetEnumerator.ReturnType;
+                actualGetEnumerator = Call(actualParameter, actualEnumerableInfo!.GetEnumerator);
+                actualCurrentInfo = actualEnumerableInfo.EnumeratorInfo.Current;
+                actualMoveNextInfo = actualEnumerableInfo.EnumeratorInfo.MoveNext;
+            }
+
+            Type expectedEnumeratorType;
+            Expression expectedGetEnumerator;
+            PropertyInfo expectedCurrentInfo;
+            MethodInfo expectedMoveNextInfo;
+            if (expectedParameter.Type.IsArray)
+            {
+                var enumerableType = typeof(IEnumerable<TExpectedItem>);
+                expectedGetEnumerator = Call(Convert(expectedParameter, enumerableType), enumerableType.GetPublicMethod(nameof(IEnumerable.GetEnumerator))!);
+                expectedEnumeratorType = typeof(IEnumerator<TExpectedItem>);
+                expectedCurrentInfo = expectedEnumeratorType.GetPublicProperty(nameof(IEnumerator.Current))!;
+                expectedMoveNextInfo = expectedEnumeratorType.GetPublicMethod(nameof(IEnumerator.MoveNext))!;
+            }
+            else
+            {
+                expectedEnumeratorType = expectedEnumerableInfo!.GetEnumerator.ReturnType;
+                expectedGetEnumerator = Call(expectedParameter, expectedEnumerableInfo!.GetEnumerator);
+                expectedCurrentInfo = expectedEnumerableInfo.EnumeratorInfo.Current;
+                expectedMoveNextInfo = expectedEnumerableInfo.EnumeratorInfo.MoveNext;
+            }
+            
+            var actualEnumerator = Variable(actualEnumeratorType, "actualEnumerator");
+            var expectedEnumerator = Variable(expectedEnumeratorType, "expectedEnumerator");
+            var index = Variable(typeof(int), "index");
+            var isActualCompleted = Variable(typeof(bool), "isActualCompleted");
+            var isExpectedCompleted = Variable(typeof(bool), "isExpectedCompleted");
+            
+            var resultType = typeof(ValueTuple<EqualityResult, int, TActualItem?, TExpectedItem?>);
+            var result = Variable(resultType, "result");
+            var resultConstructor = resultType.GetConstructor(new[] {typeof(EqualityResult), typeof(int), typeof(TActualItem), typeof(TExpectedItem)})!;
+
+            var returnTarget = Label();
+            var expression = Block(
+                new[] { actualEnumerator, expectedEnumerator, index, result },
+                // arrays have to be casted so that reflection can find the generics version of GetEnumerator
+                Assign(actualEnumerator, actualGetEnumerator),
+                Assign(expectedEnumerator, expectedGetEnumerator),
+                For(Assign(index, Constant(0)), Constant(true), PostIncrementAssign(index),
+                    Block(
+                        new[] { isActualCompleted, isExpectedCompleted },
+                        Assign(isActualCompleted, Not(Call(actualEnumerator, actualMoveNextInfo))),
+                        Assign(isExpectedCompleted, Not(Call(expectedEnumerator, expectedMoveNextInfo))),
+                        IfThen(And(isActualCompleted, isExpectedCompleted),
+                            Block(
+                                Assign(result, New(resultConstructor, Constant(EqualityResult.Equal), index, Default(typeof(TActualItem)), Default(typeof(TExpectedItem)))),
+                                Return(returnTarget)    
+                            )    
+                        ),
+                        IfThen(isActualCompleted,
+                            Block(
+                                Assign(result, New(resultConstructor, Constant(EqualityResult.LessItem), index, Default(typeof(TActualItem)), Default(typeof(TExpectedItem)))),
+                                Return(returnTarget)    
+                            )    
+                        ),
+                        IfThen(isExpectedCompleted,
+                            Block(
+                                Assign(result, New(resultConstructor, Constant(EqualityResult.MoreItems), index, Default(typeof(TActualItem)), Default(typeof(TExpectedItem)))),
+                                Return(returnTarget)    
+                            )    
+                        ),
+                        IfThen(Not(Invoke(Constant(comparer), Property(actualEnumerator, actualCurrentInfo), Property(expectedEnumerator, expectedCurrentInfo))),
+                            Block(
+                                Assign(result, New(resultConstructor, Constant(EqualityResult.NotEqualAtIndex), index, Property(actualEnumerator, actualCurrentInfo), Property(expectedEnumerator, expectedCurrentInfo))),
+                                Return(returnTarget)    
+                            )    
+                        )
+                    )
+                ),
+                Label(returnTarget),
+                result
+            );
+            var func = Lambda<Func<TActual, TExpected, Func<TActualItem, TExpectedItem, bool>, ValueTuple<EqualityResult, int, TActualItem?, TExpectedItem?>>>(
+                    expression, 
+                    actualParameter, expectedParameter, comparerParameter)
+                .Compile();
+
+            return func(actual, expected, comparer);
         }
 
         public static async Task<(EqualityResult, int, TActualItem?, TExpectedItem?)> CompareAsync<TActual, TActualItem, TExpected, TExpectedItem>(this TActual actual, TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer)

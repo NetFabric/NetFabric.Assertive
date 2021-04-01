@@ -17,20 +17,20 @@ namespace NetFabric.Assertive
 
         public AsyncEnumerableInfo EnumerableInfo { get; }
 
-        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> BeEmpty(bool testRefStructs = true, bool testRefReturns = true)
-            => BeEqualTo(Enumerable.Empty<TActualItem>(), testRefStructs, testRefReturns);
+        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> BeEmpty()
+            => BeEqualTo(Enumerable.Empty<TActualItem>());
 
-        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected>(TExpected expected, bool testRefStructs = true, bool testRefReturns = true)
+        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected>(TExpected expected)
             where TExpected : IEnumerable<TActualItem>
-            => BeEqualTo<TExpected, TActualItem>(expected, (actual, expected) => EqualityComparer<TActualItem>.Default.Equals(actual, expected), testRefStructs, testRefReturns);
+            => BeEqualTo<TExpected, TActualItem>(expected, (actual, expected) => EqualityComparer<TActualItem>.Default.Equals(actual, expected));
 
-        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer, bool testRefStructs = true, bool testRefReturns = true)
+        public AsyncEnumerableValueTypeAssertions<TActual, TActualItem> BeEqualTo<TExpected, TExpectedItem>(TExpected expected, Func<TActualItem, TExpectedItem, bool> comparer)
             where TExpected : IEnumerable<TExpectedItem>
         {
             if (expected is null)
                 throw new EqualToAssertionException<TActual, TExpected>(Actual, expected);
 
-            AssertAsyncEnumerableEquality(Actual, EnumerableInfo, expected, comparer, testRefStructs, testRefReturns);
+            AssertAsyncEnumerableEquality(Actual, EnumerableInfo, expected, comparer);
 
             return this;
         }

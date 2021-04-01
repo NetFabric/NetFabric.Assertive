@@ -14,16 +14,14 @@ namespace NetFabric.Assertive.UnitTests
 
         [Theory]
         [MemberData(nameof(BeEqualTo_TestEnumerableRef_EqualData))]
-        public void BeEqualTo_TestEnumerableRef_With_Equal_Should_Throw(TestEnumerableRef actual, int[] expected)
+        public void BeEqualTo_TestEnumerableRef_With_Equal_Should_NotThrow(TestEnumerableRef actual, int[] expected)
         {
             // Arrange
 
             // Act
-            void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+            _ = actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
-            var exception = Assert.Throws<AssertionException>(action);
-            Assert.Equal("Enumerators declared as 'ref struct' are not supported. Set the 'testRefStructs' parameter to 'false' and use other method of comparison.", exception.Message);
         }
 
         public static TheoryData<TestEnumerable, int[]> BeEqualTo_TestEnumerable_EqualData =>
