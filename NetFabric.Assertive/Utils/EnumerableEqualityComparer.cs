@@ -89,45 +89,8 @@ namespace NetFabric.Assertive
             var expectedParameter = Parameter(typeof(TExpected), "expected");
             var comparerParameter = Parameter(typeof(Func<TActualItem, TExpectedItem, bool>), "comparer");
 
-            Type actualEnumeratorType;
-            Expression actualGetEnumerator;
-            PropertyInfo actualCurrentInfo;
-            MethodInfo actualMoveNextInfo;
-            if (actualParameter.Type.IsArray)
-            {
-                var enumerableType = typeof(IEnumerable<TActualItem>);
-                actualGetEnumerator = Call(Convert(actualParameter, enumerableType), enumerableType.GetPublicMethod(nameof(IEnumerable.GetEnumerator))!);
-                actualEnumeratorType = typeof(IEnumerator<TActualItem>);
-                actualCurrentInfo = actualEnumeratorType.GetPublicProperty(nameof(IEnumerator.Current))!;
-                actualMoveNextInfo = actualEnumeratorType.GetPublicMethod(nameof(IEnumerator.MoveNext))!;
-            }
-            else
-            {
-                actualEnumeratorType = actualEnumerableInfo!.GetEnumerator.ReturnType;
-                actualGetEnumerator = Call(actualParameter, actualEnumerableInfo!.GetEnumerator);
-                actualCurrentInfo = actualEnumerableInfo.EnumeratorInfo.Current;
-                actualMoveNextInfo = actualEnumerableInfo.EnumeratorInfo.MoveNext;
-            }
-
-            Type expectedEnumeratorType;
-            Expression expectedGetEnumerator;
-            PropertyInfo expectedCurrentInfo;
-            MethodInfo expectedMoveNextInfo;
-            if (expectedParameter.Type.IsArray)
-            {
-                var enumerableType = typeof(IEnumerable<TExpectedItem>);
-                expectedGetEnumerator = Call(Convert(expectedParameter, enumerableType), enumerableType.GetPublicMethod(nameof(IEnumerable.GetEnumerator))!);
-                expectedEnumeratorType = typeof(IEnumerator<TExpectedItem>);
-                expectedCurrentInfo = expectedEnumeratorType.GetPublicProperty(nameof(IEnumerator.Current))!;
-                expectedMoveNextInfo = expectedEnumeratorType.GetPublicMethod(nameof(IEnumerator.MoveNext))!;
-            }
-            else
-            {
-                expectedEnumeratorType = expectedEnumerableInfo!.GetEnumerator.ReturnType;
-                expectedGetEnumerator = Call(expectedParameter, expectedEnumerableInfo!.GetEnumerator);
-                expectedCurrentInfo = expectedEnumerableInfo.EnumeratorInfo.Current;
-                expectedMoveNextInfo = expectedEnumerableInfo.EnumeratorInfo.MoveNext;
-            }
+            var actualEnumeratorType = actualEnumerableInfo!.GetEnumerator.ReturnType;
+            var expectedEnumeratorType = expectedEnumerableInfo!.GetEnumerator.ReturnType;
             
             var actualEnumerator = Variable(actualEnumeratorType, "actualEnumerator");
             var expectedEnumerator = Variable(expectedEnumeratorType, "expectedEnumerator");
@@ -143,13 +106,13 @@ namespace NetFabric.Assertive
             var expression = Block(
                 new[] { actualEnumerator, expectedEnumerator, index, result },
                 // arrays have to be casted so that reflection can find the generics version of GetEnumerator
-                Assign(actualEnumerator, actualGetEnumerator),
-                Assign(expectedEnumerator, expectedGetEnumerator),
+                Assign(actualEnumerator, Call(actualParameter, actualEnumerableInfo!.GetEnumerator)),
+                Assign(expectedEnumerator, Call(expectedParameter, expectedEnumerableInfo!.GetEnumerator)),
                 For(Assign(index, Constant(0)), Constant(true), PostIncrementAssign(index),
                     Block(
                         new[] { isActualCompleted, isExpectedCompleted },
-                        Assign(isActualCompleted, Not(Call(actualEnumerator, actualMoveNextInfo))),
-                        Assign(isExpectedCompleted, Not(Call(expectedEnumerator, expectedMoveNextInfo))),
+                        Assign(isActualCompleted, Not(Call(actualEnumerator, actualEnumerableInfo.EnumeratorInfo.MoveNext))),
+                        Assign(isExpectedCompleted, Not(Call(expectedEnumerator, expectedEnumerableInfo.EnumeratorInfo.MoveNext))),
                         IfThen(And(isActualCompleted, isExpectedCompleted),
                             Block(
                                 Assign(result, New(resultConstructor, Constant(EqualityResult.Equal), index, Default(typeof(TActualItem)), Default(typeof(TExpectedItem)))),
@@ -168,9 +131,9 @@ namespace NetFabric.Assertive
                                 Return(returnTarget)    
                             )    
                         ),
-                        IfThen(Not(Invoke(Constant(comparer), Property(actualEnumerator, actualCurrentInfo), Property(expectedEnumerator, expectedCurrentInfo))),
+                        IfThen(Not(Invoke(comparerParameter, Property(actualEnumerator, actualEnumerableInfo.EnumeratorInfo.Current), Property(expectedEnumerator, expectedEnumerableInfo.EnumeratorInfo.Current))),
                             Block(
-                                Assign(result, New(resultConstructor, Constant(EqualityResult.NotEqualAtIndex), index, Property(actualEnumerator, actualCurrentInfo), Property(expectedEnumerator, expectedCurrentInfo))),
+                                Assign(result, New(resultConstructor, Constant(EqualityResult.NotEqualAtIndex), index, Property(actualEnumerator, actualEnumerableInfo.EnumeratorInfo.Current), Property(expectedEnumerator, expectedEnumerableInfo.EnumeratorInfo.Current))),
                                 Return(returnTarget)    
                             )    
                         )

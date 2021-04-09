@@ -36,7 +36,7 @@ namespace NetFabric.Assertive
             }
             else
             {
-                if (errors.HasFlag(Errors.MissingGetEnumerable))
+                if (errors.HasFlag(Errors.MissingGetEnumerator))
                     throw new ActualAssertionException<TActual>(actual, $"Expected to be an enumerable but it's missing a valid 'GetEnumerator' method.");
                 if (errors.HasFlag(Errors.MissingCurrent))
                     throw new ActualAssertionException<TActual>(actual, $"Expected to be an enumerator but it's missing a valid 'Current' property.");
@@ -68,7 +68,7 @@ namespace NetFabric.Assertive
             }
             else
             {
-                if (errors.HasFlag(Errors.MissingGetEnumerable))
+                if (errors.HasFlag(Errors.MissingGetEnumerator))
                     throw new ActualAssertionException<TActual>(actual, $"Expected to be an async enumerable but it's missing a valid 'GetAsyncEnumerator' method.");
                 if (errors.HasFlag(Errors.MissingCurrent))
                     throw new ActualAssertionException<TActual>(actual, $"Expected to be an async enumerator but it's missing a valid 'Current' property.");
@@ -126,7 +126,7 @@ namespace NetFabric.Assertive
             if (publicCount is not null && publicIndexer is not null)
             {
                 var wrappedActual = new IndexerWrapper<TActual, TActualItem>(actual, publicIndexer);
-                (result, index, _, _) = wrappedActual.Compare(expected, comparer);
+                (result, index, _, _) = actual.Compare(expected, comparer);
                 switch (result)
                 {
                     case EqualityResult.NotEqualAtIndex:
@@ -165,7 +165,7 @@ namespace NetFabric.Assertive
                         continue;
 
                     wrapped = new EnumerableWrapper<TActual, TActualItem>(actual, enumerableInfo);
-                    (result, index, _, _) = wrapped.Compare(expected, comparer);
+                    (result, index, _, _) = actual.Compare(expected, comparer);
                     switch (result)
                     {
                         case EqualityResult.NotEqualAtIndex:
@@ -228,7 +228,7 @@ namespace NetFabric.Assertive
                 try
                 {
                     var wrappedActual = new CopyToWrapper<TActualItem>((ICollection<TActualItem>)actual, 10);
-                    (result, index, _, _) = wrappedActual.Compare(expected, comparer);
+                    (result, index, _, _) = actual.Compare(expected, comparer);
                     switch (result)
                     {
                         case EqualityResult.NotEqualAtIndex:
@@ -262,7 +262,7 @@ namespace NetFabric.Assertive
                 try
                 {
                     var wrappedActual = new ReadOnlyListWrapper<TActualItem>((IReadOnlyList<TActualItem>)actual);
-                    (result, index, _, _) = wrappedActual.Compare(expected, comparer);
+                    (result, index, _, _) = actual.Compare(expected, comparer);
                     switch (result)
                     {
                         case EqualityResult.NotEqualAtIndex:
@@ -298,7 +298,7 @@ namespace NetFabric.Assertive
                 // test the indexer
                 try
                 {
-                    (result, index, _, _) = wrappedActual.Compare(expected, comparer);
+                    (result, index, _, _) = listActual.Compare(expected, comparer);
                     switch (result)
                     {
                         case EqualityResult.NotEqualAtIndex:
