@@ -36,7 +36,7 @@ namespace NetFabric.Assertive
             }
             else
             {
-                if (errors.HasFlag(Errors.MissingGetEnumerable))
+                if (errors.HasFlag(Errors.MissingGetEnumerator))
                     throw new ActualAssertionException<TActual>(actual, $"Expected to be an enumerable but it's missing a valid 'GetEnumerator' method.");
                 if (errors.HasFlag(Errors.MissingCurrent))
                     throw new ActualAssertionException<TActual>(actual, $"Expected to be an enumerator but it's missing a valid 'Current' property.");
@@ -68,7 +68,7 @@ namespace NetFabric.Assertive
             }
             else
             {
-                if (errors.HasFlag(Errors.MissingGetEnumerable))
+                if (errors.HasFlag(Errors.MissingGetEnumerator))
                     throw new ActualAssertionException<TActual>(actual, $"Expected to be an async enumerable but it's missing a valid 'GetAsyncEnumerator' method.");
                 if (errors.HasFlag(Errors.MissingCurrent))
                     throw new ActualAssertionException<TActual>(actual, $"Expected to be an async enumerator but it's missing a valid 'Current' property.");
