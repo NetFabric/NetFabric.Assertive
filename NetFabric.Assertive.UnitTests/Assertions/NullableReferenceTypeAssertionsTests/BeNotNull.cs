@@ -3,13 +3,13 @@ using Xunit;
 
 namespace NetFabric.Assertive.UnitTests
 {
-    public partial class ReferenceTypeAssertionsTests
+    public partial class NullableReferenceTypeAssertionsTests
     {
         [Fact]
         public void BeNotNull_With_Null_Should_Throw()
         {
             // Arrange
-            var actual = (object)null;
+            var actual = (object?)null;
 
             // Act
             void action() => actual.Must().BeNotNull();
@@ -25,7 +25,7 @@ namespace NetFabric.Assertive.UnitTests
         public void BeNotNull_With_NotNull_Should_NotThrow()
         {
             // Arrange
-            var actual = new object();
+            var actual = (object?)new object();
 
             // Act
             _ = actual.Must().BeNotNull();

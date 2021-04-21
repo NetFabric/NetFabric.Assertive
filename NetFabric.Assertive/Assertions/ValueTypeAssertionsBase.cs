@@ -18,31 +18,31 @@ namespace NetFabric.Assertive
         public TAssertions BeOfType<TType>()
             => typeof(TActual) == typeof(TType)
                 ? (TAssertions)this
-                : throw new ActualAssertionException<TActual>(Actual, $"Expected '{ObjectExtensions.ToFriendlyString(Actual)}' to be of type '{typeof(TType)}' but it's not.");
+                : throw new NonNullableActualAssertionException<TActual>(Actual, $"Expected '{Actual.ToFriendlyString()}' to be of type '{typeof(TType)}' but it's not.");
 
         public TAssertions NotBeOfType<TType>()
             => typeof(TActual) == typeof(TType)
-                ? throw new ActualAssertionException<TActual>(Actual, $"Expected '{ObjectExtensions.ToFriendlyString(Actual)}' not to be of type '{typeof(TType)}' but it is.")
+                ? throw new NonNullableActualAssertionException<TActual>(Actual, $"Expected '{Actual.ToFriendlyString()}' not to be of type '{typeof(TType)}' but it is.")
                 : (TAssertions)this;
 
         public TAssertions BeAssignableTo<TType>()
             => typeof(TActual).IsAssignableTo(typeof(TType))
                 ? (TAssertions)this
-                : throw new ActualAssertionException<TActual>(Actual, $"Expected '{ObjectExtensions.ToFriendlyString(Actual)}' to be assignable to '{typeof(TType)}' but it's not.");
+                : throw new NonNullableActualAssertionException<TActual>(Actual, $"Expected '{Actual.ToFriendlyString()}' to be assignable to '{typeof(TType)}' but it's not.");
 
         public TAssertions BeNotAssignableTo<TType>()
             => typeof(TActual).IsAssignableTo(typeof(TType))
-                ? throw new ActualAssertionException<TActual>(Actual, $"Expected '{ObjectExtensions.ToFriendlyString(Actual)}' to be not assignable to '{typeof(TType)}' but it is.")
+                ? throw new NonNullableActualAssertionException<TActual>(Actual, $"Expected '{Actual.ToFriendlyString()}' to be not assignable to '{typeof(TType)}' but it is.")
                 : (TAssertions)this;
 
         public TAssertions EvaluateTrue(Func<TActual, bool> func)
             => func(Actual)
                 ? (TAssertions)this
-                : throw new ActualAssertionException<TActual>(Actual, $"Evaluates to 'false'.");
+                : throw new NonNullableActualAssertionException<TActual>(Actual, $"Evaluates to 'false'.");
 
         public TAssertions EvaluateFalse(Func<TActual, bool> func)
             => func(Actual)
-                ? throw new ActualAssertionException<TActual>(Actual, $"Evaluates to 'true'.")
+                ? throw new NonNullableActualAssertionException<TActual>(Actual, $"Evaluates to 'true'.")
                 : (TAssertions)this;
 
         public TAssertions BeEqualTo(TActual expected)

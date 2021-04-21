@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
-    public class ReferenceTypeAssertionsBase<TAssertions, TActual>
+    public class NullableReferenceTypeAssertionsBase<TAssertions, TActual>
         : AssertionsBase<TAssertions>
-        where TAssertions : ReferenceTypeAssertionsBase<TAssertions, TActual>
-        where TActual : class
+        where TAssertions : NullableReferenceTypeAssertionsBase<TAssertions, TActual>
+        where TActual : class?
     {
-        internal ReferenceTypeAssertionsBase(TActual actual)
+        internal NullableReferenceTypeAssertionsBase(TActual actual)
             => Actual = actual;
         
         public TActual Actual { get; }
@@ -79,7 +78,7 @@ namespace NetFabric.Assertive
                 null => throw new NotEqualToAssertionException<TActual, TActual>(Actual, null),
                 _ => (TAssertions)this,
             };
-
+        
         public TAssertions BeSameAs<TOther>(TOther? other)
             => ReferenceEquals(Actual, other)
                 ? (TAssertions)this
@@ -90,18 +89,18 @@ namespace NetFabric.Assertive
                 ? throw new ExpectedAssertionException<TActual, TOther?>(Actual, other, $"Same instance.")
                 : (TAssertions)this;
 
-        public EnumerableReferenceTypeAssertions<TActual, TActualItem> BeEnumerableOf<TActualItem>()
+        public EnumerableNullableReferenceTypeAssertions<TActual, TActualItem> BeEnumerableOf<TActualItem>()
         {
             AssertIsEnumerable<TActual, TActualItem>(Actual, out var enumerableInfo);
 
-            return new EnumerableReferenceTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
+            return new EnumerableNullableReferenceTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
         }
 
-        public AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem> BeAsyncEnumerableOf<TActualItem>()
+        public AsyncEnumerableNullableReferenceTypeAssertions<TActual, TActualItem> BeAsyncEnumerableOf<TActualItem>()
         {
             AssertIsAsyncEnumerable<TActual, TActualItem>(Actual, out var enumerableInfo);
 
-            return new AsyncEnumerableReferenceTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
+            return new AsyncEnumerableNullableReferenceTypeAssertions<TActual, TActualItem>(Actual, enumerableInfo);
         }
     }
 }

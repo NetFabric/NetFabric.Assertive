@@ -9,12 +9,34 @@ namespace NetFabric.Assertive.UnitTests
         public static TheoryData<TestEnumerableRef, int[]> BeEqualTo_TestEnumerableRef_EqualData =>
             new()
             {
-                { new TestEnumerableRef(TestData.Empty.AsMemory<int>()), TestData.Empty },
+                { new TestEnumerableRef(TestData.Empty), TestData.Empty },
+                { new TestEnumerableRef(TestData.Single), TestData.Single },
+                { new TestEnumerableRef(TestData.Multiple), TestData.Multiple },
             };
 
         [Theory]
         [MemberData(nameof(BeEqualTo_TestEnumerableRef_EqualData))]
-        public void BeEqualTo_TestEnumerableRef_With_Equal_Should_Throw(TestEnumerableRef actual, int[] expected)
+        public void BeEqualTo_TestEnumerableRef_With_Equal_Should_NotThrow(TestEnumerableRef actual, int[] expected)
+        {
+            // Arrange
+
+            // Act
+            _ = actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
+
+            // Assert
+        }
+
+        public static TheoryData<TestEnumerableRef, int[], string> BeEqualTo_TestEnumerableRef_NotEqualData =>
+            new()
+            {
+                { new TestEnumerableRef(TestData.Empty), TestData.Single, "Actual has less items when using 'NetFabric.Assertive.UnitTests.TestEnumerableRef.GetEnumerator()'.\r\nExpected: { 5 }\r\nActual: { }" },
+                { new TestEnumerableRef(TestData.Single), TestData.Multiple, "Actual differs at index 0 when using 'NetFabric.Assertive.UnitTests.TestEnumerableRef.GetEnumerator()'.\r\nExpected: { 3, 4, 5, 6, 7 }\r\nActual: { 5 }" },
+                { new TestEnumerableRef(TestData.Single), TestData.Empty, "Actual has more items when using 'NetFabric.Assertive.UnitTests.TestEnumerableRef.GetEnumerator()'.\r\nExpected: { }\r\nActual: { 5 }" },
+            };
+
+        [Theory]
+        [MemberData(nameof(BeEqualTo_TestEnumerableRef_NotEqualData))]
+        public void BeEqualTo_TestEnumerableRef_With_NotEqual_Should_Throw(TestEnumerableRef actual, int[] expected, string message)
         {
             // Arrange
 
@@ -22,8 +44,10 @@ namespace NetFabric.Assertive.UnitTests
             void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
-            var exception = Assert.Throws<AssertionException>(action);
-            Assert.Equal("Enumerators declared as 'ref struct' are not supported. Set the 'testRefStructs' parameter to 'false' and use other method of comparison.", exception.Message);
+            var exception = Assert.Throws<EnumerableAssertionException<TestEnumerableRef, int[]>>(action);
+            Assert.Same(actual, exception.Actual);
+            Assert.Same(expected, exception.Expected);
+            Assert.Equal(message, exception.Message);        
         }
 
         public static TheoryData<TestEnumerable, int[]> BeEqualTo_TestEnumerable_EqualData =>
@@ -50,56 +74,65 @@ namespace NetFabric.Assertive.UnitTests
         public void Enumerable_BeEqualTo_With_ExceptionOnGetEnumerator_Should_Throw()
         {
             // Arrange
-            var actual = new ExceptionOnGetEnumeratorEnumerable<int>();
-            var expected = new int[0];
+            var actual = new ExceptionInGetEnumeratorEnumerable<int>();
+            var expected = Array.Empty<int>();
 
             // Act
             void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
             var exception = Assert.Throws<EnumerationException>(action);
-            Assert.Equal("Unhandled exception in ExceptionOnGetEnumeratorEnumerable`1.GetEnumerator().", exception.Message);
+            Assert.Equal("Unhandled exception in ExceptionInGetEnumeratorEnumerable`1.GetEnumerator().", exception.Message);
             Assert.NotNull(exception.InnerException);
+            var innerException = Assert.IsType<UnauthorizedAccessException>(exception.InnerException);
+            Assert.Equal("An exception!...", innerException.Message);
+            Assert.Null(innerException.InnerException);
         }
 
         [Fact]
         public void BeEqualTo_With_ExceptionOnCurrent_Should_Throw()
         {
             // Arrange
-            var actual = new ExceptionOnCurrentEnumerable<int>();
-            var expected = new int[0];
+            var actual = new ExceptionInCurrentEnumerable<int>();
+            var expected = new[] { 0 };
 
             // Act
             void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
             var exception = Assert.Throws<EnumerationException>(action);
-            Assert.Equal("Unhandled exception in ExceptionOnCurrentEnumerable`1.Current.", exception.Message);
+            Assert.Equal("Unhandled exception in ExceptionInCurrentEnumerable`1.Current.", exception.Message);
             Assert.NotNull(exception.InnerException);
+            var innerException = Assert.IsType<UnauthorizedAccessException>(exception.InnerException);
+            Assert.Equal("An exception!...", innerException.Message);
+            Assert.Null(innerException.InnerException);
         }
 
         [Fact]
         public void BeEqualTo_With_ExceptionOnMoveNext_Should_Throw()
         {
             // Arrange
-            var actual = new ExceptionOnMoveNextEnumerable<int>();
-            var expected = new int[0];
+            var actual = new ExceptionInMoveNextEnumerable<int>();
+            var expected = Array.Empty<int>();
 
             // Act
             void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
             var exception = Assert.Throws<EnumerationException>(action);
-            Assert.Equal("Unhandled exception in ExceptionOnMoveNextEnumerable`1.MoveNext().", exception.Message);
+            Assert.Equal("Unhandled exception in ExceptionInMoveNextEnumerable`1.MoveNext().", exception.Message);
             Assert.NotNull(exception.InnerException);
+            var innerException = Assert.IsType<UnauthorizedAccessException>(exception.InnerException);
+            Assert.Equal("An exception!...", innerException.Message);
+            Assert.Null(innerException.InnerException);
         }
 
         [Fact]
         public void BeEqualTo_With_ExceptionOnDispose_Should_Throw()
         {
             // Arrange
-            var actual = new ExceptionOnDisposeEnumerable<int>();
-            var expected = new int[0];
+            var actual = new ExceptionInDisposeEnumerable<int>();
+            var expected = Array.Empty<int>();
 
             // Act
             void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
@@ -108,6 +141,9 @@ namespace NetFabric.Assertive.UnitTests
             var exception = Assert.Throws<EnumerationException>(action);
             Assert.Equal("Unhandled exception in IDisposable.Dispose().", exception.Message);
             Assert.NotNull(exception.InnerException);
+            var innerException = Assert.IsType<UnauthorizedAccessException>(exception.InnerException);
+            Assert.Equal("An exception!...", innerException.Message);
+            Assert.Null(innerException.InnerException);
         }
 
         public static TheoryData<TestEnumerable, int[], string> BeEqualTo_TestEnumerable_NotEqualData =>
@@ -134,8 +170,8 @@ namespace NetFabric.Assertive.UnitTests
             void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
-            var exception = Assert.Throws<EnumerableAssertionException<TestEnumerable, int, int[]>>(action);
-            Assert.Same(actual, exception.Actual.Instance);
+            var exception = Assert.Throws<EnumerableAssertionException<TestEnumerable, int[]>>(action);
+            Assert.Same(actual, exception.Actual);
             Assert.Same(expected, exception.Expected);
             Assert.Equal(message, exception.Message);
         }

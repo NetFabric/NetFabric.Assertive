@@ -3,15 +3,15 @@ using NetFabric.Reflection;
 
 namespace NetFabric.Assertive
 {
-    public class EnumerableAssertionException<TActual, TActualItem, TExpected>
-        : EqualToAssertionException<EnumerableWrapper<TActual, TActualItem>, TExpected>
+    public class EnumerableAssertionException<TActual, TExpected>
+        : EqualToAssertionException<TActual, TExpected>
     {
-        public EnumerableAssertionException(EnumerableWrapper<TActual, TActualItem> actual, TExpected expected)
+        public EnumerableAssertionException(TActual actual, TExpected expected)
             : this(actual, expected, $"Expected collections to have same items.")
         {
         }
 
-        public EnumerableAssertionException(EnumerableWrapper<TActual, TActualItem> actual, TExpected expected, string message)
+        public EnumerableAssertionException(TActual actual, TExpected expected, string message)
             : base(actual, expected, message)
         {
         }

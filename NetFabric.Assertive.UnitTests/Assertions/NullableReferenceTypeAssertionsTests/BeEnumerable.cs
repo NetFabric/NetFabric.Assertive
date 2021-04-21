@@ -5,7 +5,7 @@ using Xunit;
 
 namespace NetFabric.Assertive.UnitTests
 {
-    public partial class ReferenceTypeAssertionsTests
+    public partial class NullableReferenceTypeAssertionsTests
     {
         [Fact]
         public void BeEnumerable_With_MissingGetEnumerator_Should_Throw()
@@ -19,7 +19,7 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingGetEnumeratorEnumerable<int>>>(action);
             Assert.Equal(actual, exception.Actual);
-            Assert.Equal($"Expected to be an enumerable but it's missing a valid 'GetEnumerator' method.{Environment.NewLine}Actual: NetFabric.Assertive.UnitTests.MissingGetEnumeratorEnumerable`1[System.Int32]", exception.Message);
+            Assert.Equal($"Expected to be an enumerable but it's missing a valid 'GetEnumerator' method.{Environment.NewLine}Actual: NetFabric.Assertive.UnitTests.NullableReferenceTypeAssertionsTests+MissingGetEnumeratorEnumerable`1[System.Int32]", exception.Message);
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingCurrentEnumerable<int>>>(action);
             Assert.Equal(actual, exception.Actual);
-            Assert.Equal($"Expected to be an enumerator but it's missing a valid 'Current' property.{Environment.NewLine}Actual: NetFabric.Assertive.UnitTests.MissingCurrentEnumerable`1[System.Int32]", exception.Message);
+            Assert.Equal($"Expected to be an enumerator but it's missing a valid 'Current' property.{Environment.NewLine}Actual: NetFabric.Assertive.UnitTests.NullableReferenceTypeAssertionsTests+MissingCurrentEnumerable`1[System.Int32]", exception.Message);
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
             var exception = Assert.Throws<ActualAssertionException<MissingMoveNextEnumerable<int>>>(action);
             Assert.Equal(actual, exception.Actual);
-            Assert.Equal($"Expected to be an enumerator but it's missing a valid 'MoveNext' method.{Environment.NewLine}Actual: NetFabric.Assertive.UnitTests.MissingMoveNextEnumerable`1[System.Int32]", exception.Message);
+            Assert.Equal($"Expected to be an enumerator but it's missing a valid 'MoveNext' method.{Environment.NewLine}Actual: NetFabric.Assertive.UnitTests.NullableReferenceTypeAssertionsTests+MissingMoveNextEnumerable`1[System.Int32]", exception.Message);
         }
 
         [Fact]
@@ -115,5 +115,69 @@ namespace NetFabric.Assertive.UnitTests
             // Assert
         }
 
+        class MissingGetEnumeratorEnumerable<T>
+        {
+        }
+
+        class MissingCurrentEnumerable<T>
+        {
+            public MissingCurrentEnumerable<T> GetEnumerator() => this;
+
+            public bool MoveNext() => false;
+        }
+
+        class MissingMoveNextEnumerable<T>
+        {
+            public MissingMoveNextEnumerable<T> GetEnumerator() => this;
+
+            public T Current => default;
+        }
+
+        class EmptyEnumerable<T>
+        {
+            public EmptyEnumerable<T> GetEnumerator() => this;
+
+            public T Current => default;
+
+            public bool MoveNext() => false;
+        }
+
+        class EmptyEnumerableExplicitInterfaces<T> : IEnumerable<T>, IEnumerator<T>
+        {
+            IEnumerator<T> IEnumerable<T>.GetEnumerator() => this;
+            IEnumerator IEnumerable.GetEnumerator() => this;
+
+            T IEnumerator<T>.Current => default;
+            object IEnumerator.Current => default;
+
+            bool IEnumerator.MoveNext() => false;
+            void IEnumerator.Reset() => throw new NotSupportedException();
+            void IDisposable.Dispose() {}
+        }
+
+        class ByRefEnumerable<T>
+        {
+            readonly T[] source;
+
+            public ByRefEnumerable(T[] source) => this.source = source;
+
+            public Enumerator GetEnumerator() => new(this);
+
+            public struct Enumerator
+            {
+                readonly T[] source;
+                int current;
+
+                internal Enumerator(ByRefEnumerable<T> enumerable)
+                {
+                    source = enumerable.source;
+                    current = -1;
+                }
+
+                public readonly ref readonly T Current => ref source[current];
+
+                public bool MoveNext() => ++current < source.Length; 
+            }
+        }
     }
 }

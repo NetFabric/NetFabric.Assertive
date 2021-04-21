@@ -19,12 +19,12 @@ namespace NetFabric.Assertive
             if (Actual is null)
             {
                 if (expected is not null)
-                    throw new EqualToAssertionException<string[], TExpected>(Actual, expected);
+                    throw new EqualToAssertionException<string[]?, TExpected>(Actual, expected);
             }
             else
             {
                 if (expected is null)
-                    throw new EqualToAssertionException<string[], TExpected>(Actual, expected);
+                    throw new EqualToAssertionException<string[], TExpected?>(Actual, expected);
 
                 var (result, index, actualItem, expectedItem) = Actual.Compare(expected);
                 switch (result)

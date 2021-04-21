@@ -2,10 +2,11 @@ using System;
 
 namespace NetFabric.Assertive
 {
-    public class ActualAssertionException<TActual>
+    public class NonNullableActualAssertionException<TActual>
         : AssertionException
+        where TActual : notnull
     {
-        public ActualAssertionException(TActual actual, string message)
+        public NonNullableActualAssertionException(TActual actual, string message)
             : base($"{message}{Environment.NewLine}Actual: {actual.ToFriendlyString()}") 
             => Actual = actual;
 

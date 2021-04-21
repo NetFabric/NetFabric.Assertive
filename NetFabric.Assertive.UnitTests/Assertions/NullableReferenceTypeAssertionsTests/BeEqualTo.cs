@@ -5,11 +5,12 @@ using Xunit;
 
 namespace NetFabric.Assertive.UnitTests
 {
-    public partial class ReferenceTypeAssertionsTests
+    public partial class NullableReferenceTypeAssertionsTests
     {
         [Theory]
+        [InlineData(null)]
         [InlineData(0)]
-        public void BeEqualTo_With_Equal_Should_NotThrow(object value)
+        public void BeEqualTo_With_Equal_Should_NotThrow(object? value)
         {
             // Arrange
 
@@ -20,7 +21,7 @@ namespace NetFabric.Assertive.UnitTests
         }
 
 
-        public static TheoryData<object, object, string> Enumerable_NotEqualData =>
+        public static TheoryData<object?, object?, string> Enumerable_NotEqualData =>
             new()
             {
                 { null, 0, $"Expected to be equal but it's not.{Environment.NewLine}Expected: 0{Environment.NewLine}Actual: <null>" },
@@ -30,7 +31,7 @@ namespace NetFabric.Assertive.UnitTests
 
         [Theory]
         [MemberData(nameof(Enumerable_NotEqualData))]
-        public void BeEqualTo_With_NotEqual_Should_Throw(object actual, object expected, string message)
+        public void BeEqualTo_With_NotEqual_Should_Throw(object? actual, object? expected, string message)
         {
             // Arrange
 
