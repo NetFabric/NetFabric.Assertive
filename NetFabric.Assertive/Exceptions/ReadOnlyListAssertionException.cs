@@ -1,5 +1,3 @@
-using System;
-
 namespace NetFabric.Assertive
 {
     public class ReadOnlyListAssertionException<TActualItem, TExpected>

@@ -1,9 +1,7 @@
 using NetFabric.Reflection;
 using System;
-using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
@@ -14,7 +12,7 @@ using static System.Linq.Expressions.Expression;
 
 namespace NetFabric.Assertive
 {
-    //[DebuggerNonUserCode]
+    [DebuggerNonUserCode]
     public static class ObjectExtensions
     {
         static readonly string ListSeparator = CultureInfo.CurrentCulture.TextInfo.ListSeparator;

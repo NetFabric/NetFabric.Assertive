@@ -1,6 +1,3 @@
-using System;
-using NetFabric.Reflection;
-
 namespace NetFabric.Assertive
 {
     public class CopyToAssertionException<TActualItem, TExpected>

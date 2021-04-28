@@ -2,13 +2,12 @@ using NetFabric.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
 namespace NetFabric.Assertive
 {
-    //[DebuggerNonUserCode]
+    [DebuggerNonUserCode]
     public abstract class AssertionsBase<TAssertions>
         where TAssertions : AssertionsBase<TAssertions>
     {

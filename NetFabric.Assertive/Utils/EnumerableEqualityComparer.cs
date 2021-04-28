@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
@@ -10,7 +11,7 @@ using static System.Linq.Expressions.Expression;
 
 namespace NetFabric.Assertive
 {
-    //[DebuggerNonUserCode]
+    [DebuggerNonUserCode]
     static partial class EnumerableEqualityComparer
     {
         public static (EqualityResult, int, T?, T?) Compare<T, TExpected>(this IEnumerable<T> actual, TExpected expected)
