@@ -5,42 +5,57 @@ using System.Linq;
 
 namespace NetFabric.Assertive.UnitTests
 {
-    public class ExceptionOnGetEnumeratorEnumerable<T>
+    public class ExceptionInGetEnumeratorEnumerable<T>
     {
-        public ExceptionOnGetEnumeratorEnumerable<T> GetEnumerator() => throw new Exception();
-        public T Current => default;
-        public bool MoveNext() => false;
+        public ExceptionInGetEnumeratorEnumerable<T> GetEnumerator() 
+            => throw new UnauthorizedAccessException("An exception!...");
+        public T? Current 
+            => default;
+        public bool MoveNext() 
+            => default;
     }
 
-    public class ExceptionOnCurrentEnumerable<T>
+    public class ExceptionInCurrentEnumerable<T>
     {
-        public ExceptionOnCurrentEnumerable<T> GetEnumerator() => this;
-        public T Current => throw new Exception();
-        public bool MoveNext() => true;
+        public ExceptionInCurrentEnumerable<T> GetEnumerator() 
+            => this;
+        public T? Current 
+            => throw new UnauthorizedAccessException("An exception!...");
+        public bool MoveNext() 
+            => true;
     }
 
-    public class ExceptionOnMoveNextEnumerable<T>
+    public class ExceptionInMoveNextEnumerable<T>
     {
-        public ExceptionOnMoveNextEnumerable<T> GetEnumerator() => this;
-        public T Current => default;
-        public bool MoveNext() => throw new Exception();
+        public ExceptionInMoveNextEnumerable<T> GetEnumerator() 
+            => this;
+        public T? Current 
+            => default;
+        public bool MoveNext() 
+            => throw new UnauthorizedAccessException("An exception!...");
     }
 
-    public class ExceptionOnDisposeEnumerable<T> : IDisposable
+    public class ExceptionInDisposeEnumerable<T> : IDisposable
     {
-        public ExceptionOnDisposeEnumerable<T> GetEnumerator() => this;
-        public T Current => default;
-        public bool MoveNext() => false;
-        public void Dispose() => throw new Exception();
+        public ExceptionInDisposeEnumerable<T> GetEnumerator() 
+            => this;
+        public T? Current 
+            => default;
+        public bool MoveNext() 
+            => default;
+        public void Dispose() 
+            => throw new UnauthorizedAccessException("An exception!...");
     }
 
     public class TestEnumerableRef
     {
         readonly Memory<int> items;
 
-        public TestEnumerableRef(Memory<int> items) => this.items = items;
+        public TestEnumerableRef(Memory<int> items) 
+            => this.items = items;
 
-        public Enumerator GetEnumerator() => new(items);
+        public Enumerator GetEnumerator() 
+            => new(items);
 
         public ref struct Enumerator
         {
@@ -53,9 +68,11 @@ namespace NetFabric.Assertive.UnitTests
                 index = -1;
             }
 
-            public int Current => items[index];
+            public int Current 
+                => items[index];
 
-            public bool MoveNext() => ++index < items.Length;
+            public bool MoveNext() 
+                => ++index < items.Length;
         }
     }
 
@@ -63,9 +80,11 @@ namespace NetFabric.Assertive.UnitTests
     {
         readonly int[] items;
 
-        public TestEnumerable(int[] items) => this.items = items;
+        public TestEnumerable(int[] items) 
+            => this.items = items;
 
-        public Enumerator GetEnumerator() => new(items);
+        public Enumerator GetEnumerator() 
+            => new(items);
 
         public struct Enumerator
         {
@@ -73,14 +92,13 @@ namespace NetFabric.Assertive.UnitTests
             int index;
 
             internal Enumerator(int[] items)
-            {
-                this.items = items;
-                index = -1;
-            }
+                => (this.items, index) = (items, -1);
 
-            public int Current => items[index];
+            public int Current 
+                => items[index];
 
-            public bool MoveNext() => ++index < items.Length;
+            public bool MoveNext() 
+                => ++index < items.Length;
         }
     }
 
@@ -104,18 +122,19 @@ namespace NetFabric.Assertive.UnitTests
             int index;
 
             internal Enumerator(int[] items)
-            {
-                this.items = items;
-                index = -1;
-            }
+                => (this.items, index) = (items, -1);
 
-            public object Current => items[index];
+            public object Current 
+                => items[index];
 
-            public bool MoveNext() => ++index < items.Length;
+            public bool MoveNext() 
+                => ++index < items.Length;
 
-            public void Reset() => index = -1;
+            public void Reset() 
+                => index = -1;
 
-            public void Dispose() {}
+            public void Dispose() 
+            {}
         }
     }
 
@@ -139,19 +158,21 @@ namespace NetFabric.Assertive.UnitTests
             int index;
 
             internal Enumerator(int[] items)
-            {
-                this.items = items;
-                index = -1;
-            }
+                => (this.items, index) = (items, -1);
 
-            public int Current => items[index];
-            object IEnumerator.Current => items[index];
+            public int Current 
+                => items[index];
+            object IEnumerator.Current 
+                => items[index];
 
-            public bool MoveNext() => ++index < items.Length;
+            public bool MoveNext() 
+                => ++index < items.Length;
 
-            public void Reset() => index = -1;
+            public void Reset() 
+                => index = -1;
 
-            public void Dispose() {}
+            public void Dispose() 
+            {}
         }
     }
 
@@ -178,9 +199,11 @@ namespace NetFabric.Assertive.UnitTests
 
         public int Count { get; }
 
-        bool ICollection<int>.IsReadOnly => true;
+        bool ICollection<int>.IsReadOnly 
+            => true;
 
-        public bool Contains(int item) => containsItems.Contains(item);
+        public bool Contains(int item) 
+            => containsItems.Contains(item);
 
         public void CopyTo(int[] array, int arrayIndex)
         {
@@ -188,9 +211,12 @@ namespace NetFabric.Assertive.UnitTests
                 array[index + arrayIndex] = copyToItems[index];
         }
 
-        void ICollection<int>.Add(int item) => throw new NotSupportedException();
-        void ICollection<int>.Clear() => throw new NotSupportedException();
-        bool ICollection<int>.Remove(int item) => throw new NotSupportedException();
+        void ICollection<int>.Add(int item) 
+            => throw new NotSupportedException();
+        void ICollection<int>.Clear() 
+            => throw new NotSupportedException();
+        bool ICollection<int>.Remove(int item) 
+            => throw new NotSupportedException();
     }
 
     public class TestList : TestCollection, IReadOnlyList<int>, IList<int>
@@ -215,7 +241,8 @@ namespace NetFabric.Assertive.UnitTests
             this.indexOfItems = indexOfItems;
         }
 
-        public int this[int index] => publicIndexerItems[index];
+        public int this[int index] 
+            => publicIndexerItems[index];
 
         int IList<int>.this[int index] 
         { 
@@ -223,9 +250,12 @@ namespace NetFabric.Assertive.UnitTests
             set => throw new NotSupportedException(); 
         }
 
-        public int IndexOf(int item) => ((IList<int>)indexOfItems).IndexOf(item);
+        public int IndexOf(int item) 
+            => ((IList<int>)indexOfItems).IndexOf(item);
 
-        void IList<int>.Insert(int index, int item) => throw new NotSupportedException();
-        void IList<int>.RemoveAt(int index) => throw new NotSupportedException();
+        void IList<int>.Insert(int index, int item) 
+            => throw new NotSupportedException();
+        void IList<int>.RemoveAt(int index) 
+            => throw new NotSupportedException();
     }
 }

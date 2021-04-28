@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using NetFabric.Reflection;
 using Xunit;
 
 namespace NetFabric.Assertive.UnitTests
@@ -71,8 +72,8 @@ namespace NetFabric.Assertive.UnitTests
             void action() => actual.Must().BeEnumerableOf<int>().BeEqualTo(expected);
 
             // Assert
-            var exception = Assert.Throws<EnumerableAssertionException<TestCollection, int, int[]>>(action);
-            Assert.Equal(actual, exception.Actual.Instance);
+            var exception = Assert.Throws<EnumerableAssertionException<EnumerableWrapper<TestCollection, int>, int[]>>(action);
+            Assert.Equal(actual, exception.Actual);
             Assert.Same(expected, exception.Expected);
             Assert.Equal(message, exception.Message);
         }

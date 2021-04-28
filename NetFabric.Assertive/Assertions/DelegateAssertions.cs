@@ -5,7 +5,7 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public abstract class DelegateAssertions<TActual>
-        : ReferenceTypeAssertionsBase<DelegateAssertions<TActual>, Delegate>
+        : NullableReferenceTypeAssertionsBase<DelegateAssertions<TActual>, Delegate>
         where TActual : Delegate
     {
         internal DelegateAssertions(TActual actual) 

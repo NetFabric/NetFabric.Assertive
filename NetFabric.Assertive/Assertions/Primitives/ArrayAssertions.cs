@@ -6,7 +6,7 @@ namespace NetFabric.Assertive
 {
     [DebuggerNonUserCode]
     public class ArrayAssertions<TActualItem>
-        : ReferenceTypeAssertionsBase<ArrayAssertions<TActualItem>, TActualItem[]>
+        : NullableReferenceTypeAssertionsBase<ArrayAssertions<TActualItem>, TActualItem[]>
     {
         internal ArrayAssertions(TActualItem[] actual)
             : base(actual)
@@ -30,7 +30,7 @@ namespace NetFabric.Assertive
                 if (expected is null)
                     throw new EqualToAssertionException<TActualItem[], TExpected>(Actual, expected);
 
-                var (result, index, _, _) = Actual.Compare(expected, comparer);
+                var (result, index, _, _) = Actual.Compare<TActualItem, TExpected, TExpectedItem>(expected, comparer);
                 switch (result)
                 {
                     case EqualityResult.NotEqualAtIndex:

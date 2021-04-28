@@ -7,7 +7,7 @@
 
 # NetFabric.Assertive
 
-This is a assertions library that performs full coverage on any enumerable type and checks edge scenarios that many developers are not aware of.
+This is a assertions library that performs full coverage on most enumerable types and checks edge scenarios that many developers are not aware of.
 
 ## Syntax
 
@@ -133,50 +133,94 @@ It implements `IReadOnlyList<>` so, the indexer can be used. The indexer perform
 
 One single call to the `BeEnumerableOf<TActualItem>()` assertion validates if all implementations return the same sequence of items. Returned by the multiple `GetEnumerator()` methods, the `Count` property, the `CopyTo` method and the multiple indexers. It doesn't test `IndexOf()` and only partially tests `Contains()` methods because these would only work for certain sequences.
 
-### `ref struct` enumerators
+### No enumerable interfaces
 
-Enumerators declared as `ref struct` cannot be boxed. This means, they cannot be converted to `object` or implement interfaces. This library uses reflection to be able to handle enumerators that don't implement enumerable interfaces but this requires the conversion to `object`. For this reason, this library cannot handle this type of enumerators but, it can still test all the other functionalities of the enumerable.
+A collection does not have to implement interfaces to be enumerable using `foreach` or `await foreach`. For example, these are two valid enumerables:
 
-In this case, in the call to `BeEnumerableOf<>()`, set the optional parameter `warnRefStructs` to `false`:
+``` csharp
+public class Enumerable<T>
+{
+    public Enumerable<T> GetEnumerator() 
+        => this;
+
+    public T Current 
+        => default;
+
+    public bool MoveNext() 
+        => default;
+}
+```
+
+``` csharp
+public class AsyncEnumerable<T>
+{
+    public AsyncEnumerable<T> GetAsyncEnumerator() 
+        => this;
+
+    public T Current 
+        => default;
+
+    public ValueTask<bool> MoveNextAsync() 
+        => default;
+}
+```
+
+To be able to handle these, `NetFabric.Assertive` does not cast or constrain the collections to an enumerable interface. It uses [`NetFabric.Reflection`](https://www.nuget.org/packages/NetFabric.Reflection/) to validate if its an enumerable.
+
+Enumerables can also have `ref struct` enumerators. For example:
+
+``` csharp
+class Enumerable<T>
+{
+    readonly Memory<T> source;
+    
+    public Enumerable(Memory<T> source)
+        => this.source = source;
+        
+    public Enumerator GetEnumerator()
+        => new(source);
+        
+    public ref struct Enumerator // ref struct enumerator
+    {
+        readonly Span<T> source;
+        int index;
+        
+        internal Enumerator(Memory<T> source)
+        {
+            this.source = source.Span;
+            index = -1;
+        }
+        
+        public T Current
+            => source[index];
+            
+        public bool MoveNext()
+            => ++index < source.Length;
+    }
+}
+```
+
+These cannot be boxed, so reflection cannot be used to enumerate these as it tries to cast them to `object`. To support these type of enumerables `NetFabric.Assertive` generates custom code using expression trees and the data collected by [`NetFabric.Reflection`](https://www.nuget.org/packages/NetFabric.Reflection/).
+
+`NetFabric.Assertive` also supports validation of async enumerables. To be able to enumerate these, its required the use of the `async` and `await` keywords so that the compiler generates a complex state machine that enumerates it. Expression trees do not yet support these. For this reason, `NetFabric.Assertive` uses a wrapper that implements `IAsyncEnumerable` and calls the enumerable using reflection.
+
+`await foreach` does not support `ref struct` enumerators so, the use of reflection in this case, is not an issue.
+
+## Limitations
+
+`foreach` and `await foreach` support the return by reference of items. Unfortunately reflection only supports this feature since `netstandard 2.1` and expression trees do not support it at all.
+
+For these reasons, `NetFabric.Assertive` only support return by reference in the case of async enumerables and starting from `netstandard 2.1`.
+
+In the case it's not supported, an exception is thrown. To be able to test the other types of enumeration on the enumerable, it's possible to disable this test by setting the optional parameter `warnRefReturns` to `false`:
 
 ``` csharp
 result.Must()
     .BeEnumerableOf<int>()
-    .BeEqualTo(expected, warnRefStructs: false)
+    .BeEqualTo(expected, warnRefReturns: false)
 ```
 
-This disables the enumeration using the `ref struct` enumerator but leaves all the other tests enabled. You should still compare the enumeration using an alternative method. If `SequenceEqual` is available, add: 
-
-``` csharp
-result.SequenceEqual(expected).Must().BeTrue();
-```
-
-If not, add:
-
-``` csharp
-var resultEnumerator = result.GetEnumerator();
-using var expectedEnumerator = expected.GetEnumerator();
-while (true)
-{
-    var resultEnded = !resultEnumerator.MoveNext();
-    var expectedEnded = !expectedEnumerator.MoveNext();
-
-    if (resultEnded != expectedEnded)
-        throw new Exception("Not same size");
-
-    if (resultEnded)
-        break;
-
-    if (resultEnumerator.Current != expectedEnumerator.Current)
-        throw new Exception("Items are not equal");
-}
-```
-
-### By reference returns
-
-Enumerators and indexers can return the items by reference. As mentioned above, this library uses reflection for handling enumerators. Unfortunately, the invocation of methods that return-by-reference was made possible only with `netstandard2.1`.
-
-If your enumerator returns by reference and the unit testing project targets platforms not compatible with `netstandard2.1`, use the same solution as in the previous point but, with `warnRefReturns` set to `false`.
+This disables this particular test but leaves all the other enabled. You should still compare the enumeration using an alternative method. 
 
 ## References
 

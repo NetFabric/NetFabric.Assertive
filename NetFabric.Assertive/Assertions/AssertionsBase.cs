@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace NetFabric.Assertive
 {
-    [DebuggerNonUserCode]
+    //[DebuggerNonUserCode]
     public abstract class AssertionsBase<TAssertions>
         where TAssertions : AssertionsBase<TAssertions>
     {
@@ -83,7 +83,6 @@ namespace NetFabric.Assertive
             TActual actual, EnumerableInfo actualEnumerableInfo, 
             TExpected expected, 
             Func<TActualItem, TExpectedItem, bool> comparer,
-            bool testRefStructs,
             bool testRefReturns,
             bool testNonGeneric,
             bool testIndexOf,
@@ -91,81 +90,70 @@ namespace NetFabric.Assertive
             where TActual : notnull
             where TExpected : IEnumerable<TExpectedItem>
         {
-            var isRefReturn = false;
-#if !NETSTANDARD2_1 
-            isRefReturn = actualEnumerableInfo.EnumeratorInfo.Current.PropertyType.IsByRef;
-#endif
+            var isRefReturn = actualEnumerableInfo.EnumeratorInfo.Current.PropertyType.IsByRef;
             if (isRefReturn && testRefReturns)
                 throw new AssertionException(Resource.RefReturnsMessage);
 
-            var isRefStruct = actualEnumerableInfo.EnumeratorInfo.IsByRefLike;
-            if (isRefStruct && testRefStructs)
-                throw new AssertionException(Resource.RefStructMessage);
-
-            if ((testRefStructs || !isRefStruct) && (testRefReturns || !isRefReturn))
+            if (testRefReturns || !isRefReturn)
             {
-                var wrapped = new EnumerableWrapper<TActual, TActualItem>(actual, actualEnumerableInfo);
-                var (result, index, _, _) = wrapped.Compare(expected, comparer);
+                var (result, index, _, _) = actual.Compare(expected, comparer);
                 switch (result)
                 {
                     case EqualityResult.NotEqualAtIndex:
-                        throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
-                            wrapped,
+                        throw new EnumerableAssertionException<TActual, TExpected>(
+                            actual,
                             expected,
                             $"Actual differs at index {index} when using '{actualEnumerableInfo.GetEnumerator.DeclaringType}.GetEnumerator()'.");
 
                     case EqualityResult.LessItem:
-                        throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
-                            wrapped,
+                        throw new EnumerableAssertionException<TActual, TExpected>(
+                            actual,
                             expected,
                             $"Actual has less items when using '{actualEnumerableInfo.GetEnumerator.DeclaringType}.GetEnumerator()'.");
 
                     case EqualityResult.MoreItems:
-                        throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
-                            wrapped,
+                        throw new EnumerableAssertionException<TActual, TExpected>(
+                            actual,
                             expected,
                             $"Actual has more items when using '{actualEnumerableInfo.GetEnumerator.DeclaringType}.GetEnumerator()'.");
-                }
-
-                if (typeof(TActual).IsAssignableTo(typeof(IReadOnlyCollection<>).MakeGenericType(typeof(TActualItem))))
-                {
-                    // check if the enumeration wrapper will work
-                    if ((testRefStructs || !isRefStruct) && (testRefReturns || !isRefReturn))
-                    {
-                        // test Count
-                        var actualCount = ((IReadOnlyCollection<TActualItem>)actual).Count;
-                        var expectedCount = wrapped.Count();
-                        if (actualCount != expectedCount)
-                            throw new CountAssertionException(actualCount, expectedCount);
-                    }
                 }
             }
 
             var publicCount = typeof(TActual).GetProperty("Count", BindingFlags.Public | BindingFlags.Instance, null, typeof(int), Type.EmptyTypes, null);
-            var publicIndexer = typeof(TActual).GetProperty("Item", BindingFlags.Public | BindingFlags.Instance, null, typeof(TActualItem), new[] { typeof(int) }, null);
-            if (publicCount is not null && publicIndexer is not null)
+            if (publicCount is not null)
             {
-                var wrappedActual = new IndexerWrapper<TActual, TActualItem>(actual, publicIndexer);
-                var (result, index, _, _) = wrappedActual.Compare(expected, comparer);
-                switch (result)
+                // test Count
+                var actualCount = (int)publicCount.GetValue(actual);
+                var expectedCount = expected.Count();
+                if (actualCount != expectedCount)
+                    throw new CountAssertionException(actualCount, expectedCount);
+
+                // test indexer
+                var publicIndexer = typeof(TActual).GetProperty("Item", BindingFlags.Public | BindingFlags.Instance, null, typeof(TActualItem), new[] { typeof(int) }, null);
+                if (publicIndexer is not null)
                 {
-                    case EqualityResult.NotEqualAtIndex:
-                        throw new EqualToAssertionException<IndexerWrapper<TActual, TActualItem>, TExpected>(
-                            wrappedActual,
-                            expected,
-                            $"Actual differs at index {index} when using the indexer {typeof(TActual)}.Item[System.Int32].");
+                    var wrappedActual = new IndexerWrapper<TActual, TActualItem>(actual, publicIndexer);
+                    var (result, index, _, _) = wrappedActual.Compare(expected, comparer);
+                    switch (result)
+                    {
+                        case EqualityResult.NotEqualAtIndex:
+                            throw new EqualToAssertionException<IndexerWrapper<TActual, TActualItem>, TExpected>(
+                                wrappedActual,
+                                expected,
+                                $"Actual differs at index {index} when using the indexer {typeof(TActual)}.Item[System.Int32].");
 
-                    case EqualityResult.LessItem:
-                        throw new EqualToAssertionException<IndexerWrapper<TActual, TActualItem>, TExpected>(
-                            wrappedActual,
-                            expected,
-                            $"Actual has less items when using the indexer {typeof(TActual)}.Item[System.Int32].");
+                        case EqualityResult.LessItem:
+                            throw new EqualToAssertionException<IndexerWrapper<TActual, TActualItem>, TExpected>(
+                                wrappedActual,
+                                expected,
+                                $"Actual has less items when using the indexer {typeof(TActual)}.Item[System.Int32].");
 
-                    case EqualityResult.MoreItems:
-                        throw new EqualToAssertionException<IndexerWrapper<TActual, TActualItem>, TExpected>(
-                            wrappedActual,
-                            expected,
-                            $"Actual has more items when using the indexer {typeof(TActual)}.Item[System.Int32].");
+                        case EqualityResult.MoreItems:
+                            throw new EqualToAssertionException<IndexerWrapper<TActual, TActualItem>, TExpected>(
+                                wrappedActual,
+                                expected,
+                                $"Actual has more items when using the indexer {typeof(TActual)}.Item[System.Int32].");
+                    }
                 }
             }
 
@@ -173,12 +161,6 @@ namespace NetFabric.Assertive
             {
                 if (@interface.IsEnumerable(out var enumerableInfo))
                 {
-                    isRefStruct = enumerableInfo.EnumeratorInfo.IsByRefLike;
-                    if (!testRefStructs && isRefStruct)
-                        continue;
-                    if (testRefStructs && isRefStruct)
-                        throw new AssertionException(Resource.RefStructMessage);
-
                     // test enumeration
                     var itemType = enumerableInfo.EnumeratorInfo.Current.PropertyType;
                     if (itemType.IsByRef)
@@ -203,19 +185,19 @@ namespace NetFabric.Assertive
                     switch (result)
                     {
                         case EqualityResult.NotEqualAtIndex:
-                            throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
+                            throw new EnumerableAssertionException<EnumerableWrapper<TActual, TActualItem>, TExpected>(
                                 wrapped,
                                 expected,
                                 $"Actual differs at index {index} when using '{@interface}.GetEnumerator()'.");
 
                         case EqualityResult.LessItem:
-                            throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
+                            throw new EnumerableAssertionException<EnumerableWrapper<TActual, TActualItem>, TExpected>(
                                 wrapped,
                                 expected,
                                 $"Actual has less items when using '{@interface}.GetEnumerator()'.");
 
                         case EqualityResult.MoreItems:
-                            throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
+                            throw new EnumerableAssertionException<EnumerableWrapper<TActual, TActualItem>, TExpected>(
                                 wrapped,
                                 expected,
                                 $"Actual has more items when using '{@interface}.GetEnumerator()'.");
@@ -234,7 +216,7 @@ namespace NetFabric.Assertive
                     while (enumerator.MoveNext())
                     {
                         if (!collectionActual.Contains(enumerator.Current))
-                            throw new EnumerableAssertionException<TActual, TActualItem, TExpected>(
+                            throw new EnumerableAssertionException<EnumerableWrapper<TActual, TActualItem>, TExpected>(
                                 new EnumerableWrapper<TActual, TActualItem>(actual, actualEnumerableInfo),
                                 expected,
                                 $"'Contains' return false for an item found when using 'System.Collections.Generic.IEnumerable`1[{typeof(TActualItem)}].GetEnumerator()'.");
@@ -413,7 +395,6 @@ namespace NetFabric.Assertive
             TActual actual, 
             AsyncEnumerableInfo actualEnumerableInfo, TExpected expected, 
             Func<TActualItem, TExpectedItem, bool> comparer, 
-            bool testRefStructs = true, 
             bool testRefReturns = true,
             bool testNonGeneric = true)
             where TExpected : IEnumerable<TExpectedItem>
@@ -431,7 +412,7 @@ namespace NetFabric.Assertive
                 var getEnumeratorDeclaringType = actualEnumerableInfo.GetAsyncEnumerator.DeclaringType;
                 var actualItemType = actualEnumerableInfo.EnumeratorInfo.Current.PropertyType;
                 var wrapped = new AsyncEnumerableWrapper<TActual, TActualItem>(actual, actualEnumerableInfo);
-                var (result, index, _, _) = wrapped.Compare(expected, comparer).GetAwaiter().GetResult();
+                var (result, index, _, _) = wrapped.Compare<TActualItem, TExpected, TExpectedItem>(expected, comparer).GetAwaiter().GetResult();
                 switch (result)
                 {
                     case EqualityResult.NotEqualAtIndex:
@@ -478,7 +459,7 @@ namespace NetFabric.Assertive
                         continue;
 
                     var wrapped = new AsyncEnumerableWrapper<TActual, TActualItem>(actual, enumerableInfo);
-                    var (result, index, _, _) = wrapped.Compare(expected, comparer).GetAwaiter().GetResult();
+                    var (result, index, _, _) = wrapped.Compare<TActualItem, TExpected, TExpectedItem>(expected, comparer).GetAwaiter().GetResult();
                     switch (result)
                     {
                         case EqualityResult.NotEqualAtIndex:
