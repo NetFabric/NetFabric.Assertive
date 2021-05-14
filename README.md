@@ -3,7 +3,6 @@
 [![Coverage](https://img.shields.io/coveralls/github/NetFabric/NetFabric.Assertive/master?style=flat-square&logo=coveralls)](https://coveralls.io/github/NetFabric/NetFabric.Assertive)
 [![NuGet Version](https://img.shields.io/nuget/v/NetFabric.Assertive.svg?style=flat-square&logo=nuget)](https://www.nuget.org/packages/NetFabric.Assertive/)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/NetFabric.Assertive.svg?style=flat-square&logo=nuget)](https://www.nuget.org/packages/NetFabric.Assertive/) 
-[![Gitter](https://img.shields.io/gitter/room/netfabric/netfabric.assertive?style=flat-square&logo=gitter)](https://gitter.im/NetFabric/NetFabric.Assertive)
 
 # NetFabric.Assertive
 
