@@ -2,7 +2,8 @@
 [![Build (master)](https://img.shields.io/github/workflow/status/NetFabric/NetFabric.Assertive/.NET%20Core/master.svg?style=flat-square&logo=github)](https://github.com/NetFabric/NetFabric.Assertive/actions)
 [![Coverage](https://img.shields.io/coveralls/github/NetFabric/NetFabric.Assertive/master?style=flat-square&logo=coveralls)](https://coveralls.io/github/NetFabric/NetFabric.Assertive)
 [![NuGet Version](https://img.shields.io/nuget/v/NetFabric.Assertive.svg?style=flat-square&logo=nuget)](https://www.nuget.org/packages/NetFabric.Assertive/)
-[![NuGet Downloads](https://img.shields.io/nuget/dt/NetFabric.Assertive.svg?style=flat-square&logo=nuget)](https://www.nuget.org/packages/NetFabric.Assertive/) 
+[![NuGet Downloads](https://img.shields.io/nuget/dt/NetFabric.Assertive.svg?style=flat-square&logo=nuget)](https://www.nuget.org/packages/NetFabric.Assertive/)
+[![BuiltWithDot.Net shield](https://builtwithdot.net/project/507/netfabric-assertive/badge)](https://builtwithdot.net/project/507/netfabric-assertive)
 
 # NetFabric.Assertive
 
